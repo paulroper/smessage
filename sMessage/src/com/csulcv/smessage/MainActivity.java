@@ -1,10 +1,11 @@
 
 package com.csulcv.smessage;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -30,10 +31,10 @@ public class MainActivity extends ActionBarActivity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_search:
-                openSearch();
+                //openSearch();
                 return true;
             case R.id.action_settings:
-                openSettings();
+                //openSettings();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
