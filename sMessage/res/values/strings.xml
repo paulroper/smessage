@@ -6,7 +6,7 @@
     <string name="action_search">Search</string>
     <string name="button_send">Send</string>
     <string name="edit_message">Enter a message</string>
-    <string name="enter_number">Enter test phone number</string>
+    <string name="enter_number">Enter phone number</string>
     <string name="new_message">New Message</string>
 
 </resources>
