@@ -4,7 +4,7 @@ package com.csulcv.smessage;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +12,8 @@ import android.widget.EditText;
 
 public class MainActivity extends ActionBarActivity {
 
-    public final static String EXTRA_MESSAGE = "com.csulcv.smessage.MESSAGE";
+    public final static String TEST_NUMBER = "com.csulcv.smessage.testNumber";
+    private final static String TAG = "Smessage: Main Activity";
 
     /**
      * {@inheritDoc}
@@ -21,32 +22,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
-    
-    /**
-     * {@inheritDoc}
-     * 
-     * Called when the user exits the application temporarily (e.g. If another app takes control).
-     * 
-     * TODO: Get rid of anything that needs to happen if the user quits here.
-     * 
-     */
-    @Override
-    public void onPause() {
-        
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * Called when the application returns to the foreground.
-     * 
-     * TODO: Implement whatever happens when the user returns to the application.  
-     * 
-     */
-    @Override
-    public void onResume() {
-        
     }
     
     @Override
@@ -70,25 +45,22 @@ public class MainActivity extends ActionBarActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-    
-    public void getMesssages() {         
-        
-        
-    }
 
     /** Called when the user clicks the Send button */
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-
-        // Get SmsManager used to send messages
-        // SmsManager smsManager = SmsManager.getDefault();
+    public void createNewMessage(View view) throws Exception {
+        // Create intent used to move to SendMessage activity
+        Intent intent = new Intent(this, SendMessageActivity.class);
         
-        EditText editText = (EditText) findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-
-        intent.putExtra(EXTRA_MESSAGE, message);
-
-        startActivity(intent);
+        // Get test phone number from text box
+        EditText editText = (EditText) findViewById(R.id.test_address);
+        String testNumber = editText.getText().toString();  
+        intent.putExtra(TEST_NUMBER, testNumber);
+        Log.i(TAG, "Starting SendMessage activity");          
+        try {
+            startActivity(intent);            
+        } catch (IllegalStateException e) {
+            throw new Exception("Error creating new activity");
+        } 
     }
 
 }

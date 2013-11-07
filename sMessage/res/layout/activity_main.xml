@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -14,27 +13,29 @@
         android:id="@+id/contacts_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/edit_message"
+        android:layout_above="@+id/new_message_button"
         android:layout_marginBottom="20dp"
-        android:layout_gravity="top" />    
-    
-    <Button
-        android:id="@+id/send_button"
-        android:layout_width="96dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:onClick="sendMessage"
-        android:text="@string/button_send" />
-    
+        android:layout_gravity="top" />           
+       
     <EditText
-        android:id="@+id/edit_message"
-        android:layout_width="0dp"
+        android:id="@+id/test_address"
+        android:inputType="number"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/send_button"
+        android:layout_toLeftOf="@+id/new_message_button"
         android:ems="10"
-        android:hint="@string/edit_message" />
+        android:hint="@string/enter_number" />
+    
+    <Button
+        android:id="@+id/new_message_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="createNewMessage"
+        android:text="@string/new_message"
+        android:textSize="12sp" />
 
 </RelativeLayout>
