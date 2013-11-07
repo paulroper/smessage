@@ -4,6 +4,7 @@ package com.csulcv.smessage;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,12 +14,41 @@ public class MainActivity extends ActionBarActivity {
 
     public final static String EXTRA_MESSAGE = "com.csulcv.smessage.MESSAGE";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * Called when the user exits the application temporarily (e.g. If another app takes control).
+     * 
+     * TODO: Get rid of anything that needs to happen if the user quits here.
+     * 
+     */
+    @Override
+    public void onPause() {
+        
+    }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * Called when the application returns to the foreground.
+     * 
+     * TODO: Implement whatever happens when the user returns to the application.  
+     * 
+     */
+    @Override
+    public void onResume() {
+        
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -40,11 +70,19 @@ public class MainActivity extends ActionBarActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    
+    public void getMesssages() {         
+        
+        
+    }
 
     /** Called when the user clicks the Send button */
     public void sendMessage(View view) {
         Intent intent = new Intent(this, DisplayMessageActivity.class);
 
+        // Get SmsManager used to send messages
+        // SmsManager smsManager = SmsManager.getDefault();
+        
         EditText editText = (EditText) findViewById(R.id.edit_message);
         String message = editText.getText().toString();
 
