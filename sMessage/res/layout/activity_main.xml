@@ -19,21 +19,22 @@
        
     <EditText
         android:id="@+id/test_address"
-        android:inputType="number"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/new_message_button"
+        android:layout_toLeftOf="@id/new_message_button"
         android:ems="10"
-        android:hint="@string/enter_number" />
+        android:hint="@string/enter_number"
+        android:inputType="number" />
     
     <Button
         android:id="@+id/new_message_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="10dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/test_address"
         android:onClick="createNewMessage"
         android:text="@string/new_message"
         android:textSize="12sp" />
