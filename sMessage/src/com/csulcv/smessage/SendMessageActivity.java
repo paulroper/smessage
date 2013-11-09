@@ -110,36 +110,35 @@ public class SendMessageActivity extends ActionBarActivity {
             ArrayList<String> splitMessage = smsManager.divideMessage(message);
             
             smsManager.sendMultipartTextMessage(testNumber, null, splitMessage, null, null);
-            
-            // Ensure message length doesn't surpass SMS character limit
-/*            for (String s : smsManager.divideMessage(message)) {                
-                // TODO: Adjust parameters for error checking
-                smsManager.sendTextMessage(testNumber, null, s, null, null);
-            } */ 
-            
+
         } else {            
             // If there's no message to send, do nothing
         }   
         
     }
-    
-    // Uses the non-public SMS content provider. Be careful!
+
     public ArrayList<String> getMessages() {
         
-        Uri smsUri = Uri.parse("content://sms");       
+        Uri smsUri = Uri.parse("content://sms");    
+        String numberWithoutAreaCode = "";
         
         // Get rid of area code from number so we can find texts from this number with a LIKE comparison
-        String numberWithoutAreaCode = testNumber.substring(1);
+        // TODO: Only works for UK numbers at the moment, extend to any!
+        if (testNumber.charAt(0) == '+') {
+            numberWithoutAreaCode = testNumber.substring(3);
+        } else {
+            numberWithoutAreaCode = testNumber.substring(1);
+        }
         
         Log.i(TAG, "Address substring: " + numberWithoutAreaCode);
         
         /* SMS columns seem to be: _ID, THREAD_ID, ADDRESS, PERSON, DATE, DATE_SENT, READ, SEEN, STATUS
          * SUBJECT, BODY, PERSON, PROTOCOL, REPLY_PATH_PRESENT, SERVICE_CENTRE, LOCKED, ERROR_CODE, META_DATA
          */
-        String[] returnedColumns = {"address", "person", "body", "date"};
+        String[] returnedColumns = {"address", "person", "type", "body", "date"};
         
         // Set up WHERE clause; find texts from address containing the number without an area code
-        String address = "address LIKE '%" + numberWithoutAreaCode + "'";
+        String address = "REPLACE(address, ' ', '') LIKE '%" + numberWithoutAreaCode + "'";
         
         // Default sort order is date DESC, change to date ASC so texts appear in order
         String sortOrder = "date ASC";

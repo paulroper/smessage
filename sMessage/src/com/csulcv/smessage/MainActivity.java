@@ -72,5 +72,11 @@ public class MainActivity extends ActionBarActivity {
         }
         
     }
+    
+    // TODO: Get list of conversations
+    public void getConversations() {     
+        
+        
+    }
 
 }
