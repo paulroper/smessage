@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.csulcv.smessage"
+    package="com.csulcv.Smessage"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light">        
         <activity
-            android:name="com.csulcv.smessage.MainActivity"
+            android:name="com.csulcv.Smessage.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,8 +29,8 @@
             </intent-filter>
         </activity>        
         <activity
-            android:name="com.csulcv.smessage.SendMessageActivity"
-            android:parentActivityName="com.csulcv.smessage.MainActivity" >
+            android:name="com.csulcv.Smessage.SendMessageActivity"
+            android:parentActivityName="com.csulcv.Smessage.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.csulcv.smessage.MainActivity" />

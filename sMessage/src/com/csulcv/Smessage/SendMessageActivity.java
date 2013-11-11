@@ -1,5 +1,5 @@
 
-package com.csulcv.smessage;
+package com.csulcv.Smessage;
 
 import java.util.ArrayList;
 
@@ -21,6 +21,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+/**
+ * SendMessageActivity.java
+ * 
+ * @author Paul Roper
+ *
+ */
 public class SendMessageActivity extends ActionBarActivity {
 
     private SmsManager smsManager = SmsManager.getDefault();
@@ -28,6 +34,10 @@ public class SendMessageActivity extends ActionBarActivity {
     private final static String TAG = "Smessage: SendMessage Activity";
     private static String testNumber = "";
     
+    /**
+     * 
+     * @see android.app.Activity
+     */
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {         
@@ -70,8 +80,12 @@ public class SendMessageActivity extends ActionBarActivity {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
         
-    }
+    }    
     
+    /**
+     * 
+     * @see android.app.Activity
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
@@ -81,6 +95,11 @@ public class SendMessageActivity extends ActionBarActivity {
         
     }
     
+    
+    /**
+     * 
+     * @see android.app.Activity
+     */    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         
@@ -98,12 +117,19 @@ public class SendMessageActivity extends ActionBarActivity {
         
     }
     
+    /**
+     * Send an SMS message.
+     * 
+     * @param view
+     * @throws IllegalArgumentException If there's an error sending the message, throw an exception.
+     */
     public void sendMessage(View view) throws IllegalArgumentException {      
         
         // Get text message from the text box
         EditText editText = (EditText) findViewById(R.id.edit_message);
         String message = editText.getText().toString();      
         
+        // TODO: Error checking!
         if (message != null) {            
             Log.i(TAG, "Sending text message");   
             
@@ -117,8 +143,14 @@ public class SendMessageActivity extends ActionBarActivity {
         
     }
 
-    public ArrayList<String> getMessages() {
-        
+    /**
+     * Get the list of messages for the current contact.
+     * 
+     * @return A list of messages for the number specified
+     */
+    public ArrayList<String> getMessages() {        
+
+        ArrayList<String> messages = new ArrayList<String>();
         Uri smsUri = Uri.parse("content://sms");    
         String numberWithoutAreaCode = "";
         
@@ -141,13 +173,11 @@ public class SendMessageActivity extends ActionBarActivity {
         String address = "REPLACE(address, ' ', '') LIKE '%" + numberWithoutAreaCode + "'";
         
         // Default sort order is date DESC, change to date ASC so texts appear in order
-        String sortOrder = "date ASC";
-        
-        // ArrayList for storing the message text
-        ArrayList<String> messages = new ArrayList<String>();
+        String sortOrder = "thread_id ASC, date ASC";
         
         // Send the query to get SMS messages. Default sort order is date DESC.
-        Cursor smsCursor = getContentResolver().query(smsUri, returnedColumns, address, null, sortOrder);
+        // TODO: Use a CursorLoader, it runs the query in the background.
+        Cursor smsCursor = getContentResolver().query(smsUri, null, null, null, sortOrder);
         
         int messageCounter = 0; 
         
