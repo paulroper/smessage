@@ -62,7 +62,8 @@ public class SendMessageActivity extends ActionBarActivity {
         ArrayList<String> messages = getMessages();
         
         // Setup adapter for message list using array list of messages
-        ArrayAdapter<String> messageListAdapter = new ArrayAdapter<String>(this, R.layout.message_view_row, R.id.message_row, messages);
+        ArrayAdapter<String> messageListAdapter = new ArrayAdapter<String>(this, 
+                R.layout.message_view_row, R.id.message_row, messages);
         
         messageList.setAdapter(messageListAdapter);
         
