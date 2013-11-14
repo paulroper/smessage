@@ -1,5 +1,7 @@
 package com.csulcv.Smessage;
 
+import java.util.Date;
+
 /**
  * Message.java
  * 
@@ -8,8 +10,10 @@ package com.csulcv.Smessage;
  */
 class Message {
      
+     private int messageThreadId;
      private String messageBody;
      private String senderAddress;
+     private Long messageDate;
      
      /**
       * Constructor for a message.
@@ -17,9 +21,15 @@ class Message {
       * @param body The message's body.
       * @param address The address that the message is intended for.
       */
-     public Message(String body, String address) {
+     public Message(int threadId, String body, String address, Long date) {
          messageBody = body;
          senderAddress = address;
+         messageThreadId = threadId;
+         messageDate = date;
+     }     
+     
+     public int getThreadId() {
+         return messageThreadId;
      }
     
      /**
@@ -38,4 +48,10 @@ class Message {
          return senderAddress;
      }
      
+     public Long getDate() {
+         return messageDate;
+     }
+    
+     
+    
 }

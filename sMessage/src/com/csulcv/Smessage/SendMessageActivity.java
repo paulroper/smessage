@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.CursorJoiner;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -145,14 +146,16 @@ public class SendMessageActivity extends ActionBarActivity {
     }
 
     /**
-     * Get the list of messages for the current contact.
+     * Get the list of SMS messages for the current contact.
      * 
      * @return A list of messages for the number specified
      */
     public ArrayList<String> getMessages() {        
 
+        Uri smsUri = Uri.parse("content://sms/");
+        Uri smsConversationsUri = Uri.parse("content://sms/conversations");   
+        
         ArrayList<String> messages = new ArrayList<String>();
-        Uri smsUri = Uri.parse("content://sms");    
         String numberWithoutAreaCode = "";
         
         // Get rid of area code from number so we can find texts from this number with a LIKE comparison
@@ -168,7 +171,8 @@ public class SendMessageActivity extends ActionBarActivity {
         /* SMS columns seem to be: _ID, THREAD_ID, ADDRESS, PERSON, DATE, DATE_SENT, READ, SEEN, STATUS
          * SUBJECT, BODY, PERSON, PROTOCOL, REPLY_PATH_PRESENT, SERVICE_CENTRE, LOCKED, ERROR_CODE, META_DATA
          */
-        String[] returnedColumns = {"address", "person", "type", "body", "date"};
+        String[] returnedColumnsSmsCursor = {"thread_id", "address", "body", "date"};
+        String[] returnedColumnsSmsConversationCursor = {"thread_id", "msg_count", "snippet"};
         
         // Set up WHERE clause; find texts from address containing the number without an area code
         String address = "REPLACE(address, ' ', '') LIKE '%" + numberWithoutAreaCode + "'";
@@ -179,6 +183,7 @@ public class SendMessageActivity extends ActionBarActivity {
         // Send the query to get SMS messages. Default sort order is date DESC.
         // TODO: Use a CursorLoader, it runs the query in the background.
         Cursor smsCursor = getContentResolver().query(smsUri, null, null, null, sortOrder);
+        Cursor smsConversationCursor = getContentResolver().query(smsConversationsUri, null, null, null, sortOrder);
         
         int messageCounter = 0; 
         
@@ -188,7 +193,7 @@ public class SendMessageActivity extends ActionBarActivity {
             for (int i = 0; i < smsCursor.getColumnCount(); i++) {
                 Log.d(smsCursor.getColumnName(i) + "", smsCursor.getString(i) + "");
                 
-                if (smsCursor.getColumnName(i).equals("body")) {
+                if (smsCursor.getColumnName(i).equals("body") && smsCursor.getString(i) != null) {
                     Log.d("Adding message", "Adding message to ArrayList");
                     messages.add(smsCursor.getString(i));
                 }

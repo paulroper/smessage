@@ -7,7 +7,7 @@ public class Contact {
     
     public Contact (String name, String photoId) {        
         contactName = name;
-        contactPhotoId = photoId;               
+        contactPhotoId = photoId;        
     }
 
     public String getContactName() {

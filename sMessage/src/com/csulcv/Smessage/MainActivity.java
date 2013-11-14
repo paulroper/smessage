@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract.PhoneLookup;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
@@ -38,13 +39,13 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-                        
+        
         // Get ListView used for contacts and get contacts
         ListView contactList = (ListView) findViewById(R.id.contact_list);
         
         // Setup adapter for message list using array list of messages
         ArrayAdapter<String> contactListAdapter = new ArrayAdapter<String>(this, R.layout.contact_view_row, R.id.contact_name, 
-                getContactNames(getContactsFromMessageList(getNewestMesssagesPerConversation())));
+                getContactNames(getContactNamesFromConversations(getNewestConversationMessages())));
         
         contactList.setAdapter(contactListAdapter);       
         
@@ -120,7 +121,7 @@ public class MainActivity extends ActionBarActivity {
      * 
      * @return An ArrayList containing Message objects.
      */
-    public ArrayList<Message> getNewestMesssagesPerConversation() {     
+    public ArrayList<Message> getNewestConversationMessages() {     
         
         ArrayList<Message> newestConversationMessages = new ArrayList<Message>();        
         Uri smsUri = Uri.parse("content://sms");    
@@ -128,11 +129,8 @@ public class MainActivity extends ActionBarActivity {
         /* SMS columns seem to be: _ID, THREAD_ID, ADDRESS, PERSON, DATE, DATE_SENT, READ, SEEN, STATUS
          * SUBJECT, BODY, PERSON, PROTOCOL, REPLY_PATH_PRESENT, SERVICE_CENTRE, LOCKED, ERROR_CODE, META_DATA
          */
-        String[] returnedColumns = {"thread_id", "address", "person", "type", "body", "date"};
-        
-        // Set up WHERE clause; find texts from address containing the number without an area code
-        String address = "";
-        
+        String[] returnedColumns = {"thread_id", "address", "body", "date"};
+
         // Default sort order is date DESC, change to date ASC so texts appear in order
         String sortOrder = "thread_id DESC, date ASC";
         
@@ -143,9 +141,10 @@ public class MainActivity extends ActionBarActivity {
         // Indices are fixed constants based on position in the returnedColumns array
         int threadIdColumnIndex = 0;
         int addressColumnIndex = 1;
-        int messageBodyColumnIndex = 4;
+        int messageBodyColumnIndex = 2;
+        int dateColumnIndex = 3;
         
-        int messageCounter = 0; 
+        int messageCounter = 1; 
         String currentThreadId = "";
         
         /* 
@@ -155,15 +154,16 @@ public class MainActivity extends ActionBarActivity {
         while (smsCursor.moveToNext()) {  
             currentThreadId = smsCursor.getString(threadIdColumnIndex);                    
 
-            // Last message will always be the newest for the first message thread
+            // We don't want to move the cursor past the last index so check for when it's on the last row
             if (smsCursor.isLast()) {
-                newestConversationMessages.add(new Message(smsCursor.getString(messageBodyColumnIndex),
-                        smsCursor.getString(addressColumnIndex))); 
+                newestConversationMessages.add(new Message(smsCursor.getInt(threadIdColumnIndex), smsCursor.getString(messageBodyColumnIndex),
+                        smsCursor.getString(addressColumnIndex), smsCursor.getLong(dateColumnIndex))); 
                                 
                 Log.d("Message " + (messageCounter + 1), "-----------------");
                 Log.d("thread_id", smsCursor.getString(threadIdColumnIndex));
                 Log.d("address", smsCursor.getString(addressColumnIndex));
                 Log.d("body", smsCursor.getString(messageBodyColumnIndex));
+                Log.d("date", smsCursor.getString(dateColumnIndex));
                 Log.d("Adding message", "Adding message to ArrayList");
                 
                 messageCounter++;                
@@ -181,37 +181,18 @@ public class MainActivity extends ActionBarActivity {
             if (!(smsCursor.getString(threadIdColumnIndex).equals(currentThreadId))) {               
 
                 smsCursor.moveToPrevious();
+               
+                Log.d("Message " + messageCounter, "-----------------");
+                Log.d("thread_id", smsCursor.getString(threadIdColumnIndex));
+                Log.d("address", smsCursor.getString(addressColumnIndex));
+                Log.d("body", smsCursor.getString(messageBodyColumnIndex));
+                Log.d("date", smsCursor.getString(dateColumnIndex));
+                Log.d("Adding message", "Adding message to ArrayList");
                 
-                // If the latest message is one sent to yourself, address is set to null so make sure the user's own address is added
-                if (smsCursor.getString(addressColumnIndex).contains("null")) {                    
+                newestConversationMessages.add(new Message(smsCursor.getInt(threadIdColumnIndex), smsCursor.getString(messageBodyColumnIndex),
+                        smsCursor.getString(addressColumnIndex), smsCursor.getLong(dateColumnIndex)));
                     
-                    Log.d("NULL", "AHH, SOMETHING'S NULL");
-                    
-                    Log.d("Message " + messageCounter, "-----------------");
-                    Log.d("thread_id", smsCursor.getString(threadIdColumnIndex));
-                    Log.d("address", getOwnNumber());
-                    Log.d("body", smsCursor.getString(messageBodyColumnIndex));
-                    Log.d("Adding message", "Adding message to ArrayList");                  
-                    
-                    newestConversationMessages.add(new Message(smsCursor.getString(messageBodyColumnIndex), getOwnNumber()));    
-                    
-                    Log.d("End of message " + messageCounter, "-----------------");
-                                        
-                } else {
-                   
-                    Log.d("Message " + messageCounter, "-----------------");
-                    Log.d("thread_id", smsCursor.getString(threadIdColumnIndex));
-                    Log.d("address", smsCursor.getString(addressColumnIndex));
-                    Log.d("body", smsCursor.getString(messageBodyColumnIndex));
-                    Log.d("Adding message", "Adding message to ArrayList");
-                    
-                    newestConversationMessages.add(new Message(smsCursor.getString(messageBodyColumnIndex), 
-                            smsCursor.getString(addressColumnIndex)));
-                        
-                    messageCounter++;                
-                    Log.d("End of message " + messageCounter, "-----------------");
-                
-                }
+                messageCounter++;                
                     
             } else {                    
                 smsCursor.moveToPrevious();
@@ -220,6 +201,57 @@ public class MainActivity extends ActionBarActivity {
         }
      
         return newestConversationMessages;
+        
+    }
+    
+    /**
+     * Get the newest message from a conversation.
+     *  
+     * Retrieve a list of the newest messages from each conversation thread. These (along with the address of the contact
+     * the message is for) are used to build a contacts list.
+     * 
+     * @return An ArrayList containing Message objects.
+     */
+    public ArrayList<Message> getConversations() {     
+        
+        ArrayList<Message> newestConversationMessages = new ArrayList<Message>();        
+        Uri smsUri = Uri.parse("content://sms/conversations");    
+
+        /* 
+         * SMS conversation provider columns: thread_id, msg_count, snippet
+         */
+        String[] returnedColumns = {"thread_id", "msg_count", "snippet"};
+        
+        // Send the query to get SMS messages. Default sort order is date DESC.
+        // TODO: Use a CursorLoader, it runs the query in the background.
+        Cursor smsCursor = getContentResolver().query(smsUri, returnedColumns, null, null, null);
+
+        // Indices are fixed constants based on position in the returnedColumns array
+        int threadIdColumnIndex = 0;
+        int msgCountColumnIndex = 1;
+        int snippetColumnIndex = 2;
+        
+        /* 
+         * Use a cursor to iterate over the SMS table. Offsets are used to (hopefully) speed up access.
+         * Offsets'll have to be changed based on the number of columns we're querying.
+         */
+        while (smsCursor.moveToNext()) {  
+           
+            for (int i = 0; i < smsCursor.getColumnCount(); i++) {
+                Log.d(smsCursor.getColumnName(i) + "", smsCursor.getString(i) + "");
+                
+                if (smsCursor.getColumnName(i).equals("body") && smsCursor.getString(i) != null) {
+                    Log.d("Adding message", "Adding message to ArrayList");
+                    newestConversationMessages.add(new Message(smsCursor.getInt(threadIdColumnIndex), 
+                            "null", smsCursor.getString(snippetColumnIndex), null));
+                }
+                
+            }            
+     
+        }
+            
+        return newestConversationMessages;
+        
     }
     
     /**
@@ -228,7 +260,7 @@ public class MainActivity extends ActionBarActivity {
      * @param newestConversationMessages
      * @return
      */
-    public ArrayList<Contact> getContactsFromMessageList(ArrayList<Message> newestConversationMessages) {             
+    public ArrayList<Contact> getContactNamesFromConversations(ArrayList<Message> newestConversationMessages) {             
         
         /*
          * Contacts columns seem to be: _ID, LOOKUP_KEY, DISPLAY_NAME, PHOTO_ID, IN_VISIBLE_GROUP, HAS_PHONE_NUMBER,
@@ -307,11 +339,18 @@ public class MainActivity extends ActionBarActivity {
      * 
      * @return A string containing the user's telephone number.
      */
-    public String getOwnNumber() {        
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String ownNumber = telephonyManager.getLine1Number();
+    public String getOwnNumber() {    
         
-        return ownNumber;
-    }   
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        String ownNumber = telephonyManager.getLine1Number();        
+        
+        return PhoneNumberUtils.formatNumber(ownNumber);
+        
+    } 
+    
+    public ArrayList<Message> sortMessagesByDate(ArrayList<Message> conversations) {                
+        ArrayList<Message> sortedConversations = new ArrayList<Message>();
+        return sortedConversations;        
+    }    
 
 }
