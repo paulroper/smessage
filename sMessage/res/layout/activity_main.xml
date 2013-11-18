@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -11,32 +12,29 @@
 
     <ListView
         android:id="@+id/contact_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/new_message_button"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="top" />           
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />           
        
-    <EditText
-        android:id="@+id/test_address"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/new_message_button"
-        android:ems="10"
-        android:hint="@string/enter_number"
-        android:inputType="number" />
+<!--     <EditText -->
+<!--         android:id="@+id/test_address" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="40dp" -->
+<!--         android:layout_alignParentBottom="true" -->
+<!--         android:layout_alignParentLeft="true" -->
+<!--         android:layout_toLeftOf="@id/new_message_button" -->
+<!--         android:ems="10" -->
+<!--         android:hint="@string/enter_number" -->
+<!--         android:inputType="number" /> -->
     
-    <Button
-        android:id="@+id/new_message_button"
-        android:layout_width="wrap_content"
-        android:layout_height="10dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/test_address"
-        android:onClick="createNewMessage"
-        android:text="@string/new_message"
-        android:textSize="12sp" />
+<!--     <Button -->
+<!--         android:id="@+id/new_message_button" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="10dp" -->
+<!--         android:layout_alignParentBottom="true" -->
+<!--         android:layout_alignParentRight="true" -->
+<!--         android:layout_alignTop="@id/test_address" -->
+<!--         android:onClick="createNewMessage" -->
+<!--         android:text="@string/new_message" -->
+<!--         android:textSize="12sp" /> -->
 
 </RelativeLayout>

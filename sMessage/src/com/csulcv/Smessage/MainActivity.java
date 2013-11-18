@@ -43,40 +43,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        // Get ListView used for contacts and get contacts
-        ListView contactList = (ListView) findViewById(R.id.contact_list);
-        
-        // Setup adapter for message list using array list of messages
-        ArrayAdapter<Contact> contactListAdapter = new ArrayAdapter<Contact>(this, R.layout.contact_view_row, 
-                R.id.contact_name, getContactNamesFromConversations(getNewestConversationMessages()));
-        
-        contactList.setAdapter(contactListAdapter);  
-        
-        contactList.setOnItemClickListener(new OnItemClickListener() {
-            
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Contact contact = (Contact) parent.getAdapter().getItem(position);
-                
-                Log.d("Contact clicked: ", contact.getContactName()); 
-                
-                // Create intent used to move to SendMessage activity
-                Intent intent = new Intent(MainActivity.this, SendMessageActivity.class);
-
-                Bundle contactNamePhoneNumber = new Bundle();                
-                intent.putExtra(CONTACT_NAME_PHONE_NUMBER, contactNamePhoneNumber);
-                
-                contactNamePhoneNumber.putString("CONTACT_NAME", contact.getContactName());
-                contactNamePhoneNumber.putString("CONTACT_PHONE_NUMBER", contact.getContactPhoneNumber());
-                
-                Log.i(TAG, "Starting SendMessage activity");          
-                    
-                startActivity(intent);   
-            }
-            
-        });
-        
+        initialiseConversationList();        
     }
 
     /**
@@ -111,33 +78,73 @@ public class MainActivity extends ActionBarActivity {
         }
         
     }
-
+    
     /**
-     * Create a new message activity when the user clicks create new.
-     * 
-     * @param  view 
-     * @throws Exception Throw an illegal state exception if the activity cannot be created.
+     * Setup the conversation list.
      */
-    public void createNewMessage(View view) throws Exception {
+    public void initialiseConversationList() {
         
-        // Create intent used to move to SendMessage activity
-        Intent intent = new Intent(this, SendMessageActivity.class);
+        // Get ListView used for contacts and get contacts
+        ListView contactList = (ListView) findViewById(R.id.contact_list);
         
-        // Get test phone number from text box
-        EditText editText = (EditText) findViewById(R.id.test_address);        
-        String testNumber = editText.getText().toString();  
+        // Setup adapter for message list using array list of messages
+        ArrayAdapter<Contact> contactListAdapter = new ArrayAdapter<Contact>(this, R.layout.contact_view_row, 
+                R.id.contact_name, getContactNamesFromConversations(getNewestConversationMessages()));
         
-        intent.putExtra(TEST_NUMBER, testNumber);
+        contactList.setAdapter(contactListAdapter);  
         
-        Log.i(TAG, "Starting SendMessage activity");          
-        
-        try {
-            startActivity(intent);            
-        } catch (IllegalStateException e) {
-            throw new Exception("Error creating new activity");
-        }
+        contactList.setOnItemClickListener(new OnItemClickListener() {
+            
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Contact contact = (Contact) parent.getAdapter().getItem(position);
+                
+                Log.d("Contact clicked: ", contact.getContactName() + " " + contact.getContactPhoneNumber()); 
+                
+                // Create intent used to move to SendMessage activity
+                Intent intent = new Intent(MainActivity.this, SendMessageActivity.class);
+
+                Bundle contactNamePhoneNumber = new Bundle();                
+                intent.putExtra(CONTACT_NAME_PHONE_NUMBER, contactNamePhoneNumber);
+                
+                contactNamePhoneNumber.putString("CONTACT_NAME", contact.getContactName());
+                contactNamePhoneNumber.putString("CONTACT_PHONE_NUMBER", contact.getContactPhoneNumber());
+                
+                Log.i(TAG, "Starting SendMessage activity");          
+                    
+                startActivity(intent);   
+            }
+            
+        });
         
     }
+
+    //    /**
+    //     * Create a new message activity when the user clicks create new.
+    //     * 
+    //     * @param  view 
+    //     * @throws Exception Throw an illegal state exception if the activity cannot be created.
+    //     */
+    //    public void createNewMessage(View view) throws Exception {
+    //        
+    //        // Create intent used to move to SendMessage activity
+    //        Intent intent = new Intent(this, SendMessageActivity.class);
+    //        
+    //        // Get test phone number from text box
+    //        EditText editText = (EditText) findViewById(R.id.test_address);        
+    //        String testNumber = editText.getText().toString();  
+    //        
+    //        intent.putExtra(TEST_NUMBER, testNumber);
+    //        
+    //        Log.i(TAG, "Starting SendMessage activity");          
+    //        
+    //        try {
+    //            startActivity(intent);            
+    //        } catch (IllegalStateException e) {
+    //            throw new Exception("Error creating new activity");
+    //        }
+    //        
+    //    }
 
     /**
      * Get the newest message from a conversation.
@@ -260,10 +267,10 @@ public class MainActivity extends ActionBarActivity {
 
         // Indices are fixed constants based on position in the returnedColumns array        
         @SuppressWarnings("unused")
-        int msgCountColumnIndex = 1;
+        final int MSG_COUNT_COLUMN_INDEX = 1;        
         
-        int threadIdColumnIndex = 0;
-        int snippetColumnIndex = 2;
+        final int THREAD_ID_COLUMN_INDEX = 0;
+        final int SNIPPET_COLUMN_INDEX = 2;
         
         /* 
          * Use a cursor to iterate over the SMS table. Offsets are used to (hopefully) speed up access.
@@ -276,8 +283,8 @@ public class MainActivity extends ActionBarActivity {
                 
                 if (smsCursor.getColumnName(i).equals("body") && smsCursor.getString(i) != null) {
                     Log.d("Adding message", "Adding message to ArrayList");
-                    newestConversationMessages.add(new Message(smsCursor.getInt(threadIdColumnIndex), 
-                            "null", smsCursor.getString(snippetColumnIndex), null));
+                    newestConversationMessages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX), 
+                            "null", smsCursor.getString(SNIPPET_COLUMN_INDEX), null));
                 }
                 
             }            

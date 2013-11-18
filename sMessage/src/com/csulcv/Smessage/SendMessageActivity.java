@@ -41,40 +41,11 @@ public class SendMessageActivity extends ActionBarActivity {
      */
     @SuppressLint("NewApi")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {         
-        
+    protected void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_message);
-        
-        // Show the Up button in the action bar.
-        setupActionBar();
-        
-        ActionBar actionBar = getSupportActionBar();
-        
-        // Get the message from the intent that created this activity
-        Intent intent = getIntent();
-        Bundle contactNameAddress = intent.getBundleExtra(MainActivity.CONTACT_NAME_PHONE_NUMBER);
-
-        contactName = contactNameAddress.getString("CONTACT_NAME");
-        contactPhoneNumber = contactNameAddress.getString("CONTACT_PHONE_NUMBER");
-        
-        if (contactName.equals("null")) {
-            actionBar.setTitle(contactPhoneNumber);  
-        } else {
-            actionBar.setTitle(contactName);
-            actionBar.setSubtitle(contactPhoneNumber);
-        }
-        
-        // Get ListView used for messages and get messages
-        ListView messageList = (ListView) findViewById(R.id.message_list);
-        ArrayList<String> messages = getMessages();
-        
-        // Setup adapter for message list using array list of messages
-        ArrayAdapter<String> messageListAdapter = new ArrayAdapter<String>(this, 
-                R.layout.message_view_row, R.id.message_row, messages);
-        
-        messageList.setAdapter(messageListAdapter);
-        
+        initialiseActionBar();
+        initialiseMessageList();       
     }  
 
     /**
@@ -126,6 +97,49 @@ public class SendMessageActivity extends ActionBarActivity {
     }
     
     /**
+     * Set up the ActionBar for this activity.
+     */
+    public void initialiseActionBar() {        
+        
+        // Show the Up button in the action bar.
+        setupActionBar();
+        
+        ActionBar actionBar = getSupportActionBar();
+        
+        // Get the message from the intent that created this activity
+        Intent intent = getIntent();
+        Bundle contactNameAddress = intent.getBundleExtra(MainActivity.CONTACT_NAME_PHONE_NUMBER);
+
+        contactName = contactNameAddress.getString("CONTACT_NAME");
+        contactPhoneNumber = contactNameAddress.getString("CONTACT_PHONE_NUMBER");
+        
+        if (contactName.equals("null")) {
+            actionBar.setTitle(contactPhoneNumber);  
+        } else {
+            actionBar.setTitle(contactName);
+            actionBar.setSubtitle(contactPhoneNumber);
+        }        
+        
+    }
+    
+    /**
+     * Generate the list of messages for the contact this activity was generated from.
+     */
+    public void initialiseMessageList() {
+                
+        // Get ListView used for messages and get messages
+        ListView messageList = (ListView) findViewById(R.id.message_list);
+        ArrayList<String> messages = getMessages();
+        
+        // Setup adapter for message list using array list of messages
+        ArrayAdapter<String> messageListAdapter = new ArrayAdapter<String>(this, 
+                R.layout.message_view_row, R.id.message_row, messages);
+        
+        messageList.setAdapter(messageListAdapter);
+                
+    }    
+    
+    /**
      * Send an SMS message.
      * 
      * @param view
@@ -164,6 +178,11 @@ public class SendMessageActivity extends ActionBarActivity {
         
         ArrayList<String> messages = new ArrayList<String>();
         String numberWithoutAreaCode = "";
+        
+        // Remove whitespace from the string
+        // TODO: We need to remove dashes and things as well! Also, why does this fix getting messages for 
+        //       some contacts?
+        contactPhoneNumber = contactPhoneNumber.replaceAll("\\s", "");
         
         // Get rid of area code from number so we can find texts from this number with a LIKE comparison
         // TODO: Only works for UK numbers at the moment, extend to any!
