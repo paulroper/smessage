@@ -32,7 +32,8 @@ public class SendMessageActivity extends ActionBarActivity {
     private SmsManager smsManager = SmsManager.getDefault();
     
     private final static String TAG = "Smessage: SendMessage Activity";
-    private static String testNumber = "";
+    private static String contactName = "";
+    private static String contactPhoneNumber = "";
     
     /**
      * 
@@ -52,10 +53,17 @@ public class SendMessageActivity extends ActionBarActivity {
         
         // Get the message from the intent that created this activity
         Intent intent = getIntent();
-        testNumber = intent.getStringExtra(MainActivity.TEST_NUMBER);
+        Bundle contactNameAddress = intent.getBundleExtra(MainActivity.CONTACT_NAME_PHONE_NUMBER);
+
+        contactName = contactNameAddress.getString("CONTACT_NAME");
+        contactPhoneNumber = contactNameAddress.getString("CONTACT_PHONE_NUMBER");
         
-        actionBar.setTitle("Test Contact");
-        actionBar.setSubtitle(testNumber);     
+        if (contactName.equals("null")) {
+            actionBar.setTitle(contactPhoneNumber);  
+        } else {
+            actionBar.setTitle(contactName);
+            actionBar.setSubtitle(contactPhoneNumber);
+        }
         
         // Get ListView used for messages and get messages
         ListView messageList = (ListView) findViewById(R.id.message_list);
@@ -135,7 +143,7 @@ public class SendMessageActivity extends ActionBarActivity {
             
             ArrayList<String> splitMessage = smsManager.divideMessage(message);
             
-            smsManager.sendMultipartTextMessage(testNumber, null, splitMessage, null, null);
+            smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);
 
         } else {            
             // If there's no message to send, do nothing
@@ -159,10 +167,10 @@ public class SendMessageActivity extends ActionBarActivity {
         
         // Get rid of area code from number so we can find texts from this number with a LIKE comparison
         // TODO: Only works for UK numbers at the moment, extend to any!
-        if (testNumber.charAt(0) == '+') {
-            numberWithoutAreaCode = testNumber.substring(3);
+        if (contactPhoneNumber.charAt(0) == '+') {
+            numberWithoutAreaCode = contactPhoneNumber.substring(3);
         } else {
-            numberWithoutAreaCode = testNumber.substring(1);
+            numberWithoutAreaCode = contactPhoneNumber.substring(1);
         }
         
         Log.i(TAG, "Address substring: " + numberWithoutAreaCode);
@@ -181,7 +189,7 @@ public class SendMessageActivity extends ActionBarActivity {
         
         // Send the query to get SMS messages. Default sort order is date DESC.
         // TODO: Use a CursorLoader, it runs the query in the background.
-        Cursor smsCursor = getContentResolver().query(smsUri, null, null, null, sortOrder);
+        Cursor smsCursor = getContentResolver().query(smsUri, returnedColumnsSmsCursor, address, null, sortOrder);
         Cursor smsConversationCursor = getContentResolver().query(smsConversationsUri, null, null, null, sortOrder);
         
         int messageCounter = 0; 

@@ -31,6 +31,7 @@ import android.widget.ListView;
  */
 public class MainActivity extends ActionBarActivity {
 
+    public final static String CONTACT_NAME_PHONE_NUMBER = "com.csulcv.smessage.contactNamePhoneNumber";
     public final static String TEST_NUMBER = "com.csulcv.smessage.testNumber";
     private final static String TAG = "Smessage: Main Activity"; 
     
@@ -47,29 +48,46 @@ public class MainActivity extends ActionBarActivity {
         ListView contactList = (ListView) findViewById(R.id.contact_list);
         
         // Setup adapter for message list using array list of messages
-        ArrayAdapter<String> contactListAdapter = new ArrayAdapter<String>(this, R.layout.contact_view_row, 
-                R.id.contact_name, getContactNames(getContactNamesFromConversations(getNewestConversationMessages())));
+        ArrayAdapter<Contact> contactListAdapter = new ArrayAdapter<Contact>(this, R.layout.contact_view_row, 
+                R.id.contact_name, getContactNamesFromConversations(getNewestConversationMessages()));
         
-        contactList.setAdapter(contactListAdapter);       
+        contactList.setAdapter(contactListAdapter);  
+        
+        contactList.setOnItemClickListener(new OnItemClickListener() {
+            
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Contact contact = (Contact) parent.getAdapter().getItem(position);
+                
+                Log.d("Contact clicked: ", contact.getContactName()); 
+                
+                // Create intent used to move to SendMessage activity
+                Intent intent = new Intent(MainActivity.this, SendMessageActivity.class);
+
+                Bundle contactNamePhoneNumber = new Bundle();                
+                intent.putExtra(CONTACT_NAME_PHONE_NUMBER, contactNamePhoneNumber);
+                
+                contactNamePhoneNumber.putString("CONTACT_NAME", contact.getContactName());
+                contactNamePhoneNumber.putString("CONTACT_PHONE_NUMBER", contact.getContactPhoneNumber());
+                
+                Log.i(TAG, "Starting SendMessage activity");          
+                    
+                startActivity(intent);   
+            }
+            
+        });
         
     }
-    
-    // TODO: Implement!
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        
-    }
-    
+
     /**
      * 
      * @see android.app.Activity
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        
+    public boolean onCreateOptionsMenu(Menu menu) {        
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_activity_actions, menu);
-        return true; 
-        
+        return true;         
     }
     
     /**
@@ -286,15 +304,16 @@ public class MainActivity extends ActionBarActivity {
          * Contacts columns seem to be: _ID, LOOKUP_KEY, DISPLAY_NAME, PHOTO_ID, IN_VISIBLE_GROUP, HAS_PHONE_NUMBER,
          * TIMES_CONTACTED, LAST_TIME_CONTACTED, STARRED, CUSTOM_RINGTONE, SEND_TO_VOICEMAIL 
          */
-        String[] returnedColumns = {PhoneLookup.DISPLAY_NAME, PhoneLookup.PHOTO_ID};
+        String[] returnedColumns = {PhoneLookup.DISPLAY_NAME, PhoneLookup.NUMBER, PhoneLookup.PHOTO_ID};
 
         ArrayList<Contact> contacts = new ArrayList<Contact>();
         String lookupAddress = "";
         Uri lookupUri = null;
         Cursor contactsCursor = null;
         
-        int displayNameColumnIndex = 0;
-        int photoIdColumnIndex = 1;
+        final int DISPLAY_NAME_COLUMN_INDEX = 0;
+        final int NUMBER_COLUMN_INDEX = 1;
+        final int PHOTO_ID_COLUMN_INDEX = 2;
         
         /*
          * For each of the latest messages, use the contact's address to find the contact's name from the phone book.
@@ -319,14 +338,15 @@ public class MainActivity extends ActionBarActivity {
                     Log.d(contactsCursor.getColumnName(i) + "", contactsCursor.getString(i) + "");
                 }
                                 
-                Log.d("Adding contact", contactsCursor.getString(displayNameColumnIndex));
+                Log.d("Adding contact", contactsCursor.getString(DISPLAY_NAME_COLUMN_INDEX));
                 
-                contacts.add(new Contact(contactsCursor.getString(displayNameColumnIndex),
-                        contactsCursor.getString(photoIdColumnIndex)));  
+                contacts.add(new Contact(contactsCursor.getString(DISPLAY_NAME_COLUMN_INDEX),
+                        contactsCursor.getString(NUMBER_COLUMN_INDEX), 
+                        contactsCursor.getString(PHOTO_ID_COLUMN_INDEX)));  
                 
             } else {  
                 Log.d("Adding contact", lookupAddress);                    
-                contacts.add(new Contact(lookupAddress, null));          
+                contacts.add(new Contact("null", lookupAddress, "null"));          
             } 
             
             // Close the cursor, we're going to open a new one on the next iteration
