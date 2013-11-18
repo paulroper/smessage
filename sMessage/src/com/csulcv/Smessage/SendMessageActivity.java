@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.CursorJoiner;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -150,6 +149,7 @@ public class SendMessageActivity extends ActionBarActivity {
      * 
      * @return A list of messages for the number specified
      */
+    @SuppressWarnings("unused")
     public ArrayList<String> getMessages() {        
 
         Uri smsUri = Uri.parse("content://sms/");

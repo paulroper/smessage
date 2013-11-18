@@ -2,6 +2,7 @@
 package com.csulcv.Smessage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.content.Context;
 import android.content.Intent;
@@ -200,6 +201,9 @@ public class MainActivity extends ActionBarActivity {
     
         }
      
+        // Sort messages in ascending order
+        Collections.sort(newestConversationMessages);
+        
         return newestConversationMessages;
         
     }
@@ -226,9 +230,11 @@ public class MainActivity extends ActionBarActivity {
         // TODO: Use a CursorLoader, it runs the query in the background.
         Cursor smsCursor = getContentResolver().query(smsUri, returnedColumns, null, null, null);
 
-        // Indices are fixed constants based on position in the returnedColumns array
-        int threadIdColumnIndex = 0;
+        // Indices are fixed constants based on position in the returnedColumns array        
+        @SuppressWarnings("unused")
         int msgCountColumnIndex = 1;
+        
+        int threadIdColumnIndex = 0;
         int snippetColumnIndex = 2;
         
         /* 
@@ -250,6 +256,9 @@ public class MainActivity extends ActionBarActivity {
      
         }
             
+        // Sort conversations in ascending order
+        Collections.sort(newestConversationMessages);
+        
         return newestConversationMessages;
         
     }
@@ -346,11 +355,6 @@ public class MainActivity extends ActionBarActivity {
         
         return PhoneNumberUtils.formatNumber(ownNumber);
         
-    } 
-    
-    public ArrayList<Message> sortMessagesByDate(ArrayList<Message> conversations) {                
-        ArrayList<Message> sortedConversations = new ArrayList<Message>();
-        return sortedConversations;        
-    }    
+    }  
 
 }

@@ -1,14 +1,12 @@
 package com.csulcv.Smessage;
 
-import java.util.Date;
-
 /**
  * Message.java
  * 
  * @author Paul Roper
  *
  */
-class Message {
+class Message implements Comparable<Message> {
      
      private int messageThreadId;
      private String messageBody;
@@ -50,8 +48,23 @@ class Message {
      
      public Long getDate() {
          return messageDate;
+     }    
+     
+     public int compareTo(Message message) {
+         
+         final int greaterThan = 1;
+         final int equalTo = 0;
+         final int lessThan = -1;
+         
+         if (message.getDate() > messageDate) {
+             return greaterThan;          
+         } else if (message.getDate() < messageDate) {
+             return lessThan;
+         } else {
+             return equalTo;
+         }
+         
      }
-    
      
     
 }

@@ -17,5 +17,5 @@ public class Contact {
     public String getContactPhotoId() {
         return contactPhotoId;
     }   
-
+    
 }
