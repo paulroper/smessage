@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -49,6 +51,11 @@ public class MainActivity extends ActionBarActivity {
                 R.id.contact_name, getContactNames(getContactNamesFromConversations(getNewestConversationMessages())));
         
         contactList.setAdapter(contactListAdapter);       
+        
+    }
+    
+    // TODO: Implement!
+    protected void onListItemClick(ListView l, View v, int position, long id) {
         
     }
     
