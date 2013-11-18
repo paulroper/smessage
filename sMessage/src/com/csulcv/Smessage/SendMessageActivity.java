@@ -94,8 +94,7 @@ public class SendMessageActivity extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.send_message_activity_actions, menu);
         return true;
         
-    }
-    
+    }    
     
     /**
      * 

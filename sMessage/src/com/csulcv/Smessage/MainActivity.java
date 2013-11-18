@@ -45,8 +45,8 @@ public class MainActivity extends ActionBarActivity {
         ListView contactList = (ListView) findViewById(R.id.contact_list);
         
         // Setup adapter for message list using array list of messages
-        ArrayAdapter<String> contactListAdapter = new ArrayAdapter<String>(this, R.layout.contact_view_row, R.id.contact_name, 
-                getContactNames(getContactNamesFromConversations(getNewestConversationMessages())));
+        ArrayAdapter<String> contactListAdapter = new ArrayAdapter<String>(this, R.layout.contact_view_row, 
+                R.id.contact_name, getContactNames(getContactNamesFromConversations(getNewestConversationMessages())));
         
         contactList.setAdapter(contactListAdapter);       
         
@@ -90,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Create a new message activity when the user clicks create new.
      * 
-     * @param view 
+     * @param  view 
      * @throws Exception Throw an illegal state exception if the activity cannot be created.
      */
     public void createNewMessage(View view) throws Exception {
@@ -117,8 +117,8 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Get the newest message from a conversation.
      *  
-     * Retrieve a list of the newest messages from each conversation thread. These (along with the address of the contact
-     * the message is for) are used to build a contacts list.
+     * Retrieve a list of the newest messages from each conversation thread. These (along with the address of the 
+     * contact the message is for) are used to build a contacts list.
      * 
      * @return An ArrayList containing Message objects.
      */
@@ -140,10 +140,10 @@ public class MainActivity extends ActionBarActivity {
         Cursor smsCursor = getContentResolver().query(smsUri, returnedColumns, null, null, sortOrder);
 
         // Indices are fixed constants based on position in the returnedColumns array
-        int threadIdColumnIndex = 0;
-        int addressColumnIndex = 1;
-        int messageBodyColumnIndex = 2;
-        int dateColumnIndex = 3;
+        final int THREAD_ID_COLUMN_INDEX = 0;
+        final int ADDRESS_COLUMN_INDEX = 1;
+        final int MESSAGE_BODY_COLUMN_INDEX = 2;
+        final int DATE_COLUMN_INDEX = 3;
         
         int messageCounter = 1; 
         String currentThreadId = "";
@@ -153,19 +153,22 @@ public class MainActivity extends ActionBarActivity {
          * Offsets'll have to be changed based on the number of columns we're querying.
          */
         while (smsCursor.moveToNext()) {  
-            currentThreadId = smsCursor.getString(threadIdColumnIndex);                    
+            currentThreadId = smsCursor.getString(THREAD_ID_COLUMN_INDEX);                    
 
-            // We don't want to move the cursor past the last index so check for when it's on the last row
+            /* 
+             * We don't want to move the cursor past the last index so check for when it's on the last row and break
+             * so it doesn't move past it.
+             */
             if (smsCursor.isLast()) {
-                newestConversationMessages.add(new Message(smsCursor.getInt(threadIdColumnIndex), smsCursor.getString(messageBodyColumnIndex),
-                        smsCursor.getString(addressColumnIndex), smsCursor.getLong(dateColumnIndex))); 
-                                
-                Log.d("Message " + (messageCounter + 1), "-----------------");
-                Log.d("thread_id", smsCursor.getString(threadIdColumnIndex));
-                Log.d("address", smsCursor.getString(addressColumnIndex));
-                Log.d("body", smsCursor.getString(messageBodyColumnIndex));
-                Log.d("date", smsCursor.getString(dateColumnIndex));
-                Log.d("Adding message", "Adding message to ArrayList");
+                newestConversationMessages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX), 
+                        smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX), smsCursor.getString(ADDRESS_COLUMN_INDEX),
+                        smsCursor.getLong(DATE_COLUMN_INDEX))); 
+                
+                for (int i = 0; i < smsCursor.getColumnCount(); i++) {                    
+                    Log.d("Message " + (messageCounter + 1), "-----------------");
+                    Log.d(smsCursor.getColumnName(i), smsCursor.getString(i));
+                    Log.d("Adding message", "Adding message to ArrayList");
+                }
                 
                 messageCounter++;                
                 
@@ -176,22 +179,22 @@ public class MainActivity extends ActionBarActivity {
             }
             
             /* 
-             * If the next thread ID in the message list is different then we've reached the end of the current thread. As the data
-             * is arranged by date, we add this newest message to the list and move on. 
+             * If the next thread ID in the message list is different then we've reached the end of the current thread. 
+             * As the data is arranged by date, we add this newest message to the list and move on. 
              */
-            if (!(smsCursor.getString(threadIdColumnIndex).equals(currentThreadId))) {               
+            if (!(smsCursor.getString(THREAD_ID_COLUMN_INDEX).equals(currentThreadId))) {               
 
                 smsCursor.moveToPrevious();
                
-                Log.d("Message " + messageCounter, "-----------------");
-                Log.d("thread_id", smsCursor.getString(threadIdColumnIndex));
-                Log.d("address", smsCursor.getString(addressColumnIndex));
-                Log.d("body", smsCursor.getString(messageBodyColumnIndex));
-                Log.d("date", smsCursor.getString(dateColumnIndex));
-                Log.d("Adding message", "Adding message to ArrayList");
+                for (int i = 0; i < smsCursor.getColumnCount(); i++) {                    
+                    Log.d("Message " + (messageCounter + 1), "-----------------");
+                    Log.d(smsCursor.getColumnName(i), smsCursor.getString(i));
+                    Log.d("Adding message", "Adding message to ArrayList");
+                }
                 
-                newestConversationMessages.add(new Message(smsCursor.getInt(threadIdColumnIndex), smsCursor.getString(messageBodyColumnIndex),
-                        smsCursor.getString(addressColumnIndex), smsCursor.getLong(dateColumnIndex)));
+                newestConversationMessages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX), 
+                        smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX), smsCursor.getString(ADDRESS_COLUMN_INDEX),                         
+                        smsCursor.getLong(DATE_COLUMN_INDEX)));
                     
                 messageCounter++;                
                     
@@ -211,8 +214,8 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Get the newest message from a conversation.
      *  
-     * Retrieve a list of the newest messages from each conversation thread. These (along with the address of the contact
-     * the message is for) are used to build a contacts list.
+     * Retrieve a list of the newest messages from each conversation thread. These (along with the address of the 
+     * contact the message is for) are used to build a contacts list.
      * 
      * @return An ArrayList containing Message objects.
      */
@@ -264,10 +267,11 @@ public class MainActivity extends ActionBarActivity {
     }
     
     /**
-     * Use a list of the latest text messages per conversation thread to get a list of contacts for those threads.
+     * Use a list of the latest text messages per conversation thread to get a list of contacts that have a conversation
+     * thread on-going.
      * 
-     * @param newestConversationMessages
-     * @return
+     * @param  ArrayList<Message> newestConversationMessages
+     * @return ArrayList<Contact> containing contacts with a conversation thread.
      */
     public ArrayList<Contact> getContactNamesFromConversations(ArrayList<Message> newestConversationMessages) {             
         
@@ -285,20 +289,22 @@ public class MainActivity extends ActionBarActivity {
         int displayNameColumnIndex = 0;
         int photoIdColumnIndex = 1;
         
+        /*
+         * For each of the latest messages, use the contact's address to find the contact's name from the phone book.
+         * If a name does not exist, just use the address as a name.
+         */
         for (Message m : newestConversationMessages) {             
 
             lookupAddress = m.getAddress();
             
             // Use the contact's number from the message list to get their contact name
-            lookupUri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI,
-                    Uri.encode(lookupAddress));            
+            lookupUri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(lookupAddress));            
                        
             // Run the query
-            contactsCursor = getContentResolver().query(lookupUri, 
-                    returnedColumns, null, null, null);
+            contactsCursor = getContentResolver().query(lookupUri, returnedColumns, null, null, null);
             
             /*
-             *  If a contact is found for the given address, add it to the contacts list. Otherwise only add the address.
+             * If a contact is found for the given address, add it to the contacts list. Otherwise only add the address.
              */
             if (contactsCursor.moveToFirst()) {              
                 
@@ -328,7 +334,7 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Convert a list of contacts into a list of contact names.
      * 
-     * @param contacts An ArrayList of contacts.
+     * @param  contacts An ArrayList of contacts.
      * @return An ArrayList of contact names.
      */
     public ArrayList<String> getContactNames(ArrayList<Contact> contacts) {

@@ -14,10 +14,7 @@ class Message implements Comparable<Message> {
      private Long messageDate;
      
      /**
-      * Constructor for a message.
-      * 
-      * @param body The message's body.
-      * @param address The address that the message is intended for.
+      * Constructor for creating a new Message.
       */
      public Message(int threadId, String body, String address, Long date) {
          messageBody = body;
@@ -31,6 +28,7 @@ class Message implements Comparable<Message> {
      }
     
      /**
+      * Return the body of the message.
       * 
       * @return The body of the message.
       */
@@ -39,17 +37,30 @@ class Message implements Comparable<Message> {
      }
     
      /**
+      * Return the phone number of the message's sender/recipient.
       * 
-      * @return The address that the message is inteded for.
+      * @return The address that the message is intended for.
       */
      public String getAddress() {
          return senderAddress;
      }
      
+     /** 
+      * Return the date that the message was sent/received.
+      * 
+      * @return The date the message was sent/received.
+      */
      public Long getDate() {
          return messageDate;
      }    
      
+     /**
+      * Used to compare objects so that {@link Collections#sort()} can be used.
+      * 
+      * @param  Message message The Message to compare dates with.
+      * @return A value corresponding to whether the Message date is greater than, less than or equal to the 
+      *         comparison date.
+      */
      public int compareTo(Message message) {
          
          final int greaterThan = 1;
