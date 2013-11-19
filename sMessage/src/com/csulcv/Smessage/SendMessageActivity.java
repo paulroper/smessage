@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
@@ -137,7 +136,7 @@ public class SendMessageActivity extends ActionBarActivity {
                 R.layout.message_view_row, R.id.message_row, messages);
         
         messageList.setAdapter(messageListAdapter);
-                
+        
     }    
     
     /**
@@ -152,14 +151,13 @@ public class SendMessageActivity extends ActionBarActivity {
         EditText editText = (EditText) findViewById(R.id.edit_message);
         String message = editText.getText().toString();      
         
+        // If we have a message to send, split it and send it
         // TODO: Error checking!
-        if (message != null) {            
-            Log.i(TAG, "Sending text message");   
-            
-            ArrayList<String> splitMessage = smsManager.divideMessage(message);
-            
-            smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);
-
+        if (message != null) {          
+            Log.i(TAG, "Sending text message");           
+            ArrayList<String> splitMessage = smsManager.divideMessage(message);            
+            smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);            
+            editText.setText("");            
         } else {            
             // If there's no message to send, do nothing
         }   
@@ -189,8 +187,7 @@ public class SendMessageActivity extends ActionBarActivity {
         String[] returnedColumnsSmsConversationCursor = {"thread_id", "msg_count", "snippet"};
         
         // Set up WHERE clause; find texts from address containing the number without an area code
-        // String address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE '%" + numberWithoutAreaCode + "'";
-        String address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE '" + numberWithoutAreaCode + "'";
+        String address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE '%" + numberWithoutAreaCode + "'";
         
         // Default sort order is date DESC, change to date ASC so texts appear in order
         String sortOrder = "thread_id ASC, date ASC";
@@ -220,6 +217,9 @@ public class SendMessageActivity extends ActionBarActivity {
             Log.d("End of message " + messageCounter, "-----------------");
             
         }
+        
+        smsCursor.close();
+        smsConversationCursor.close();
 
         return messages;        
         
@@ -238,7 +238,10 @@ public class SendMessageActivity extends ActionBarActivity {
         String formattedNumberWithoutAreaCode = "";
         String phoneNumberNumeric = "";
         
-        Log.e("Phone number before replacements", phoneNumber);
+        Log.d("Phone number before replacements", phoneNumber);
+        
+        final int FIRST_NUMBER_AFTER_AREA_CODE_INDEX = 2;
+        final int FIRST_NUMBER_AFTER_ZERO_INDEX = 1;
         
         /* 
          * Get rid of area code from number so we can find texts from this number with a LIKE comparison. If the number
@@ -252,11 +255,11 @@ public class SendMessageActivity extends ActionBarActivity {
             // Use the regex [^\\d] to remove all non-numeric characters from the phone number
             phoneNumberNumeric = phoneNumber.replaceAll("[^\\d]", "");
             Log.d("Phone number with only numbers", phoneNumberNumeric);            
-            formattedNumberWithoutAreaCode = phoneNumberNumeric.substring(3);            
+            formattedNumberWithoutAreaCode = phoneNumberNumeric.substring(FIRST_NUMBER_AFTER_AREA_CODE_INDEX);            
         } else if (contactPhoneNumber.charAt(0) == '0') {
             phoneNumberNumeric = phoneNumber.replaceAll("[^\\d]", "");
             Log.d("Phone number with only numbers", phoneNumberNumeric);            
-            formattedNumberWithoutAreaCode = phoneNumberNumeric.substring(1);
+            formattedNumberWithoutAreaCode = phoneNumberNumeric.substring(FIRST_NUMBER_AFTER_ZERO_INDEX);
         } else {
             return phoneNumber;
         }
