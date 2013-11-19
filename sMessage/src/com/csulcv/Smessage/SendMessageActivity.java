@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
@@ -177,20 +178,7 @@ public class SendMessageActivity extends ActionBarActivity {
         Uri smsConversationsUri = Uri.parse("content://sms/conversations");   
         
         ArrayList<String> messages = new ArrayList<String>();
-        String numberWithoutAreaCode = "";
-        
-        // Remove whitespace from the string
-        // TODO: We need to remove dashes and things as well! Also, why does this fix getting messages for 
-        //       some contacts?
-        contactPhoneNumber = contactPhoneNumber.replaceAll("\\s", "");
-        
-        // Get rid of area code from number so we can find texts from this number with a LIKE comparison
-        // TODO: Only works for UK numbers at the moment, extend to any!
-        if (contactPhoneNumber.charAt(0) == '+') {
-            numberWithoutAreaCode = contactPhoneNumber.substring(3);
-        } else {
-            numberWithoutAreaCode = contactPhoneNumber.substring(1);
-        }
+        String numberWithoutAreaCode = formatPhoneNumber(contactPhoneNumber);
         
         Log.i(TAG, "Address substring: " + numberWithoutAreaCode);
         
@@ -201,7 +189,8 @@ public class SendMessageActivity extends ActionBarActivity {
         String[] returnedColumnsSmsConversationCursor = {"thread_id", "msg_count", "snippet"};
         
         // Set up WHERE clause; find texts from address containing the number without an area code
-        String address = "REPLACE(address, ' ', '') LIKE '%" + numberWithoutAreaCode + "'";
+        // String address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE '%" + numberWithoutAreaCode + "'";
+        String address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE '" + numberWithoutAreaCode + "'";
         
         // Default sort order is date DESC, change to date ASC so texts appear in order
         String sortOrder = "thread_id ASC, date ASC";
@@ -235,5 +224,45 @@ public class SendMessageActivity extends ActionBarActivity {
         return messages;        
         
     }
+    
+    /**
+     * Format the given phone number to get the original number minus the area code and without separators.
+     * 
+     * Currently only works for UK numbers but extend
+     * 
+     * @param  String phoneNumber The given phone number to format.
+     * @return The formatted phone number without the area code and without separators.
+     */
+    public String formatPhoneNumber(String phoneNumber) {
+        
+        String formattedNumberWithoutAreaCode = "";
+        String phoneNumberNumeric = "";
+        
+        Log.e("Phone number before replacements", phoneNumber);
+        
+        /* 
+         * Get rid of area code from number so we can find texts from this number with a LIKE comparison. If the number
+         * starts with a +XX, get the rest of the number after it. If it starts with a 0, get the rest of the number
+         * after that. If neither of these apply (e.g. The number is actually a name like some couriers use) then just
+         * return the original phone number (or name).
+         * 
+         */
+        // TODO: Only works for UK numbers at the moment, extend to any!
+        if (phoneNumber.charAt(0) == '+') {             
+            // Use the regex [^\\d] to remove all non-numeric characters from the phone number
+            phoneNumberNumeric = phoneNumber.replaceAll("[^\\d]", "");
+            Log.d("Phone number with only numbers", phoneNumberNumeric);            
+            formattedNumberWithoutAreaCode = phoneNumberNumeric.substring(3);            
+        } else if (contactPhoneNumber.charAt(0) == '0') {
+            phoneNumberNumeric = phoneNumber.replaceAll("[^\\d]", "");
+            Log.d("Phone number with only numbers", phoneNumberNumeric);            
+            formattedNumberWithoutAreaCode = phoneNumberNumeric.substring(1);
+        } else {
+            return phoneNumber;
+        }
+        
+        return formattedNumberWithoutAreaCode;
+        
+    }    
     
 }
