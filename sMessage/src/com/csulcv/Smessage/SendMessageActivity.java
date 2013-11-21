@@ -129,14 +129,20 @@ public class SendMessageActivity extends ActionBarActivity {
                 
         // Get ListView used for messages and get messages
         ListView messageList = (ListView) findViewById(R.id.message_list);
-        ArrayList<String> messages = getMessages();
         
-        // Setup adapter for message list using array list of messages
-        ArrayAdapter<String> messageListAdapter = new ArrayAdapter<String>(this, 
-                R.layout.message_view_row, R.id.message_row, messages);
-        
-        messageList.setAdapter(messageListAdapter);
-        
+        // TODO: THIS ISN'T FIXING THE PROBLEM, escape contact names!
+        try {
+            ArrayList<String> messages = getMessages();
+            
+            // Setup adapter for message list using array list of messages
+            ArrayAdapter<String> messageListAdapter = new ArrayAdapter<String>(this, 
+                    R.layout.message_view_row, R.id.message_row, messages);
+            
+            messageList.setAdapter(messageListAdapter);
+        } catch (Exception initialiseMessageList) {
+            Log.e(TAG, "Error initialising message list");
+        }
+            
     }    
     
     /**
@@ -170,7 +176,7 @@ public class SendMessageActivity extends ActionBarActivity {
      * @return A list of messages for the number specified
      */
     @SuppressWarnings("unused")
-    public ArrayList<String> getMessages() {        
+    public ArrayList<String> getMessages() throws Exception {        
 
         Uri smsUri = Uri.parse("content://sms/");
         Uri smsConversationsUri = Uri.parse("content://sms/conversations");   
