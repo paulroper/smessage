@@ -1,11 +1,11 @@
-package com.csulcv.Smessage;
-
 /**
  * Contact.java
  * 
- * @author Paul
+ * @author Paul Roper
  *
  */
+package com.csulcv.Smessage;
+
 public class Contact {
     
     private String contactName;

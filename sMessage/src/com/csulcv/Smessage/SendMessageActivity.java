@@ -1,4 +1,9 @@
-
+/**
+ * SendMessageActivity.java
+ * 
+ * @author Paul Roper
+ *
+ */
 package com.csulcv.Smessage;
 
 import java.util.ArrayList;
@@ -21,12 +26,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-/**
- * SendMessageActivity.java
- * 
- * @author Paul Roper
- *
- */
 public class SendMessageActivity extends ActionBarActivity {
 
     private SmsManager smsManager = SmsManager.getDefault();

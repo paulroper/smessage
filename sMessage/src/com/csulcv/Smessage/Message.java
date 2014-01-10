@@ -1,11 +1,11 @@
-package com.csulcv.Smessage;
-
 /**
  * Message.java
  * 
  * @author Paul Roper
  *
  */
+package com.csulcv.Smessage;
+
 class Message implements Comparable<Message> {
      
      private int messageThreadId;

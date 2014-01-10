@@ -1,4 +1,9 @@
-
+/**
+ * MainActivity.java
+ * 
+ * @author Paul Roper
+ *
+ */
 package com.csulcv.Smessage;
 
 import java.util.ArrayList;
@@ -22,12 +27,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-/**
- * MainActivity.java
- * 
- * @author Paul Roper
- *
- */
 public class MainActivity extends ActionBarActivity {
 
     public final static String CONTACT_NAME_PHONE_NUMBER = "com.csulcv.smessage.contactNamePhoneNumber";
