@@ -65,6 +65,10 @@ public class MainActivity extends ActionBarActivity {
 
         // Handle presses on the action bar items
         switch (item.getItemId()) {
+            case R.id.action_new_message:
+                Intent intent = new Intent(this, NewMessageActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.action_search:
                 //openSearch();
                 return true;

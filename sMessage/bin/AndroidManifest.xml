@@ -13,7 +13,7 @@
     
     <uses-sdk
         android:minSdkVersion="7"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -31,11 +31,17 @@
         </activity>        
         <activity
             android:name="com.csulcv.Smessage.SendMessageActivity"
-            android:parentActivityName="com.csulcv.Smessage.MainActivity" >
+            android:parentActivityName="com.csulcv.Smessage.MainActivity"
+            android:windowSoftInputMode="adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.csulcv.smessage.MainActivity" />
         </activity>        
+        <activity 
+            android:name="com.csulcv.Smessage.NewMessageActivity"
+            android:parentActivityName="com.csulcv.Smessage.MainActivity" 
+            android:windowSoftInputMode="adjustResize">
+        </activity>
     </application>
 
 </manifest>
