@@ -15,6 +15,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
@@ -26,14 +30,22 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class SendMessageActivity extends ActionBarActivity {
+public class SendMessageActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private SmsManager smsManager = SmsManager.getDefault();
     
     private final static String TAG = "Smessage: SendMessage Activity";
     private static String contactName = "";
     private static String contactPhoneNumber = "";
+    private static final int LOADER_ID = 0; 
     
+    public String[] smsColumnsToDisplay = {"body"};
+    public int[] displayMessageIn = {R.id.message_row}; 
+    
+    // Get ListView used for messages and get messages
+    ListView messageList = null;
+    SimpleCursorAdapter messages = null;
+           
     /**
      * 
      * @see android.app.Activity
@@ -41,10 +53,21 @@ public class SendMessageActivity extends ActionBarActivity {
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {  
-        super.onCreate(savedInstanceState);
+        
+        super.onCreate(savedInstanceState);        
         setContentView(R.layout.activity_send_message);
-        initialiseActionBar();
-        initialiseMessageList();       
+        initialiseActionBar();   
+        
+        messageList = (ListView) findViewById(R.id.message_list);
+        messages = new SimpleCursorAdapter(this, R.layout.message_view_row, null, smsColumnsToDisplay,
+                displayMessageIn, 0);               
+        
+        // Get the cursor loader used for getting messages
+        messageList.setAdapter(messages);   
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+    
+        //initialiseMessageList();   
+        
     }  
 
     /**
@@ -124,10 +147,9 @@ public class SendMessageActivity extends ActionBarActivity {
     /**
      * Generate the list of messages for the contact this activity was generated from.
      */
-    public void initialiseMessageList() {
-                
-        // Get ListView used for messages and get messages
-        ListView messageList = (ListView) findViewById(R.id.message_list);
+    public void initialiseMessageList() {        
+        
+        messageList.setAdapter(messages);        
         
         // TODO: THIS ISN'T FIXING THE PROBLEM, escape contact names!
         try {
@@ -228,8 +250,75 @@ public class SendMessageActivity extends ActionBarActivity {
 
         return messages;        
         
+    }    
+    
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+        
+        Uri smsUri = Uri.parse("content://sms/");
+        String numberWithoutAreaCode = formatPhoneNumber(contactPhoneNumber);
+        
+        Log.i(TAG, "Address substring: " + numberWithoutAreaCode);
+        
+        /* SMS columns seem to be: _ID, THREAD_ID, ADDRESS, PERSON, DATE, DATE_SENT, READ, SEEN, STATUS
+         * SUBJECT, BODY, PERSON, PROTOCOL, REPLY_PATH_PRESENT, SERVICE_CENTRE, LOCKED, ERROR_CODE, META_DATA
+         */
+        String[] returnedColumnsSmsCursor = {"thread_id", "address", "body", "date"};
+
+        // Set up WHERE clause; find texts from address containing the number without an area code
+        String address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE '%" + numberWithoutAreaCode + "'";
+        
+        // Default sort order is date DESC, change to date ASC so texts appear in order
+        String sortOrder = "thread_id ASC, date ASC";
+        
+        return new CursorLoader(this, smsUri, returnedColumnsSmsCursor, address, null, sortOrder);        
+        
     }
     
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        
+        Log.i(TAG, "Cursor finished loading");
+        
+        int messageCounter = 0;
+        
+        // Use cursor to iterate over the database and get each row
+        while (cursor.moveToNext()) {            
+            
+            for (int i = 0; i < cursor.getColumnCount(); i++) {
+                Log.d(cursor.getColumnName(i) + "", cursor.getString(i) + "");               
+            }
+            
+            messageCounter++;
+            
+            Log.d("End of message " + messageCounter, "-----------------");
+            
+        }
+        
+        
+        /*
+         * Moves the query results into the adapter, causing the ListView fronting this adapter to re-display
+         */
+        messages.changeCursor(cursor);
+        
+    }    
+    
+    /*
+     * Invoked when the CursorLoader is being reset. For example, this is
+     * called if the data in the provider changes and the Cursor becomes stale.
+     * 
+     * TODO: Refresh message list when this happens.
+     */
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        
+        /*
+         * Clears out the adapter's reference to the Cursor.
+         * This prevents memory leaks.
+         */
+        messages.changeCursor(null);
+    }
+
     /**
      * Format the given phone number to get the original number minus the area code and without separators.
      * 
