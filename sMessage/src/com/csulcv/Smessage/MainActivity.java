@@ -1,7 +1,8 @@
 /**
  * MainActivity.java
- * 
  * @author Paul Roper
+ *
+ * The main screen to which the user is brought when the application is launched.
  *
  */
 package com.csulcv.Smessage;
@@ -15,6 +16,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract.PhoneLookup;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
@@ -27,11 +31,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public final static String CONTACT_NAME_PHONE_NUMBER = "com.csulcv.smessage.contactNamePhoneNumber";
     public final static String TEST_NUMBER = "com.csulcv.smessage.testNumber";
     private final static String TAG = "Smessage: Main Activity"; 
+    
+    private static final int LOADER_ID = 0;
+    private ListView contactList = null;
+    private ArrayAdapter<Contact> contactListAdapter = null;    
+    
+    private static final boolean loggingEnabled = true;
     
     /**
      * 
@@ -39,9 +49,12 @@ public class MainActivity extends ActionBarActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initialiseConversationList();        
+ 
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);        
+
     }
 
     /**
@@ -80,21 +93,112 @@ public class MainActivity extends ActionBarActivity {
         }
         
     }
+        
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+        
+        Uri smsUri = Uri.parse("content://sms");    
+
+        /* SMS columns seem to be: _ID, THREAD_ID, ADDRESS, PERSON, DATE, DATE_SENT, READ, SEEN, STATUS
+         * SUBJECT, BODY, PERSON, PROTOCOL, REPLY_PATH_PRESENT, SERVICE_CENTRE, LOCKED, ERROR_CODE, META_DATA
+         */
+        String[] returnedColumns = {"_id", "thread_id", "address", "body", "date"};
+
+        // Default sort order is date DESC, change to date ASC so texts appear in order
+        String sortOrder = "thread_id DESC, date ASC";
+        
+        return new CursorLoader(this, smsUri, returnedColumns, null, null, sortOrder);       
+        
+    }
     
-    /**
-     * Setup the conversation list.
-     */
-    public void initialiseConversationList() {
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor smsCursor) {
+        
+        ArrayList<Message> newestConversationMessages = new ArrayList<Message>();   
+        
+        // Indices are fixed constants based on position in the returnedColumns array
+        // final int ID_COLUMN_INDEX = 0;      Not used yet!
+        final int THREAD_ID_COLUMN_INDEX = 1;
+        final int ADDRESS_COLUMN_INDEX = 2;
+        final int MESSAGE_BODY_COLUMN_INDEX = 3;
+        final int DATE_COLUMN_INDEX = 4;
+        
+        int messageCounter = 1; 
+        String currentThreadId = "";
+        
+        /* 
+         * Use a cursor to iterate over the database. Offsets are used to (hopefully) speed up access.
+         * Offsets'll have to be changed based on the number of columns we're querying.
+         */
+        while (smsCursor.moveToNext()) {  
+            currentThreadId = smsCursor.getString(THREAD_ID_COLUMN_INDEX);                    
+
+            /* 
+             * We don't want to move the cursor past the last index so check for when it's on the last row and break
+             * so it doesn't move past it.
+             */
+            if (smsCursor.isLast()) {
+                newestConversationMessages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX), 
+                        smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX), smsCursor.getString(ADDRESS_COLUMN_INDEX),
+                        smsCursor.getLong(DATE_COLUMN_INDEX))); 
+                
+                Log.d("Message " + (messageCounter + 1), "-----------------");
+                
+                for (int i = 0; i < smsCursor.getColumnCount(); i++) {   
+                    Log.d(smsCursor.getColumnName(i), smsCursor.getString(i));
+                }
+                
+                
+                Log.d("Adding message", "Adding message to ArrayList");
+                messageCounter++;                
+                
+                break;
+                
+            } else {
+                smsCursor.moveToNext();
+            }
+            
+            /* 
+             * If the next thread ID in the message list is different then we've reached the end of the current thread. 
+             * As the data is arranged by date, we add this newest message to the list and move on. 
+             */
+            if (!(smsCursor.getString(THREAD_ID_COLUMN_INDEX).equals(currentThreadId))) {               
+
+                smsCursor.moveToPrevious();
+                
+                if (loggingEnabled) {
+  
+                    Log.d("Message " + (messageCounter + 1), "-----------------");
+                    
+                    for (int i = 0; i < smsCursor.getColumnCount(); i++) {                 
+                        Log.d(smsCursor.getColumnName(i), smsCursor.getString(i));    
+                    }
+                    
+                }
+                
+                newestConversationMessages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX), 
+                        smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX), smsCursor.getString(ADDRESS_COLUMN_INDEX),                         
+                        smsCursor.getLong(DATE_COLUMN_INDEX)));
+                
+                messageCounter++;                
+                    
+            } else {                    
+                smsCursor.moveToPrevious();
+            }    
+    
+        }
+     
+        // Sort messages in ascending order
+        Collections.sort(newestConversationMessages);        
         
         // Get ListView used for contacts and get contacts
-        ListView contactList = (ListView) findViewById(R.id.contact_list);
+        contactList = (ListView) findViewById(R.id.contact_list);
         
         // Setup adapter for message list using array list of messages
-        ArrayAdapter<Contact> contactListAdapter = new ArrayAdapter<Contact>(this, R.layout.contact_view_row, 
-                R.id.contact_name, getContactNamesFromConversations(getNewestConversationMessages()));
+        contactListAdapter = new ArrayAdapter<Contact>(this, R.layout.contact_view_row, 
+                R.id.contact_name, getContactNamesFromConversations(newestConversationMessages));
         
-        contactList.setAdapter(contactListAdapter);  
-        
+        contactList.setAdapter(contactListAdapter);          
         contactList.setOnItemClickListener(new OnItemClickListener() {
             
             @Override
@@ -119,35 +223,82 @@ public class MainActivity extends ActionBarActivity {
             
         });
         
+    }    
+    
+    /*
+     * Invoked when the CursorLoader is being reset. For example, this is
+     * called if the data in the provider changes and the Cursor becomes stale.
+     * 
+     * TODO: Refresh message list when this happens.
+     */
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        
+        /*
+         * Clears out the adapter's reference to the Cursor.
+         * This prevents memory leaks.
+         */
+        //getSupportLoaderManager().restartLoader(LOADER_ID, null, this);     
+        
+    }        
+   
+    /**
+     * Get the newest message from a conversation.
+     *  
+     * Retrieve a list of the newest messages from each conversation thread. These (along with the address of the 
+     * contact the message is for) are used to build a contacts list.
+     * 
+     * @return An ArrayList containing Message objects.
+     */
+    public ArrayList<Message> getConversations() {     
+        
+        ArrayList<Message> newestConversationMessages = new ArrayList<Message>();        
+        Uri smsUri = Uri.parse("content://sms/conversations");    
+
+        /* 
+         * SMS conversation provider columns: thread_id, msg_count, snippet
+         */
+        String[] returnedColumns = {"thread_id", "msg_count", "snippet"};
+        
+        // Send the query to get SMS messages. Default sort order is date DESC.
+        // TODO: Use a CursorLoader, it runs the query in the background.
+        Cursor smsCursor = getContentResolver().query(smsUri, returnedColumns, null, null, null);
+
+        // Indices are fixed constants based on position in the returnedColumns array        
+        @SuppressWarnings("unused")
+        final int MSG_COUNT_COLUMN_INDEX = 1;        
+        
+        final int THREAD_ID_COLUMN_INDEX = 0;
+        final int SNIPPET_COLUMN_INDEX = 2;
+        
+        /* 
+         * Use a cursor to iterate over the SMS table. Offsets are used to (hopefully) speed up access.
+         * Offsets'll have to be changed based on the number of columns we're querying.
+         * 
+         * TODO: Drafts are seen as new messages
+         */
+        while (smsCursor.moveToNext()) {  
+           
+            for (int i = 0; i < smsCursor.getColumnCount(); i++) {
+                Log.d(smsCursor.getColumnName(i), smsCursor.getString(i));
+                
+                if (smsCursor.getColumnName(i).equals("body") && smsCursor.getString(i) != null) {
+                    Log.d("Adding message", "Adding message to ArrayList");
+                    newestConversationMessages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX), 
+                            "null", smsCursor.getString(SNIPPET_COLUMN_INDEX), null));
+                }
+                
+            }            
+     
+        }
+            
+        // Sort conversations in ascending order
+        Collections.sort(newestConversationMessages);
+        
+        return newestConversationMessages;
+        
     }
-
-    //    /**
-    //     * Create a new message activity when the user clicks create new.
-    //     * 
-    //     * @param  view 
-    //     * @throws Exception Throw an illegal state exception if the activity cannot be created.
-    //     */
-    //    public void createNewMessage(View view) throws Exception {
-    //        
-    //        // Create intent used to move to SendMessage activity
-    //        Intent intent = new Intent(this, SendMessageActivity.class);
-    //        
-    //        // Get test phone number from text box
-    //        EditText editText = (EditText) findViewById(R.id.test_address);        
-    //        String testNumber = editText.getText().toString();  
-    //        
-    //        intent.putExtra(TEST_NUMBER, testNumber);
-    //        
-    //        Log.i(TAG, "Starting SendMessage activity");          
-    //        
-    //        try {
-    //            startActivity(intent);            
-    //        } catch (IllegalStateException e) {
-    //            throw new Exception("Error creating new activity");
-    //        }
-    //        
-    //    }
-
+    
     /**
      * Get the newest message from a conversation.
      *  
@@ -243,62 +394,7 @@ public class MainActivity extends ActionBarActivity {
         
         return newestConversationMessages;
         
-    }
-    
-    /**
-     * Get the newest message from a conversation.
-     *  
-     * Retrieve a list of the newest messages from each conversation thread. These (along with the address of the 
-     * contact the message is for) are used to build a contacts list.
-     * 
-     * @return An ArrayList containing Message objects.
-     */
-    public ArrayList<Message> getConversations() {     
-        
-        ArrayList<Message> newestConversationMessages = new ArrayList<Message>();        
-        Uri smsUri = Uri.parse("content://sms/conversations");    
-
-        /* 
-         * SMS conversation provider columns: thread_id, msg_count, snippet
-         */
-        String[] returnedColumns = {"thread_id", "msg_count", "snippet"};
-        
-        // Send the query to get SMS messages. Default sort order is date DESC.
-        // TODO: Use a CursorLoader, it runs the query in the background.
-        Cursor smsCursor = getContentResolver().query(smsUri, returnedColumns, null, null, null);
-
-        // Indices are fixed constants based on position in the returnedColumns array        
-        @SuppressWarnings("unused")
-        final int MSG_COUNT_COLUMN_INDEX = 1;        
-        
-        final int THREAD_ID_COLUMN_INDEX = 0;
-        final int SNIPPET_COLUMN_INDEX = 2;
-        
-        /* 
-         * Use a cursor to iterate over the SMS table. Offsets are used to (hopefully) speed up access.
-         * Offsets'll have to be changed based on the number of columns we're querying.
-         */
-        while (smsCursor.moveToNext()) {  
-           
-            for (int i = 0; i < smsCursor.getColumnCount(); i++) {
-                Log.d(smsCursor.getColumnName(i) + "", smsCursor.getString(i) + "");
-                
-                if (smsCursor.getColumnName(i).equals("body") && smsCursor.getString(i) != null) {
-                    Log.d("Adding message", "Adding message to ArrayList");
-                    newestConversationMessages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX), 
-                            "null", smsCursor.getString(SNIPPET_COLUMN_INDEX), null));
-                }
-                
-            }            
-     
-        }
-            
-        // Sort conversations in ascending order
-        Collections.sort(newestConversationMessages);
-        
-        return newestConversationMessages;
-        
-    }
+    }    
     
     /**
      * Use a list of the latest text messages per conversation thread to get a list of contacts that have a conversation
@@ -344,7 +440,7 @@ public class MainActivity extends ActionBarActivity {
             if (contactsCursor.moveToFirst()) {              
                 
                 for (int i = 0; i < contactsCursor.getColumnCount(); i++) {
-                    Log.d(contactsCursor.getColumnName(i) + "", contactsCursor.getString(i) + "");
+                    Log.d(contactsCursor.getColumnName(i), contactsCursor.getString(i) + "");
                 }
                                 
                 Log.d("Adding contact", contactsCursor.getString(DISPLAY_NAME_COLUMN_INDEX));

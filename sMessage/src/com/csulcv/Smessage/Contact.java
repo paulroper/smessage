@@ -1,6 +1,5 @@
 /**
  * Contact.java
- * 
  * @author Paul Roper
  *
  */

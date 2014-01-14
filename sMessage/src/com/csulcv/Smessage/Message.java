@@ -1,6 +1,5 @@
 /**
  * Message.java
- * 
  * @author Paul Roper
  *
  */
