@@ -41,7 +41,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     private ListView contactList = null;
     private ArrayAdapter<Contact> contactListAdapter = null;    
     
-    private static final boolean loggingEnabled = true;
+    // TODO: Write a log wrapper
+    private static final boolean loggingEnabled = false;
     
     /**
      * 
@@ -139,18 +140,23 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
              */
             if (smsCursor.isLast()) {
                 newestConversationMessages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX), 
-                        smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX), smsCursor.getString(ADDRESS_COLUMN_INDEX),
+                        smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX), 
+                        smsCursor.getString(ADDRESS_COLUMN_INDEX),
                         smsCursor.getLong(DATE_COLUMN_INDEX))); 
                 
-                Log.d("Message " + (messageCounter + 1), "-----------------");
-                
-                for (int i = 0; i < smsCursor.getColumnCount(); i++) {   
-                    Log.d(smsCursor.getColumnName(i), smsCursor.getString(i));
+                if (loggingEnabled) {
+
+                    Log.d("Message " + (messageCounter + 1), "-----------------");
+                    
+                    for (int i = 0; i < smsCursor.getColumnCount(); i++) {   
+                        Log.d(smsCursor.getColumnName(i), smsCursor.getString(i));
+                    }
+                    
+                    
+                    Log.d("Adding message", "Adding message to ArrayList");
+                    messageCounter++;                
+
                 }
-                
-                
-                Log.d("Adding message", "Adding message to ArrayList");
-                messageCounter++;                
                 
                 break;
                 
@@ -177,7 +183,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 }
                 
                 newestConversationMessages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX), 
-                        smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX), smsCursor.getString(ADDRESS_COLUMN_INDEX),                         
+                        smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX), 
+                        smsCursor.getString(ADDRESS_COLUMN_INDEX),                         
                         smsCursor.getLong(DATE_COLUMN_INDEX)));
                 
                 messageCounter++;                
@@ -195,8 +202,10 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         contactList = (ListView) findViewById(R.id.contact_list);
         
         // Setup adapter for message list using array list of messages
-        contactListAdapter = new ArrayAdapter<Contact>(this, R.layout.contact_view_row, 
-                R.id.contact_name, getContactNamesFromConversations(newestConversationMessages));
+        contactListAdapter = new ArrayAdapter<Contact>(this, 
+                R.layout.contact_view_row, 
+                R.id.contact_name, 
+                getContactNamesFromConversations(newestConversationMessages));
         
         contactList.setAdapter(contactListAdapter);          
         contactList.setOnItemClickListener(new OnItemClickListener() {
@@ -293,8 +302,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         }
             
         // Sort conversations in ascending order
-        Collections.sort(newestConversationMessages);
-        
+        Collections.sort(newestConversationMessages);        
         return newestConversationMessages;
         
     }
@@ -439,18 +447,26 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
              */
             if (contactsCursor.moveToFirst()) {              
                 
-                for (int i = 0; i < contactsCursor.getColumnCount(); i++) {
-                    Log.d(contactsCursor.getColumnName(i), contactsCursor.getString(i) + "");
-                }
-                                
-                Log.d("Adding contact", contactsCursor.getString(DISPLAY_NAME_COLUMN_INDEX));
+                if (loggingEnabled) {
                 
+                    for (int i = 0; i < contactsCursor.getColumnCount(); i++) {
+                        Log.d(contactsCursor.getColumnName(i), contactsCursor.getString(i) + "");
+                    }
+                                    
+                    Log.d("Adding contact", contactsCursor.getString(DISPLAY_NAME_COLUMN_INDEX));
+                
+                }
+                    
                 contacts.add(new Contact(contactsCursor.getString(DISPLAY_NAME_COLUMN_INDEX),
                         contactsCursor.getString(NUMBER_COLUMN_INDEX), 
                         contactsCursor.getString(PHOTO_ID_COLUMN_INDEX)));  
                 
             } else {  
-                Log.d("Adding contact", lookupAddress);                    
+                
+                if (loggingEnabled) {
+                    Log.d("Adding contact", lookupAddress);  
+                }    
+                    
                 contacts.add(new Contact("null", lookupAddress, "null"));          
             } 
             

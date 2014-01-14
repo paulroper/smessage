@@ -33,16 +33,16 @@ public class SendMessageActivity extends ActionBarActivity implements LoaderMana
 
     private SmsManager smsManager = SmsManager.getDefault();
     
-    private final static String TAG = "Smessage: SendMessage Activity";
+    private static final String TAG = "Smessage: SendMessage Activity";
     private static String contactName = "";
     private static String contactPhoneNumber = "";
     private static final int LOADER_ID = 0; 
     
-    private boolean loggingEnabled = true;
-    
-    // Get ListView used for messages and get messages
+    // SimpleCursorAdapter stores messages from the SMS database and the ListView displays them
     private ListView messageList = null;
     private SimpleCursorAdapter messages = null;
+    
+    private boolean loggingEnabled = false;
            
     /**
      * 
