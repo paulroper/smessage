@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>        
         <activity
-            android:name="com.csulcv.Smessage.SendMessageActivity"
+            android:name="com.csulcv.Smessage.ConversationActivity"
             android:parentActivityName="com.csulcv.Smessage.MainActivity"
             android:windowSoftInputMode="adjustResize" >
             <meta-data

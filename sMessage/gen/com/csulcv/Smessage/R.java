@@ -994,23 +994,23 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f05002f;
         public static final int action_mode_bar_stub=0x7f05002e;
         public static final int action_mode_close_button=0x7f050022;
-        public static final int action_new_message=0x7f05004a;
-        public static final int action_search=0x7f05004b;
-        public static final int action_settings=0x7f05004c;
+        public static final int action_new_message=0x7f05004c;
+        public static final int action_search=0x7f05004a;
+        public static final int action_settings=0x7f05004b;
         public static final int activity_chooser_view_content=0x7f050023;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
         public static final int checkbox=0x7f05002b;
         public static final int collapseActionView=0x7f05000d;
         public static final int contact_image=0x7f050047;
-        public static final int contact_list=0x7f050042;
+        public static final int contact_list=0x7f050045;
         public static final int contact_name=0x7f050048;
-        public static final int contact_number=0x7f050043;
+        public static final int contact_number=0x7f050046;
         public static final int default_activity_button=0x7f050026;
         public static final int dialog=0x7f05000e;
         public static final int disableHome=0x7f050008;
         public static final int dropdown=0x7f05000f;
-        public static final int edit_message=0x7f050045;
+        public static final int edit_message=0x7f050044;
         public static final int edit_query=0x7f050036;
         public static final int end=0x7f050013;
         public static final int expand_activities_button=0x7f050024;
@@ -1023,7 +1023,7 @@ containing a value of this type.
         public static final int left_icon=0x7f050031;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050027;
-        public static final int message_list=0x7f050046;
+        public static final int message_list=0x7f050042;
         public static final int message_row=0x7f050049;
         public static final int middle=0x7f050012;
         public static final int never=0x7f050009;
@@ -1044,7 +1044,7 @@ containing a value of this type.
         public static final int search_plate=0x7f05003c;
         public static final int search_src_text=0x7f05003d;
         public static final int search_voice_btn=0x7f050041;
-        public static final int send_button=0x7f050044;
+        public static final int send_button=0x7f050043;
         public static final int shortcut=0x7f05002c;
         public static final int showCustom=0x7f050007;
         public static final int showHome=0x7f050004;
@@ -1109,17 +1109,17 @@ containing a value of this type.
         public static final int abc_screen=0x7f030015;
         public static final int abc_search_dropdown_item_icons_2line=0x7f030016;
         public static final int abc_search_view=0x7f030017;
-        public static final int activity_main=0x7f030018;
-        public static final int activity_new_message=0x7f030019;
-        public static final int activity_send_message=0x7f03001a;
-        public static final int contact_view_row=0x7f03001b;
-        public static final int message_view_row=0x7f03001c;
+        public static final int activity_conversation=0x7f030018;
+        public static final int activity_main=0x7f030019;
+        public static final int activity_new_message=0x7f03001a;
+        public static final int contact_list_row=0x7f03001b;
+        public static final int message_list_row=0x7f03001c;
         public static final int support_simple_spinner_dropdown_item=0x7f03001d;
     }
     public static final class menu {
-        public static final int main_activity_actions=0x7f0c0000;
-        public static final int new_message_activity=0x7f0c0001;
-        public static final int send_message_activity_actions=0x7f0c0002;
+        public static final int conversation_activity_actions=0x7f0c0000;
+        public static final int main_activity_actions=0x7f0c0001;
+        public static final int new_message_activity_actions=0x7f0c0002;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 

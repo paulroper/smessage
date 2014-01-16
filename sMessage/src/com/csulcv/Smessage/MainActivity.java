@@ -202,7 +202,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         
         // Setup adapter for message list using array list of messages
         contactListAdapter = new ArrayAdapter<Contact>(this, 
-                R.layout.contact_view_row, 
+                R.layout.contact_list_row, 
                 R.id.contact_name, 
                 getContactNamesFromConversations(newestConversationMessages));
         
@@ -216,7 +216,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 Log.d("Contact clicked: ", contact.getContactName() + " " + contact.getContactPhoneNumber()); 
                 
                 // Create intent used to move to SendMessage activity
-                Intent intent = new Intent(MainActivity.this, SendMessageActivity.class);
+                Intent intent = new Intent(MainActivity.this, ConversationActivity.class);
 
                 Bundle contactNamePhoneNumber = new Bundle();                
                 intent.putExtra(CONTACT_NAME_PHONE_NUMBER, contactNamePhoneNumber);

@@ -1,5 +1,5 @@
 /**
- * SendMessageActivity.java
+ * ConversationActivity.java
  * @author Paul Roper
  *
  *
@@ -29,7 +29,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class SendMessageActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ConversationActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private SmsManager smsManager = SmsManager.getDefault();
     
@@ -53,7 +53,7 @@ public class SendMessageActivity extends ActionBarActivity implements LoaderMana
     protected void onCreate(Bundle savedInstanceState) {  
         
         super.onCreate(savedInstanceState);        
-        setContentView(R.layout.activity_send_message);
+        setContentView(R.layout.activity_conversation);
         initialiseActionBar();           
         
         String[] smsColumnsToDisplay = {"body"};
@@ -62,7 +62,7 @@ public class SendMessageActivity extends ActionBarActivity implements LoaderMana
         messageList = (ListView) findViewById(R.id.message_list);
         
         messages = new SimpleCursorAdapter(this, 
-                R.layout.message_view_row, 
+                R.layout.message_list_row, 
                 null, 
                 smsColumnsToDisplay,
                 displayMessageIn, 
@@ -96,7 +96,7 @@ public class SendMessageActivity extends ActionBarActivity implements LoaderMana
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.send_message_activity_actions, menu);
+        getMenuInflater().inflate(R.menu.conversation_activity_actions, menu);
         return true;
         
     }    
@@ -154,7 +154,7 @@ public class SendMessageActivity extends ActionBarActivity implements LoaderMana
      * @param view
      * @throws IllegalArgumentException If there's an error sending the message, throw an exception.
      */
-    public void sendMessage(View view) throws IllegalArgumentException {      
+    public void sendMessage(View view) throws IllegalArgumentException {   
         
         // Get text message from the text box
         EditText editText = (EditText) findViewById(R.id.edit_message);
@@ -170,6 +170,8 @@ public class SendMessageActivity extends ActionBarActivity implements LoaderMana
         } else {            
             // If there's no message to send, do nothing
         }   
+        
+        getSupportLoaderManager().restartLoader(LOADER_ID, null, this);  
         
     }
   
