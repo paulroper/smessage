@@ -40,8 +40,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     private static final int LOADER_ID = 0;
     private ListView contactList = null;
     private ArrayAdapter<Contact> contactListAdapter = null;    
-    
-    // TODO: Write a log wrapper
+
     private static final boolean loggingEnabled = false;
     
     /**
