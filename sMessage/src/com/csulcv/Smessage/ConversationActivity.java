@@ -22,6 +22,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -225,13 +226,13 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         /*
          * Moves the query results into the adapter, causing the ListView fronting this adapter to re-display
          */
-        messages.changeCursor(cursor);
+        messages.swapCursor(cursor);
         
     }    
     
     /*
-     * Invoked when the CursorLoader is being reset. For example, this is
-     * called if the data in the provider changes and the Cursor becomes stale.
+     * Invoked when the CursorLoader is being reset. For example, this is called if the data in the provider changes 
+     * and the Cursor becomes stale.
      * 
      * TODO: Refresh message list when this happens.
      */
@@ -242,10 +243,10 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
          * Clears out the adapter's reference to the Cursor.
          * This prevents memory leaks.
          */
-        messages.changeCursor(null);
+        messages.swapCursor(null);
         
         getSupportLoaderManager().restartLoader(LOADER_ID, null, this);     
-        messageList.setSelection(messages.getCount() - 1);
+        messageList.setSelection(messages.getCount());
         
     }
    
