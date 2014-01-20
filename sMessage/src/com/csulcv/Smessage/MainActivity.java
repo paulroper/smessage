@@ -278,7 +278,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                         Log.d(smsCursor.getColumnName(i), smsCursor.getString(i) + "");                        
                     }
                     
-                    Log.i("Adding message", "Adding message to ArrayList");                    
+                    Log.d("Adding message", "Adding message to ArrayList");                    
                     messageCounter++;                       
                     Log.i("End of messages", "-----------------");
                     
@@ -306,7 +306,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                         Log.d(smsCursor.getColumnName(i), smsCursor.getString(i) + "");
                     }
                     
-                    Log.i("Adding message", "Adding message to ArrayList");
+                    Log.d("Adding message", "Adding message to ArrayList");
                     
                     messageCounter++;
                 
@@ -387,7 +387,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                         Log.d(contactsCursor.getColumnName(i), contactsCursor.getString(i) + "");
                     }
                                     
-                    Log.i("Adding contact", contactsCursor.getString(DISPLAY_NAME_COLUMN_INDEX));
+                    Log.d("Adding contact", contactsCursor.getString(DISPLAY_NAME_COLUMN_INDEX));
                     
                     contactCounter++;
                 
