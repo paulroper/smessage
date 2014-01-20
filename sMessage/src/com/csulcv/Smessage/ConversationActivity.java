@@ -43,7 +43,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     private ListView messageList = null;
     private SimpleCursorAdapter messages = null;
     
-    private boolean loggingEnabled = false;
+    private boolean loggingEnabled = true;
            
     /**
      * 
@@ -172,7 +172,8 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
             // If there's no message to send, do nothing
         }   
         
-        getSupportLoaderManager().restartLoader(LOADER_ID, null, this);  
+        // TODO: Refresh message list after sending
+        getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
         
     }
   
@@ -188,7 +189,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
          * SMS columns seem to be: _ID, THREAD_ID, ADDRESS, PERSON, DATE, DATE_SENT, READ, SEEN, STATUS
          * SUBJECT, BODY, PERSON, PROTOCOL, REPLY_PATH_PRESENT, SERVICE_CENTRE, LOCKED, ERROR_CODE, META_DATA
          */
-        String[] returnedColumnsSmsCursor = {"_id", "thread_id", "address", "body", "date"};
+        String[] returnedColumnsSmsCursor = {"_id", "thread_id", "address", "body", "date", "type"};
 
         // Set up WHERE clause; find texts from address containing the number without an area code
         String address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE '%" + numberWithoutAreaCode + "'";
@@ -202,22 +203,22 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        
-        Log.i(TAG, "Cursor finished loading");
-        
-        if (loggingEnabled) {
-        
+
+        if (loggingEnabled) {       
+            
+            Log.i(TAG, "Cursor finished loading");            
             int messageCounter = 0;
             
             // Use cursor to iterate over the database and get each row
             while (cursor.moveToNext()) {  
+                
+                Log.i("Message " + messageCounter, "-----------------");
                 
                 for (int i = 0; i < cursor.getColumnCount(); i++) {
                     Log.d(cursor.getColumnName(i) + "", cursor.getString(i) + "");               
                 }
                 
                 messageCounter++;                
-                Log.d("End of message " + messageCounter, "-----------------");
                 
             }
             
