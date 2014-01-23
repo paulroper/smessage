@@ -35,10 +35,10 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     private SmsManager smsManager = SmsManager.getDefault();
     
     private static final String TAG = "Smessage: SendMessage Activity";
+    private static final int LOADER_ID = 0; 
     private static String contactName = "";
     private static String contactPhoneNumber = "";
-    private static final int LOADER_ID = 0; 
-    
+
     // SimpleCursorAdapter stores messages from the SMS database and the ListView displays them
     private ListView messageList = null;
     private SimpleCursorAdapter messages = null;
@@ -111,14 +111,18 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         
         // Handle presses on the action bar items
         switch (item.getItemId()) {
+            
             case R.id.action_search:
                 //openSearch();
                 return true;
+            
             case R.id.action_settings:
                 //openSettings();
                 return true;
+            
             default:
                 return super.onOptionsItemSelected(item);
+        
         }
         
     }
@@ -164,10 +168,14 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         // If we have a message to send, split it and send it
         // TODO: Error checking!
         if (message != null) {          
+            
             Log.i(TAG, "Sending text message");           
+            
             ArrayList<String> splitMessage = smsManager.divideMessage(message);            
             smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);            
+            
             editText.setText("");            
+        
         } else {            
             // If there's no message to send, do nothing
         }   

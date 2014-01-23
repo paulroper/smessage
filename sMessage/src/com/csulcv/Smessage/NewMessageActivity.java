@@ -22,8 +22,7 @@ import android.widget.EditText;
 
 public class NewMessageActivity extends ActionBarActivity {
 
-    private SmsManager smsManager = SmsManager.getDefault();
-    
+    private SmsManager smsManager = SmsManager.getDefault();    
     private final static String TAG = "Smessage: NewMessage Activity";
     
     /**
@@ -74,14 +73,18 @@ public class NewMessageActivity extends ActionBarActivity {
         
         // Handle presses on the action bar items
         switch (item.getItemId()) {
+            
             case R.id.action_search:
                 //openSearch();
                 return true;
+                
             case R.id.action_settings:
                 //openSettings();
                 return true;
+                
             default:
                 return super.onOptionsItemSelected(item);
+                
         }
         
     }
@@ -116,11 +119,15 @@ public class NewMessageActivity extends ActionBarActivity {
         
         // If we have a message to send, split it and send it
         // TODO: Error checking!
-        if (message != null && contactPhoneNumber != null) {          
-            Log.i(TAG, "Sending text message");           
+        if (message != null && contactPhoneNumber != null) {  
+            
+            Log.i(TAG, "Sending text message"); 
+            
             ArrayList<String> splitMessage = smsManager.divideMessage(message);            
             smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);            
-            editTextMessage.setText("");            
+            
+            editTextMessage.setText("");
+            
         } else {            
             // If there's no message to send, do nothing
         }   
