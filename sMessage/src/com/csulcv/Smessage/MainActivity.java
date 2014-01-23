@@ -10,7 +10,6 @@ package com.csulcv.Smessage;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -20,8 +19,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
-import android.telephony.PhoneNumberUtils;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -442,20 +439,6 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         
         return contactNames;        
         
-    }
+    }    
     
-    /**
-     * Get the user's telephone number.
-     * 
-     * @return A string containing the user's telephone number.
-     */
-    public String getOwnNumber() {    
-        
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String ownNumber = telephonyManager.getLine1Number();        
-        
-        return PhoneNumberUtils.formatNumber(ownNumber);
-        
-    }  
-
 }

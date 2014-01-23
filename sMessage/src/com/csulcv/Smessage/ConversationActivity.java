@@ -189,7 +189,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
         
         Uri smsUri = Uri.parse("content://sms/");
-        String numberWithoutAreaCode = HelperMethods.formatPhoneNumber(contactPhoneNumber);
+        String numberWithoutAreaCode = HelperMethods.stripSeparatorsAndAreaCode(contactPhoneNumber);
         
         Log.i(TAG, "Address substring: " + numberWithoutAreaCode);
         

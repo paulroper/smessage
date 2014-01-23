@@ -5,12 +5,28 @@
  * Contains some utility methods used throughout the application.
  * 
  */
-
 package com.csulcv.Smessage;
 
+import android.content.Context;
+import android.telephony.PhoneNumberUtils;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class HelperMethods {
+    
+    /**
+     * Get the user's telephone number.
+     * 
+     * @return A string containing the user's telephone number.
+     */
+    public String getOwnNumber(Context activityContext) {    
+        
+        TelephonyManager telephonyManager = (TelephonyManager) activityContext.getSystemService(Context.TELEPHONY_SERVICE);
+        String ownNumber = telephonyManager.getLine1Number();        
+        
+        return PhoneNumberUtils.formatNumber(ownNumber);
+        
+    }  
     
     /**
      * Format the given phone number to get the original number minus the area code and without separators.
@@ -20,12 +36,12 @@ public class HelperMethods {
      * @param  String phoneNumber The given phone number to format.
      * @return The formatted phone number without the area code and without separators.
      */
-    public static String formatPhoneNumber(String phoneNumber) {
+    public static String stripSeparatorsAndAreaCode(String phoneNumber) {
         
-        String formattedNumberWithoutAreaCode = "";
-        String phoneNumberNumeric = "";
-        
-        Log.d("Phone number before replacements", phoneNumber);
+        String phoneNumberWithoutSeparators = "";
+        String phoneNumberStripped = "";
+                
+        Log.d("Phone number to format:", phoneNumber);
         
         final int FIRST_NUMBER_AFTER_AREA_CODE_INDEX = 2;
         final int FIRST_NUMBER_AFTER_ZERO_INDEX = 1;
@@ -38,20 +54,28 @@ public class HelperMethods {
          * 
          */
         // TODO: Only works for UK numbers at the moment, extend to any!
-        if (phoneNumber.charAt(0) == '+') {             
+        if (phoneNumber.charAt(0) == '+') {    
+            
             // Use the regex [^\\d] to remove all non-numeric characters from the phone number
-            phoneNumberNumeric = phoneNumber.replaceAll("[^\\d]", "");
-            Log.d("Phone number with only numbers", phoneNumberNumeric);            
-            formattedNumberWithoutAreaCode = phoneNumberNumeric.substring(FIRST_NUMBER_AFTER_AREA_CODE_INDEX);            
+            phoneNumberWithoutSeparators = phoneNumber.replaceAll("[^\\d]", "");
+            phoneNumberStripped = phoneNumberWithoutSeparators.substring(FIRST_NUMBER_AFTER_AREA_CODE_INDEX);
+            
+            Log.d("Phone number without separators:", phoneNumberWithoutSeparators);  
+            
         } else if (phoneNumber.charAt(0) == '0') {
-            phoneNumberNumeric = phoneNumber.replaceAll("[^\\d]", "");
-            Log.d("Phone number with only numbers", phoneNumberNumeric);            
-            formattedNumberWithoutAreaCode = phoneNumberNumeric.substring(FIRST_NUMBER_AFTER_ZERO_INDEX);
+            
+            phoneNumberWithoutSeparators = phoneNumber.replaceAll("[^\\d]", "");
+            phoneNumberStripped = phoneNumberWithoutSeparators.substring(FIRST_NUMBER_AFTER_ZERO_INDEX);
+            
+            Log.d("Phone number without separators:", phoneNumberWithoutSeparators);    
+            
         } else {
             return phoneNumber;
         }
         
-        return formattedNumberWithoutAreaCode;
+        Log.d("Phone number without separators and area code:", phoneNumberStripped);
+        
+        return phoneNumberStripped;
         
     }  
     
