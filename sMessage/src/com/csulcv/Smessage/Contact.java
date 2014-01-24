@@ -12,6 +12,10 @@ public class Contact {
     
     /**
      * Constructor for creating a new Contact.
+     * 
+     * @param name    The name of the contact.
+     * @param number  The phone number if the contact.
+     * @param photoId The ID of the stored photo for the contact.
      */
     public Contact (String name, String number, String photoId) {        
         contactName = name;
