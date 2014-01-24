@@ -1,8 +1,6 @@
 /**
  * NewMessageActivity.java
  * @author Paul Roper
- *
- *
  */
 package com.csulcv.Smessage;
 

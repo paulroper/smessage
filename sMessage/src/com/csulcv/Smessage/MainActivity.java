@@ -3,7 +3,6 @@
  * @author Paul Roper
  *
  * The main screen to which the user is brought when the application is launched.
- *
  */
 package com.csulcv.Smessage;
 
@@ -172,11 +171,13 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         
     }    
     
-    /*
+    /**
      * Invoked when the CursorLoader is being reset. For example, this is
      * called if the data in the provider changes and the Cursor becomes stale.
      * 
      * TODO: Refresh message list when this happens.
+     * 
+     * @see
      */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -189,7 +190,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
      * Retrieve a list of the newest messages from each conversation thread. These (along with the address of the 
      * contact the message is for) are used to build a contacts list.
      * 
-     * @return An ArrayList containing Message objects.
+     * @param smsCursor The cursor to iterate over and retrieve messages from.
+     * @return          An ArrayList containing Message objects.
      */
     public ArrayList<Message> getConversations(Cursor smsCursor) {     
         
@@ -238,7 +240,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
      * Retrieve a list of the newest messages from each conversation thread. These (along with the address of the 
      * contact the message is for) are used to build a contacts list.
      * 
-     * @return An ArrayList containing Message objects.
+     * @param smsCursor The cursor to iterate over and retrieve messages from. 
+     * @return          An ArrayList containing Message objects.
      */
     public ArrayList<Message> getNewestConversationMessages(Cursor smsCursor) {     
         
@@ -335,8 +338,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
      * Use a list of the latest text messages per conversation thread to get a list of contacts that have a conversation
      * thread on-going.
      * 
-     * @param  ArrayList<Message> newestConversationMessages
-     * @return ArrayList<Contact> containing contacts with a conversation thread.
+     * @param  newestConversationMessages The list of messages to lookup the contact names from.
+     * @return                            A list containing contacts with an on-going conversation thread.
      */
     public ArrayList<Contact> getContactNamesFromConversations(ArrayList<Message> newestConversationMessages) {             
         
@@ -427,7 +430,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
      * Convert a list of contacts into a list of contact names.
      * 
      * @param  contacts An ArrayList of contacts.
-     * @return An ArrayList of contact names.
+     * @return          An ArrayList of contact names.
      */
     public ArrayList<String> getContactNames(ArrayList<Contact> contacts) {
         

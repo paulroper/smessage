@@ -3,7 +3,6 @@
  * @author Paul Roper
  * 
  * Contains some utility methods used throughout the application.
- * 
  */
 package com.csulcv.Smessage;
 
@@ -17,11 +16,14 @@ public class HelperMethods {
     /**
      * Get the user's telephone number.
      * 
-     * @return A string containing the user's telephone number.
+     * @param activityContext The context of the activity that this method was called from.
+     * @return A String containing the user's telephone number.
      */
     public String getOwnNumber(Context activityContext) {    
         
-        TelephonyManager telephonyManager = (TelephonyManager) activityContext.getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager telephonyManager = 
+                (TelephonyManager) activityContext.getSystemService(Context.TELEPHONY_SERVICE);
+        
         String ownNumber = telephonyManager.getLine1Number();        
         
         return PhoneNumberUtils.formatNumber(ownNumber);
@@ -30,8 +32,6 @@ public class HelperMethods {
     
     /**
      * Format the given phone number to get the original number minus the area code and without separators.
-     * 
-     * Currently only works for UK numbers but extend
      * 
      * @param  String phoneNumber The given phone number to format.
      * @return The formatted phone number without the area code and without separators.

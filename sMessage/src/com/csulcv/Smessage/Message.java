@@ -1,7 +1,6 @@
 /**
  * Message.java
  * @author Paul Roper
- *
  */
 package com.csulcv.Smessage;
 
@@ -14,6 +13,11 @@ class Message implements Comparable<Message> {
      
      /**
       * Constructor for creating a new Message.
+      * 
+      * @param threadId The thread ID of the conversation the message is from.
+      * @param body     The actual message.
+      * @param address  The recipient's phone number.
+      * @param date     The date the message was sent.
       */
      public Message(int threadId, String body, String address, Long date) {
          messageBody = body;
@@ -56,7 +60,7 @@ class Message implements Comparable<Message> {
      /**
       * Used to compare objects so that {@link Collections#sort()} can be used.
       * 
-      * @param  Message message The Message to compare dates with.
+      * @param  message The Message to compare dates with.
       * @return A value corresponding to whether the Message date is greater than, less than or equal to the 
       *         comparison date.
       */
