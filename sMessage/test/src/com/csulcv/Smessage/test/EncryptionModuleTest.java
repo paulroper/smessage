@@ -17,7 +17,7 @@ public class EncryptionModuleTest extends AndroidTestCase {
 	private String TAG = "Encryption Module Test";
 	
 	private AsymmetricCipherKeyPair keyPair = null;
-	private String TEST_STRING = "This is a test string";
+	private String TEST_STRING = "The lorem ipsum dolor sit amet, nonummy ligula volutpat hac integer nonummy. Suspendisse ultricies, congue etiam tellus, erat libero, nulla eleifend, mauris pellentesque. Suspendisse integer praesent vel, integer gravida mauris, fringilla vehicula lacinia non";
 	
 	public EncryptionModuleTest() {		
 	}
@@ -57,9 +57,7 @@ public class EncryptionModuleTest extends AndroidTestCase {
 		
 		try {
 			
-			String encryptedString = EncryptionModule.rsaEncrypt(getContext(), TEST_STRING, keyPair.getPublic());		
-			System.out.println(encryptedString);
-			
+			String encryptedString = EncryptionModule.rsaEncrypt(getContext(), TEST_STRING, keyPair.getPublic());	
 			String decryptedString = EncryptionModule.rsaDecrypt(getContext(), encryptedString, keyPair.getPrivate());
 			
 			assertEquals(TEST_STRING, decryptedString);

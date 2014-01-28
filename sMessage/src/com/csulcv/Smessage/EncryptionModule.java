@@ -11,8 +11,10 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.spongycastle.crypto.AsymmetricBlockCipher;
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 import org.spongycastle.crypto.CipherParameters;
+import org.spongycastle.crypto.encodings.OAEPEncoding;
 import org.spongycastle.crypto.engines.RSAEngine;
 import org.spongycastle.crypto.generators.RSAKeyPairGenerator;
 import org.spongycastle.crypto.params.RSAKeyGenerationParameters;
@@ -85,14 +87,9 @@ public class EncryptionModule {
 
         Log.d(TAG, "Message to encrypt: " + message);
 
-        // TODO: Explain reasons for base 64 encoding
-        String CHAR_SET = "UTF-8";
-        byte[] data = Base64.encode(message.getBytes(CHAR_SET));        
-        
+        byte[] data = message.getBytes();           
         RSAEngine engine = new RSAEngine();
         final boolean ENCRYPT = true;
-        
-        Log.d(TAG, "Base64 encoded message: " + new String(data));
                 
         // encrypt = true encrypts and encrypt = false decrypts
         engine.init(ENCRYPT, key);        
@@ -103,8 +100,16 @@ public class EncryptionModule {
         ArrayList<byte[]> blockList = new ArrayList<byte[]>();        
         
         // Turn message into chunks that are encrypted/decrypted with each iteration
-        for (int chunkPos = 0; chunkPos < data.length; chunkPos += blockSize) {             
-            int chunkSize = Math.min(blockSize, data.length - (chunkPos * blockSize));
+        for (int chunkPos = 0; chunkPos < data.length; chunkPos += blockSize) {   
+            
+            Log.d(TAG, chunkPos + " / " +  blockSize + " blocks processed.");
+            
+            //int chunkSize = Math.min(blockSize, data.length - (chunkPos * blockSize));
+            int chunkSize = Math.min(blockSize, data.length - chunkPos);
+            
+            Log.d(TAG, "Chunk size is: " + chunkSize + " min(" + blockSize + ", " 
+                    + (data.length - chunkPos) + ")");
+            
             blockList.add(engine.processBlock(data, chunkPos, chunkSize));  
         }
                 
@@ -112,15 +117,16 @@ public class EncryptionModule {
         StringBuilder rsaMessage = new StringBuilder();
         
         for (byte[] block : blockList) {
-            
-            Log.d(TAG, "Block as a string: " + new String(block));
+
             Log.d(TAG, "Block: " + Arrays.toString(block));
 
-            rsaMessage.append(new String(block));
+            // Base 64 is used so that the cipher text can be sent in a human readable form (i.e. using characters from
+            // a character set).
+            rsaMessage.append(new String(Base64.encode(block)));
                 
         }
 
-        Log.d(TAG, "RSA'd message " + rsaMessage.toString());
+        Log.d(TAG, "Encrypted message, base 64 " + rsaMessage.toString());
         
         return rsaMessage.toString();        
 
@@ -138,21 +144,33 @@ public class EncryptionModule {
       
         Log.d(TAG, "Message to decrypt: " + message);
         
-        byte[] data = message.getBytes();        
+        // We need to decode the the message from base 64 before it can be decrypted
+        byte[] data = Base64.decode(message.getBytes());        
+        
         RSAEngine engine = new RSAEngine();
         final boolean ENCRYPT = false;
                 
         // encrypt = true encrypts and encrypt = false decrypts
-        engine.init(ENCRYPT, key);        
+        engine.init(ENCRYPT, key);                   
         int blockSize = engine.getInputBlockSize();
-        
+
         Log.d(TAG, "Block size is " + blockSize + ", data array size is " + data.length);
         
         ArrayList<byte[]> blockList = new ArrayList<byte[]>();        
         
         // Turn message into chunks that are decrypted with each iteration
-        for (int chunkPos = 0; chunkPos < data.length; chunkPos += blockSize) {             
-            int chunkSize = Math.min(blockSize, data.length - (chunkPos * blockSize));
+        for (int chunkPos = 0; chunkPos < data.length; chunkPos += blockSize) {  
+            
+            Log.d(TAG, chunkPos + " / " +  blockSize + " blocks processed.");
+            
+            // As we're working on the message in chunks of 256, we'll need more than one iteration to work on messages
+            // longer than this.
+            //int chunkSize = Math.min(blockSize, data.length - (chunkPos * blockSize));
+            int chunkSize = Math.min(blockSize, data.length - chunkPos);            
+            
+            Log.d(TAG, "Chunk size is: " + chunkSize + " min(" + blockSize + ", " 
+                    + (data.length - chunkPos) + ")");
+            
             blockList.add(engine.processBlock(data, chunkPos, chunkSize));  
         }                
         
@@ -160,19 +178,47 @@ public class EncryptionModule {
         StringBuilder rsaMessage = new StringBuilder();
         
         for (byte[] block : blockList) {
-            
-            Log.d(TAG, "Block as a string: " + new String(block));
             Log.d(TAG, "Block: " + Arrays.toString(block));
-
-            rsaMessage.append(new String(Base64.decode(block)));
-                
+            rsaMessage.append(new String(block));                
         }
 
-        Log.d(TAG, "RSA'd message " + rsaMessage.toString());
+        Log.d(TAG, "Decrypted message: " + rsaMessage.toString());
         
         return rsaMessage.toString();        
 
     }
     
+    /** 
+     * Encrypt a String message using RSA. 
+     * 
+     * @param activityContext The context of the activity that this method was called from.
+     * @param message         The message to encrypt.
+     * @param key             A public key for encryption.
+     * @return                A String containing the encrypted message.
+     */
+    public static void simplerRSAEncrypt(Context activityContext, String message, CipherParameters key) throws Exception {
+
+        // TODO: Try implementing simpler encryption approach
+        // http://www.bouncycastle.org/specifications.html
+        Log.d(TAG, "Message to encrypt: " + message);
+        
+        byte[] data = message.getBytes();
+        boolean ENCRYPT = true;
+        
+        AsymmetricBlockCipher engine = new RSAEngine();
+        OAEPEncoding cipher = new OAEPEncoding(engine);
+        
+        
+        cipher.init(ENCRYPT, key);
+       
+        try {
+            
+        } catch (Exception e) {
+            
+        }
+        
+        
+
+    }
     
 }
