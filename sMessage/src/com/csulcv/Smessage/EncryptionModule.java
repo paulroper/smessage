@@ -11,12 +11,17 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.spongycastle.crypto.AsymmetricBlockCipher;
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
+import org.spongycastle.crypto.BlockCipher;
+import org.spongycastle.crypto.BufferedBlockCipher;
 import org.spongycastle.crypto.CipherParameters;
-import org.spongycastle.crypto.encodings.OAEPEncoding;
+import org.spongycastle.crypto.CryptoException;
+import org.spongycastle.crypto.engines.AESEngine;
 import org.spongycastle.crypto.engines.RSAEngine;
 import org.spongycastle.crypto.generators.RSAKeyPairGenerator;
+import org.spongycastle.crypto.modes.CBCBlockCipher;
+import org.spongycastle.crypto.paddings.PaddedBufferedBlockCipher;
+import org.spongycastle.crypto.params.KeyParameter;
 import org.spongycastle.crypto.params.RSAKeyGenerationParameters;
 import org.spongycastle.util.encoders.Base64;
 
@@ -189,35 +194,40 @@ public class EncryptionModule {
     }
     
     /** 
-     * Encrypt a String message using RSA. 
+     * Encrypt a String message using AES. 
      * 
      * @param activityContext The context of the activity that this method was called from.
      * @param message         The message to encrypt.
-     * @param key             A public key for encryption.
+     * @param key             A secret key for encryption.
      * @return                A String containing the encrypted message.
      */
-    public static void simplerRSAEncrypt(Context activityContext, String message, CipherParameters key) throws Exception {
+    public static String aesEncrypt(Context activityContext, String message, byte[] key) throws Exception {
 
-        // TODO: Try implementing simpler encryption approach
-        // http://www.bouncycastle.org/specifications.html
-        Log.d(TAG, "Message to encrypt: " + message);
-        
-        byte[] data = message.getBytes();
+        // Set up the cipher
         boolean ENCRYPT = true;
+        BlockCipher engine = new AESEngine();
+        BufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(engine));
+
+        byte[] input = message.getBytes();
+
+        cipher.init(ENCRYPT, new KeyParameter(key));
+
+        byte[] cipherText = new byte[cipher.getOutputSize(input.length)];
         
-        AsymmetricBlockCipher engine = new RSAEngine();
-        OAEPEncoding cipher = new OAEPEncoding(engine);
+        final int INPUT_OFFSET = 0;
+        final int OUTPUT_OFFSET = 0;
         
+        // Process the message 
+        int outputLen = cipher.processBytes(input, INPUT_OFFSET, input.length, cipherText, OUTPUT_OFFSET);
         
-        cipher.init(ENCRYPT, key);
-       
         try {
-            
-        } catch (Exception e) {
-            
+            cipher.doFinal(cipherText, outputLen);
+        } catch (CryptoException ce) {
+            Log.e(TAG, "Error encrypting message", ce);
         }
         
-        
+        // Encode the message in base 64 so that it's human readable
+        return new String(Base64.encode(cipherText));
 
     }
     

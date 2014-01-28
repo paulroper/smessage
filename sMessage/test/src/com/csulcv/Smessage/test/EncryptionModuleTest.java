@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
+import org.spongycastle.crypto.CipherKeyGenerator;
+import org.spongycastle.crypto.KeyGenerationParameters;
 import org.spongycastle.crypto.generators.RSAKeyPairGenerator;
 import org.spongycastle.crypto.params.RSAKeyGenerationParameters;
 
@@ -17,6 +19,7 @@ public class EncryptionModuleTest extends AndroidTestCase {
 	private String TAG = "Encryption Module Test";
 	
 	private AsymmetricCipherKeyPair keyPair = null;
+	private byte[] aesKey = null;
 	private String TEST_STRING = "The lorem ipsum dolor sit amet, nonummy ligula volutpat hac integer nonummy. Suspendisse ultricies, congue etiam tellus, erat libero, nulla eleifend, mauris pellentesque. Suspendisse integer praesent vel, integer gravida mauris, fringilla vehicula lacinia non";
 	
 	public EncryptionModuleTest() {		
@@ -46,6 +49,12 @@ public class EncryptionModuleTest extends AndroidTestCase {
 				new SecureRandom(), RSA_STRENGTH, CERTAINTY));    
 		
 		keyPair = keyGen.generateKeyPair();
+		
+		CipherKeyGenerator aesKeyGen = new CipherKeyGenerator();
+		int AES_STRENGTH = 256;
+		
+		aesKeyGen.init(new KeyGenerationParameters(new SecureRandom(), AES_STRENGTH));
+		aesKey = aesKeyGen.generateKey();
 
 	}
 	
@@ -53,7 +62,7 @@ public class EncryptionModuleTest extends AndroidTestCase {
 	protected void tearDown() {		
 	}
 	
-	public void testRsaEncryption() {
+	public void testRSAEncryption() {
 		
 		try {
 			
@@ -63,7 +72,21 @@ public class EncryptionModuleTest extends AndroidTestCase {
 			assertEquals(TEST_STRING, decryptedString);
 			
 		} catch (Exception e) {
-			Log.e(TAG, "Error running encryption test", e);		
+			Log.e(TAG, "Error running RSA encryption test", e);		
+		}
+		
+		
+	}
+	
+	public void testAESEncryption() {
+		
+		try {
+			
+			String encryptedString = EncryptionModule.aesEncrypt(getContext(), TEST_STRING, aesKey);
+
+			
+		} catch (Exception e) {
+			Log.e(TAG, "Error running AES encryption test", e);
 		}
 		
 		
