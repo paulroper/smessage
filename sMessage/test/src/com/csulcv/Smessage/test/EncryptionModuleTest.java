@@ -82,8 +82,12 @@ public class EncryptionModuleTest extends AndroidTestCase {
 		
 		try {
 			
-			String encryptedString = EncryptionModule.aesEncrypt(getContext(), TEST_STRING, aesKey);
-
+			boolean ENCRYPT = true;
+			
+			String encryptedString = EncryptionModule.aes(getContext(), TEST_STRING, aesKey, ENCRYPT);
+			String decryptedString = EncryptionModule.aes(getContext(), encryptedString, aesKey, !ENCRYPT);
+			
+			assertEquals(TEST_STRING, decryptedString);
 			
 		} catch (Exception e) {
 			Log.e(TAG, "Error running AES encryption test", e);

@@ -183,7 +183,7 @@ public class EncryptionModule {
         StringBuilder rsaMessage = new StringBuilder();
         
         for (byte[] block : blockList) {
-            Log.d(TAG, "Block: " + Arrays.toString(block));
+            Log.d(TAG, "Block: " + new String(block));
             rsaMessage.append(new String(block));                
         }
 
@@ -194,41 +194,93 @@ public class EncryptionModule {
     }
     
     /** 
-     * Encrypt a String message using AES. 
+     * Encrypt/decrypt a String message using AES. 
      * 
      * @param activityContext The context of the activity that this method was called from.
      * @param message         The message to encrypt.
      * @param key             A secret key for encryption.
+     * @param encrypt         True to encrypt a message, false to decrypt a message.
      * @return                A String containing the encrypted message.
      */
-    public static String aesEncrypt(Context activityContext, String message, byte[] key) throws Exception {
-
-        // Set up the cipher
-        boolean ENCRYPT = true;
+    public static String aes(Context activityContext, String message, byte[] key, boolean encrypt) throws Exception {
+        
+        Log.d(TAG, "Message is: " + message);
+        
+        // Set up the cipher: AES/CBC/PKCS7 
+        // CBC = Cipher-block Chaining
         BlockCipher engine = new AESEngine();
         BufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(engine));
+        byte[] input = null;
 
-        byte[] input = message.getBytes();
-
-        cipher.init(ENCRYPT, new KeyParameter(key));
-
-        byte[] cipherText = new byte[cipher.getOutputSize(input.length)];
+        // Convert the input String into bytes
+        if (encrypt) {
+            input = message.getBytes();
+        } else {
+            input = Base64.decode(message.getBytes());
+        }
+            
+        cipher.init(encrypt, new KeyParameter(key));
+        byte[] output = new byte[cipher.getOutputSize(input.length)];
         
+        Log.d(TAG, "Cipher text array size is " + cipher.getOutputSize(input.length));
+        
+        // We don't need these but the processBytes method requires them. It tells the cipher where to start processing
+        // the input array and where to store the processed block in the output array
         final int INPUT_OFFSET = 0;
         final int OUTPUT_OFFSET = 0;
         
         // Process the message 
-        int outputLen = cipher.processBytes(input, INPUT_OFFSET, input.length, cipherText, OUTPUT_OFFSET);
+        int outputLen = cipher.processBytes(input, INPUT_OFFSET, input.length, output, OUTPUT_OFFSET);
         
         try {
-            cipher.doFinal(cipherText, outputLen);
+            int finalOutputBytes = cipher.doFinal(output, outputLen);
+            Log.d(TAG, "Processed " + finalOutputBytes + " bytes.");
         } catch (CryptoException ce) {
             Log.e(TAG, "Error encrypting message", ce);
         }
         
-        // Encode the message in base 64 so that it's human readable
-        return new String(Base64.encode(cipherText));
+        if (encrypt) {            
+            Log.d(TAG, "Output bytes are " + Arrays.toString(output));
+            Log.d(TAG, "Output is " + new String(Base64.encode(output)));
+        } else {            
+            Log.d(TAG, "Output bytes are " + Arrays.toString(output));
+            Log.d(TAG, "Output is " + new String(output));
+        }
+        
+        // Encode the message in base 64 so that it's human readable or decode it if we're dealing with a decrypted
+        // message
+        if (encrypt) {
+            return new String(Base64.encode(output));
+        } else {
+            // TODO: Why does PCKS7 keep padding with 0s?
+            return new String(stripPCKS7Padding(output));
+        }
 
+    }
+    
+    /**
+     * Removes PCKS7 padding from a byte array. The final byte of the input array using this padding scheme indicates
+     * how many bytes were added for padding.
+     * 
+     * @param input The array of bytes to remove padding from.
+     * @return      A byte array containing the input bytes without padding.
+     */
+    public static byte[] stripPCKS7Padding(byte[] input) {
+        
+        // TODO: Check that PCKS7 padding has actually been used
+        
+        // Get indicator value for number of bytes to strip
+        int bytesToStrip = input[input.length - 1];
+        
+        // If 0 bytes were added for padding, we still need to remove the indicator byte from the array
+        if (bytesToStrip == 0) {
+            bytesToStrip = 1;
+        }
+        
+        Log.d(TAG, "Bytes to strip: " + bytesToStrip);
+        
+        return Arrays.copyOf(input, (input.length - bytesToStrip));
+        
     }
     
 }
