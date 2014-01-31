@@ -1,6 +1,8 @@
 # Don't track Android build files
-./sMessage/*/bin/*
-./sMessage/*/gen/*
+./sMessage/bin/*
+./sMessage/gen/*
+./sMessage/test/bin/*
+./sMessage/test/gen/*
 ./android-support-v7-appcompat/bin/*
 ./android-support-v7-appcompat/gen/*
 
