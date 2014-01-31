@@ -20,8 +20,7 @@ public class EncryptionModuleTest extends AndroidTestCase {
 	
 	private AsymmetricCipherKeyPair keyPair = null;
 	private byte[] aesKey = null;
-	private String TEST_STRING = "The lorem ipsum dolor sit amet, nonummy ligula volutpat hac integer nonummy. Suspendisse ultricies, congue etiam tellus, erat libero, nulla eleifend, mauris pellentesque. Suspendisse integer praesent vel, integer gravida mauris, fringilla vehicula lacinia non";
-	
+		
 	public EncryptionModuleTest() {		
 	}
 	
@@ -64,6 +63,8 @@ public class EncryptionModuleTest extends AndroidTestCase {
 	
 	public void testRSAEncryption() {
 		
+		String TEST_STRING = "hjMIJC2ixV3RjmAFFhRNuTxI8xdGYHijZJLU5iHPGxN7iYpwnhMtLX1XSBzhhHE";
+		
 		try {
 			
 			String encryptedString = EncryptionModule.rsaEncrypt(getContext(), TEST_STRING, keyPair.getPublic());	
@@ -78,11 +79,32 @@ public class EncryptionModuleTest extends AndroidTestCase {
 		
 	}
 	
-	public void testAESEncryption() {
+	public void testOtherRsaEncryption() {
+		
+		String TEST_STRING = "hjMIJC2ixV3RjmAFFhRNuTxI8xdGYHijZJLU5iHPGxN7iYpwnhMtLX1XSBzhhHE";
 		
 		try {
 			
-			boolean ENCRYPT = true;
+			final boolean ENCRYPT = true;
+			
+			String encryptedString = EncryptionModule.rsa(getContext(), TEST_STRING, keyPair.getPublic(), ENCRYPT);
+			String decryptedString = EncryptionModule.rsa(getContext(), encryptedString, keyPair.getPrivate(), !ENCRYPT);
+			
+			assertEquals(TEST_STRING, decryptedString);			
+			
+		} catch (Exception e) {
+			Log.e(TAG, "Error running ESA encryption test", e);
+		}
+		
+	}
+
+	public void testAESEncryption() {
+		
+		String TEST_STRING = "The lorem ipsum dolor sit amet, nonummy ligula volutpat hac integer nonummy. Suspendisse ultricies, congue etiam tellus, erat libero, nulla eleifend, mauris pellentesque. Suspendisse integer praesent vel, integer gravida mauris, fringilla vehicula lacinia non";
+		
+		try {
+			
+			final boolean ENCRYPT = true;
 			
 			String encryptedString = EncryptionModule.aes(getContext(), TEST_STRING, aesKey, ENCRYPT);
 			String decryptedString = EncryptionModule.aes(getContext(), encryptedString, aesKey, !ENCRYPT);
