@@ -1,7 +1,8 @@
 # Don't track Android build files
-./sMessage/bin/*
-./sMessage/test/bin/*
+./sMessage/*/bin/*
+./sMessage/*/gen/*
 ./android-support-v7-appcompat/bin/*
+./android-support-v7-appcompat/gen/*
 
 # Don't track Java class files
 *.class
