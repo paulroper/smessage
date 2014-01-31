@@ -67,24 +67,6 @@ public class EncryptionModuleTest extends AndroidTestCase {
 		
 		try {
 			
-			String encryptedString = EncryptionModule.rsaEncrypt(getContext(), TEST_STRING, keyPair.getPublic());	
-			String decryptedString = EncryptionModule.rsaDecrypt(getContext(), encryptedString, keyPair.getPrivate());
-			
-			assertEquals(TEST_STRING, decryptedString);
-			
-		} catch (Exception e) {
-			Log.e(TAG, "Error running RSA encryption test", e);		
-		}
-		
-		
-	}
-	
-	public void testOtherRsaEncryption() {
-		
-		String TEST_STRING = "hjMIJC2ixV3RjmAFFhRNuTxI8xdGYHijZJLU5iHPGxN7iYpwnhMtLX1XSBzhhHE";
-		
-		try {
-			
 			final boolean ENCRYPT = true;
 			
 			String encryptedString = EncryptionModule.rsa(getContext(), TEST_STRING, keyPair.getPublic(), ENCRYPT);
