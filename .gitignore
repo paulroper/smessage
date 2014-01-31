@@ -3,9 +3,8 @@
 ./sMessage/test/bin/*
 ./android-support-v7-appcompat/bin/*
 
-# Don't track Java class files/JAR files
+# Don't track Java class files
 *.class
-*.jar
 
 # Don't track text editor temp files
 *~
