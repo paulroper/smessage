@@ -16,8 +16,10 @@ import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 import org.spongycastle.crypto.BlockCipher;
 import org.spongycastle.crypto.BufferedAsymmetricBlockCipher;
 import org.spongycastle.crypto.BufferedBlockCipher;
+import org.spongycastle.crypto.CipherKeyGenerator;
 import org.spongycastle.crypto.CipherParameters;
 import org.spongycastle.crypto.CryptoException;
+import org.spongycastle.crypto.KeyGenerationParameters;
 import org.spongycastle.crypto.encodings.OAEPEncoding;
 import org.spongycastle.crypto.engines.AESEngine;
 import org.spongycastle.crypto.engines.RSAEngine;
@@ -83,6 +85,24 @@ public class EncryptionModule {
         }        
 
     }    
+    
+    /**
+     * Generate a new symmetric key used for AES message encryption.
+     * 
+     * @param activityContext The context of the activity that this method was called from.
+     * @param keySizeInBits   The size of the key to generate.
+     * @return                A byte[] array containing a symmetric key ready to be encrypted and sent to the recipient.             
+     */
+    public static byte[] generateSymmetricKey(Context activityContext, int keySizeInBits) {
+        
+        CipherKeyGenerator aesKeyGen = new CipherKeyGenerator();
+        
+        aesKeyGen.init(new KeyGenerationParameters(new SecureRandom(), keySizeInBits));
+        byte[] aesKey = aesKeyGen.generateKey();        
+        
+        return aesKey;
+        
+    }
   
     
     /** 
