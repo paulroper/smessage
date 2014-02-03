@@ -13,4 +13,10 @@
           android:title="@string/action_settings"
           smessage:showAsAction="never" />
     
+    <!--  Secure the conversation, should always appear -->
+    <item android:id="@+id/action_secure_conversation"
+          android:icon="@drawable/ic_action_secure"
+          android:title="@string/action_secure_conversation"
+          smessage:showAsAction="always" />
+    
 </menu>

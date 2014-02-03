@@ -17,16 +17,7 @@
         android:layout_marginBottom="20dp"
         android:layout_gravity="top"
         android:orientation="vertical"
-        android:stackFromBottom="true" /> 
-
-	<Button
-	    android:id="@+id/send_button"
-	    android:layout_width="96dp"
-	    android:layout_height="50dp"
-	    android:layout_alignParentBottom="true"
-	    android:layout_alignParentRight="true"
-	    android:onClick="sendMessage"
-	    android:text="@string/button_send" />
+        android:stackFromBottom="true" />
     
     <EditText
         android:ems="10"
@@ -40,5 +31,14 @@
         android:lines="3"
         android:minLines="1"
         android:hint="@string/edit_message" />
+
+    <Button
+        android:id="@+id/send_button"
+        android:layout_width="96dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/message_list"
+        android:onClick="sendMessage"
+        android:text="@string/button_send" />
 
 </RelativeLayout>

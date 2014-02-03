@@ -20,7 +20,6 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,7 +53,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         super.onCreate(savedInstanceState);        
         setContentView(R.layout.activity_conversation);
         initialiseActionBar();           
-        
+
         String[] smsColumnsToDisplay = {"body"};
         int[] displayMessageIn = {R.id.message_row}; 
         
@@ -117,12 +116,21 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
             case R.id.action_settings:
                 //openSettings();
                 return true;
+                
+            case R.id.action_secure_conversation:
+                startSecureConversation();
+                return true;
             
             default:
                 return super.onOptionsItemSelected(item);
         
         }
         
+    }
+    
+    public void startSecureConversation() {
+        
+              
     }
     
     /**

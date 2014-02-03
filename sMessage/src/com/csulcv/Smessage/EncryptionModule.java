@@ -39,16 +39,18 @@ public class EncryptionModule {
     private static String TAG = "EncryptionModule";
 
     /**
-     * Used to generate the private/public key pair for the user.
+     * Generates an RSA public/private key pair and stores them to a local file unavailable to the user.
      * 
      * @param activityContext The context of the activity that this method was called from.
      * @param keySizeInBits   The size of the key to generate.
      */
-    public static void generatePublicKey(Context activityContext, int keySizeInBits) {
+    public static void generateAsymmetricKeys(Context activityContext, int keySizeInBits) {
         
         RSAKeyPairGenerator keyGen = new RSAKeyPairGenerator();
-        String publicKeyFileName = "rsa_public_key";
-        String privateKeyFileName = "rsa_private_key";
+        
+        // TODO: Rewrite to store the keys in a key store (or similar).
+        String rsaPublicKeyFileName = "rsa_public_key";
+        String rsaPrivateKeyFileName = "rsa_private_key";
         
         /* 
          * Use Fermat number 4 (F4) for RSA key generation. From Wikipedia:
@@ -70,8 +72,8 @@ public class EncryptionModule {
         try {
             
             // Open a couple of private files to write keys to
-            FileOutputStream privateKeyStream = activityContext.openFileOutput(publicKeyFileName, Context.MODE_PRIVATE);
-            FileOutputStream publicKeyStream = activityContext.openFileOutput(privateKeyFileName, Context.MODE_PRIVATE);
+            FileOutputStream privateKeyStream = activityContext.openFileOutput(rsaPublicKeyFileName, Context.MODE_PRIVATE);
+            FileOutputStream publicKeyStream = activityContext.openFileOutput(rsaPrivateKeyFileName, Context.MODE_PRIVATE);
             
             // Get the keys to write and write them in to the file
             publicKeyStream.write(keyPair.getPublic().toString().getBytes(Charset.defaultCharset()));
