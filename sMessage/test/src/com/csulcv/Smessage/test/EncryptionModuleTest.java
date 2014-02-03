@@ -8,6 +8,7 @@ import org.spongycastle.crypto.CipherKeyGenerator;
 import org.spongycastle.crypto.KeyGenerationParameters;
 import org.spongycastle.crypto.generators.RSAKeyPairGenerator;
 import org.spongycastle.crypto.params.RSAKeyGenerationParameters;
+import org.spongycastle.util.encoders.Base64;
 
 import android.test.AndroidTestCase;
 import android.util.Log;
@@ -82,7 +83,11 @@ public class EncryptionModuleTest extends AndroidTestCase {
 
 	public void testAESEncryption() {
 		
-		String TEST_STRING = "The lorem ipsum dolor sit amet, nonummy ligula volutpat hac integer nonummy. Suspendisse ultricies, congue etiam tellus, erat libero, nulla eleifend, mauris pellentesque. Suspendisse integer praesent vel, integer gravida mauris, fringilla vehicula lacinia non";
+		String TEST_STRING = "The lorem ipsum dolor sit amet, nonummy ligula volutpat hac integer nonummy. Suspendisse "
+				+ "ultricies, congue etiam tellus, erat libero, nulla eleifend, mauris pellentesque. Suspendisse integer"
+				+ " praesent vel, integer gravida mauris, fringilla vehicula lacinia non" + "ultricies, congue etiam tellus, "
+				+ "erat libero, nulla eleifend, mauris pellentesque. Suspendisse integer"
+				+ " praesent vel, integer gravida mauris, fringilla vehicula lacinia non";
 		
 		try {
 			
@@ -98,6 +103,42 @@ public class EncryptionModuleTest extends AndroidTestCase {
 		}
 		
 		
+	}
+	
+	public void testKeyExchange() {
+		
+		String message = "This is a message to test key exchange. It is fairly long to test how well AES handles lots"
+				+ "of blocks to encrypt.";
+
+		final int AES_STRENGTH = 256;
+		String aesKey = new String(Base64.encode(EncryptionModule.generateSymmetricKey(getContext(), AES_STRENGTH)));
+		
+		Log.d(TAG, "The AES key is " + aesKey);
+		
+		try {
+			
+			final boolean ENCRYPT = true;
+			
+			// Generate an encrypted message using AES.
+			String encryptedMessage = EncryptionModule.aes(getContext(), message, Base64.decode(aesKey.getBytes()), 
+					ENCRYPT); 
+
+			// Use a public key and RSA encryption to produce an encrypted secret key.
+			String encryptedKey = EncryptionModule.rsa(getContext(), aesKey, keyPair.getPublic(), ENCRYPT);		
+			
+			// Decrypt the symmetric key using a private key
+			String decryptedKey = EncryptionModule.rsa(getContext(), encryptedKey, keyPair.getPrivate(), !ENCRYPT);
+			
+			// Decrypt the original message
+			String decryptedMessage = EncryptionModule.aes(getContext(), encryptedMessage, 
+					Base64.decode(decryptedKey.getBytes()), !ENCRYPT);
+			
+			assertEquals(message, decryptedMessage);
+			
+		} catch (Exception e) {
+			Log.e(TAG, "Error during key exchange test", e);
+		}
+			
 	}
 
 }
