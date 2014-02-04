@@ -4,6 +4,7 @@
  */
 package com.csulcv.Smessage;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -38,6 +39,9 @@ public class EncryptionModule {
     
     private static String TAG = "EncryptionModule";
 
+    private static String rsaPublicKeyFileName = "rsa_public_key";
+    private static String rsaPrivateKeyFileName = "rsa_private_key";
+
     /**
      * Generates an RSA public/private key pair and stores them to a local file unavailable to the user.
      * 
@@ -47,10 +51,6 @@ public class EncryptionModule {
     public static void generateAsymmetricKeys(Context activityContext, int keySizeInBits) {
         
         RSAKeyPairGenerator keyGen = new RSAKeyPairGenerator();
-        
-        // TODO: Rewrite to store the keys in a key store (or similar).
-        String rsaPublicKeyFileName = "rsa_public_key";
-        String rsaPrivateKeyFileName = "rsa_private_key";
         
         /* 
          * Use Fermat number 4 (F4) for RSA key generation. From Wikipedia:
@@ -251,6 +251,30 @@ public class EncryptionModule {
             return new String(output, Charset.defaultCharset());
         }
 
+    }    
+    
+    /**
+     * Check whether the RSA keys have been generated.
+     * 
+     * @param activityContext The context of the activity that this method was called from.
+     * @return                True if both files exist, false otherwise.
+     */
+    public static boolean rsaKeysExist(Context activityContext) {
+        
+        File privateKey = activityContext.getFileStreamPath(getRSAPrivateKeyFileName());
+        File publicKey = activityContext.getFileStreamPath(getRSAPublicKeyFileName());
+        
+        // If both the key files exist, return true
+        return ((privateKey.exists()) && (publicKey.exists()));
+        
+    }
+    
+    public static String getRSAPublicKeyFileName() {
+        return rsaPublicKeyFileName;
+    }
+    
+    public static String getRSAPrivateKeyFileName() {
+        return rsaPrivateKeyFileName;
     }
        
 }
