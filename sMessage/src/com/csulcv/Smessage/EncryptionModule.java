@@ -37,7 +37,7 @@ import android.util.Log;
 
 public class EncryptionModule {
     
-    private static String TAG = "EncryptionModule";
+    private static final String TAG = "EncryptionModule";
 
     private static String rsaPublicKeyFileName = "rsa_public_key";
     private static String rsaPrivateKeyFileName = "rsa_private_key";

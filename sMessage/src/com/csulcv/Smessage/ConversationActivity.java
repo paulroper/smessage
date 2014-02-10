@@ -209,8 +209,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         } else {            
             // If there's no message to send, do nothing
         }   
-        
-        // TODO: Refresh message list after sending
+
         getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
         
     }
@@ -267,13 +266,20 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
          */
         messages.swapCursor(cursor);
         
+        runOnUiThread(new Runnable() { 
+            
+            @Override 
+            public void run() {
+                Log.d(TAG, "Moving list to bottom");
+                messageList.setSelection(messages.getCount());
+            }
+            
+        });
+        
     }    
     
     /*
-     * Invoked when the CursorLoader is being reset. For example, this is called if the data in the provider changes 
-     * and the Cursor becomes stale.
-     * 
-     * TODO: Refresh message list when this happens.
+     * Invoked when the CursorLoader is reset.
      */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -282,10 +288,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
          * Clears out the adapter's reference to the Cursor.
          * This prevents memory leaks.
          */
-        messages.swapCursor(null);
-        
-        getSupportLoaderManager().restartLoader(LOADER_ID, null, this);     
-        messageList.setSelection(messages.getCount());
+        messages.swapCursor(null);      
         
     }
    

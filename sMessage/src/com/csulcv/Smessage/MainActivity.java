@@ -9,14 +9,19 @@ package com.csulcv.Smessage;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract.PhoneLookup;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -29,12 +34,24 @@ import android.widget.ListView;
 
 public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public final static String CONTACT_NAME_PHONE_NUMBER = "com.csulcv.smessage.contactNamePhoneNumber";
-    private final static String TAG = "Smessage: Main Activity"; 
+    public static final String CONTACT_NAME_PHONE_NUMBER = "com.csulcv.smessage.contactNamePhoneNumber";
+    private static final String TAG = "Smessage: Main Activity"; 
     
     private static final int LOADER_ID = 0;
     private ListView contactList = null;
     private ArrayAdapter<Contact> contactListAdapter = null;    
+    
+    private LoaderCallbacks<Cursor> callbacks = this;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver () {
+        
+        // TODO: Get this working!
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Intent received: " + intent.getType());
+            getSupportLoaderManager().restartLoader(LOADER_ID, null, callbacks);
+        }
+        
+    };    
 
     private static final boolean loggingEnabled = true;
     
@@ -56,6 +73,11 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         } else {
             Log.d(TAG, "No need to generate keys");
         }
+                
+        // Set up a LocalBroadcastManager so that when we receive a new SMS we can update the conversation list dynamically
+        // TODO: The intent filter must be wrong as onReceive is never called
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, 
+                new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
         
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);        
 
@@ -132,7 +154,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
          SMS columns seem to be: _ID, THREAD_ID, ADDRESS, PERSON, DATE, DATE_SENT, READ, SEEN, STATUS
          * SUBJECT, BODY, PERSON, PROTOCOL, REPLY_PATH_PRESENT, SERVICE_CENTRE, LOCKED, ERROR_CODE, META_DATA
          
-        String[] returnedColumns = {"thread_id", "msg_count", "snippet"};
+        String[] returnedColumns = {"_id", "thread_id", "msg_count", "snippet"};
 
         // Default sort order is date DESC, change to date ASC so texts appear in order
         String sortOrder = "thread_id DESC, date ASC";
@@ -190,7 +212,13 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
      */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-         getSupportLoaderManager().restartLoader(LOADER_ID, null, this);          
+        
+        /*
+         * Clears out the adapter's reference to the Cursor.
+         * This prevents memory leaks.
+         */
+        contactListAdapter.clear();
+  
     }        
    
     /**
@@ -445,8 +473,14 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         
         ArrayList<String> contactNames = new ArrayList<String>();
         
-        for (Contact c : contacts) {
+        // Supposedly 3x faster to hand write the loop rather using for each
+        // http://developer.android.com/training/articles/perf-tips.html
+        /* for (Contact c : contacts) {
             contactNames.add(c.getContactName());
+        } */
+        
+        for (int i = 0; i < contacts.size(); i++) {
+            contactNames.add(contacts.get(i).getContactName());
         }
         
         return contactNames;        

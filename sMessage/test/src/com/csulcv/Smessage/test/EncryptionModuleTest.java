@@ -1,3 +1,7 @@
+/**
+ * EncryptionModule.java
+ * @author Paul Roper
+ */
 package com.csulcv.Smessage.test;
 
 import java.math.BigInteger;
