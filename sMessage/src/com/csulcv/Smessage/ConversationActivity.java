@@ -34,7 +34,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
 
     private SmsManager smsManager = SmsManager.getDefault();
     
-    private static final String TAG = "Smessage: SendMessage Activity";
+    private static final String TAG = "Smessage: Conversation Activity";
     private static final int LOADER_ID = 0; 
     private static String contactName = "";
     private static String contactPhoneNumber = "";
@@ -43,7 +43,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     private ListView messageList = null;
     private SimpleCursorAdapter messages = null;
 
-    private boolean loggingEnabled = true;
+    private static final boolean loggingEnabled = true;
            
     /**
      * 
@@ -218,9 +218,9 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
         
         Uri smsUri = Uri.parse("content://sms/");
-        String numberWithoutAreaCode = HelperMethods.stripSeparatorsAndAreaCode(contactPhoneNumber);
+        String numberToFind = HelperMethods.stripSeparatorsAndAreaCode(contactPhoneNumber);
         
-        Log.i(TAG, "Address substring: " + numberWithoutAreaCode);
+        Log.i(TAG, "Address substring: " + numberToFind);
         
         /* 
          * SMS columns seem to be: _ID, THREAD_ID, ADDRESS, PERSON, DATE, DATE_SENT, READ, SEEN, STATUS
@@ -228,8 +228,16 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
          */
         String[] returnedColumnsSmsCursor = {"_id", "thread_id", "address", "body", "date", "type"};
 
-        // Set up WHERE clause; find texts from address containing the number without an area code
-        String address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE '%" + numberWithoutAreaCode + "'";
+        String address = "";
+        
+        // Set up WHERE clause; find texts from address containing the number without an area code. If the number is
+        // actually a word (like Google), don't strip any separators from the address stored in the table
+        // TODO: Sent messages aren't displaying...
+        if (numberToFind.matches("\\d")) {
+            address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE '%" + numberToFind + "'";
+        } else {    
+            address = "REPLACE(address, ' ', '') LIKE '%" + numberToFind + "'";
+        }
         
         // Default sort order is date DESC, change to date ASC so texts appear in order
         String sortOrder = "thread_id ASC, date ASC";

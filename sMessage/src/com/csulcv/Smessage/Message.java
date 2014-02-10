@@ -6,6 +6,8 @@ package com.csulcv.Smessage;
 
 class Message implements Comparable<Message> {
      
+     // TODO: Not using getters and setters is supposedly faster so these could be made public. Alternatively, use 
+     // ProGuard as it apparently inlines the calls
      private int messageThreadId;
      private String messageBody;
      private String senderAddress;

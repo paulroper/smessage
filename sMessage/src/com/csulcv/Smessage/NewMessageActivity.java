@@ -21,7 +21,7 @@ import android.widget.EditText;
 public class NewMessageActivity extends ActionBarActivity {
 
     private SmsManager smsManager = SmsManager.getDefault();    
-    private final static String TAG = "Smessage: NewMessage Activity";
+    private final static String TAG = "Smessage: New Message Activity";
     
     /**
      * 

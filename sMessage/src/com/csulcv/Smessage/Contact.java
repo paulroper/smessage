@@ -6,6 +6,8 @@ package com.csulcv.Smessage;
 
 public class Contact {
     
+    // TODO: Not using getters and setters is supposedly faster so these could be made public. Alternatively, use 
+    // ProGuard as it apparently inlines the calls
     private String contactName;
     private String contactPhoneNumber;
     private String contactPhotoId;

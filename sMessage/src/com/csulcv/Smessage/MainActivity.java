@@ -21,7 +21,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -42,9 +41,9 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     private ArrayAdapter<Contact> contactListAdapter = null;    
     
     private LoaderCallbacks<Cursor> callbacks = this;
+    private static final IntentFilter newSmsIntent = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver () {
-        
-        // TODO: Get this working!
+
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "Intent received: " + intent.getType());
@@ -74,11 +73,10 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
             Log.d(TAG, "No need to generate keys");
         }
                 
-        // Set up a LocalBroadcastManager so that when we receive a new SMS we can update the conversation list dynamically
-        // TODO: The intent filter must be wrong as onReceive is never called
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, 
-                new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
+        // Set up a BroadcastReceiver so that when we receive a new SMS we can update the conversation list dynamically
+        registerReceiver(broadcastReceiver, newSmsIntent);
         
+        // Start the cursor loader that gets SMS messages from the device
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);        
 
     }
@@ -193,7 +191,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 contactNamePhoneNumber.putString("CONTACT_NAME", contact.getContactName());
                 contactNamePhoneNumber.putString("CONTACT_PHONE_NUMBER", contact.getContactPhoneNumber());
                 
-                Log.i(TAG, "Starting SendMessage activity");          
+                Log.i(TAG, "Starting Conversation activity");          
                     
                 startActivity(intent);   
             }
@@ -203,10 +201,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     }    
     
     /**
-     * Invoked when the CursorLoader is being reset. For example, this is
-     * called if the data in the provider changes and the Cursor becomes stale.
-     * 
-     * TODO: Refresh message list when this happens.
+     * Invoked when the CursorLoader is being reset. 
      * 
      * @see
      */
