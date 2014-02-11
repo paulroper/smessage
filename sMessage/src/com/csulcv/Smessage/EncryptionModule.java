@@ -76,8 +76,9 @@ public class EncryptionModule {
             FileOutputStream publicKeyStream = activityContext.openFileOutput(rsaPrivateKeyFileName, Context.MODE_PRIVATE);
             
             // Get the keys to write and write them in to the file
-            publicKeyStream.write(keyPair.getPublic().toString().getBytes(Charset.defaultCharset()));
-            privateKeyStream.write(keyPair.getPrivate().toString().getBytes(Charset.defaultCharset()));            
+            // TODO: Find a serialisable format that the keys can be written in to
+            //publicKeyStream.write(keyPair.getPublic().toString().getBytes(Charset.defaultCharset()));
+            ///privateKeyStream.write(keyPair.getPrivate().toString().getBytes(Charset.defaultCharset()));            
             
             publicKeyStream.close();
             privateKeyStream.close();
