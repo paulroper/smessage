@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+    <!-- the theme applied to the application or activity -->
+    <style name="SmessageTheme"
+           parent="@style/Theme.AppCompat.Light">
+        <item name="actionBarStyle">@style/SmessageActionBar</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/SmessageActionBar</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="SmessageActionBar"
+           parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/actionbar_background</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@drawable/actionbar_background</item>
+    </style>
+    
+</resources>
