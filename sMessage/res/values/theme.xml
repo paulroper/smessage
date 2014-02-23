@@ -13,10 +13,10 @@
     <!-- ActionBar styles -->
     <style name="SmessageActionBar"
            parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/actionbar_background</item>
+        <item name="android:background">@string/action_bar_colour</item>
 
         <!-- Support library compatibility -->
-        <item name="background">@drawable/actionbar_background</item>
+        <item name="background">@string/action_bar_colour</item>
     </style>
     
 </resources>

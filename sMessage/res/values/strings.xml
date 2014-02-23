@@ -12,5 +12,6 @@
     <string name="new_message">New Message</string>
     <string name="contact_icon_desc">Contact image</string>
     <string name="secure_conversation_desc">Start a new secure conversation</string>
+    <string name="action_bar_colour">#32B1F0</string>
 
 </resources>
