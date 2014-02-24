@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -195,6 +196,8 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
         
         Uri smsUri = Uri.parse("content://sms/");
+        
+        // TODO: sqlEscapeString might not actually work correctly
         String numberToFind = HelperMethods.stripSeparatorsAndAreaCode(contactPhoneNumber);
         
         Log.i(TAG, "Address substring: " + numberToFind);

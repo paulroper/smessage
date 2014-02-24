@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Security;
 
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 import org.spongycastle.crypto.CipherKeyGenerator;
@@ -29,10 +30,15 @@ import com.csulcv.Smessage.EncryptionModule;
 
 public class EncryptionModuleTest extends AndroidTestCase {
 	
-	private String TAG = "Encryption Module Test";
+	private static String TAG = "Encryption Module Test";
 	
 	private AsymmetricCipherKeyPair keyPair = null;
-	private byte[] aesKey = null;
+	private byte[] aesKey = null;	
+    
+    static {    	
+        Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);        	
+    }
+    
 		
 	public EncryptionModuleTest() {		
 	}

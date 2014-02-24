@@ -55,7 +55,7 @@ public class EncryptionModule {
      * @param activityContext The context of the activity that this method was called from.
      * @param keySizeInBits   The size of the key to generate.
      */
-    public static PrivateKey generateAsymmetricKeys(Context activityContext, int keySizeInBits) {
+    public static void generateAsymmetricKeys(Context activityContext, int keySizeInBits) {
         
         RSAKeyPairGenerator keyGen = new RSAKeyPairGenerator();
         
@@ -75,12 +75,14 @@ public class EncryptionModule {
                 new SecureRandom(), RSA_STRENGTH, CERTAINTY));     
         
         AsymmetricCipherKeyPair keyPair = keyGen.generateKeyPair();
+        
+        // TODO: We'll need a self signed cert to store the keys in the keystore. Could use X.509.
 
         try {
             KeyStore keyStore = KeyStore.getInstance("BKS");
-            
+            keyStore.aliases();
             // TODO: Create a keystore file to load in. Get the user to input their password to unlock the keystore.            
-            keyStore.load(stream, password);
+            //keyStore.load(stream, password);
             
         } catch (KeyStoreException e) {
             Log.e(TAG, "Error loading key store");
@@ -103,7 +105,7 @@ public class EncryptionModule {
         aesKeyGen.init(new KeyGenerationParameters(new SecureRandom(), keySizeInBits));
         byte[] aesKey = aesKeyGen.generateKey();        
         
-        return aesKey;
+        return aesKey;    
         
     }
   

@@ -6,6 +6,7 @@
  */
 package com.csulcv.Smessage;
 
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -51,6 +52,10 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         }
         
     };    
+    
+    static {        
+        Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);         
+    }
 
     private static final boolean loggingEnabled = true;
     
