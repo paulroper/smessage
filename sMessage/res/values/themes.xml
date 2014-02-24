@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>   
+
+<!--  As we're taking care of actionBarStyle for separate API levels, we need to override the API level for 
+      android:actionBarStyle as that wasn't included in API level 7 -->
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- the theme applied to the application or activity -->
+    <style name="SmessageTheme"
+           parent="@style/Theme.AppCompat.Light">           
+
+        <item name="android:actionBarStyle" tools:targetApi="11">@style/SmessageActionBar</item>        
+                
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/SmessageActionBar</item>
+        
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="SmessageActionBar"
+           parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/action_bar_colour</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@color/action_bar_colour</item>
+    </style>
+
+</resources>

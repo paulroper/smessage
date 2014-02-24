@@ -66,6 +66,13 @@ public class EncryptionModuleTest extends AndroidTestCase {
 	protected void tearDown() {		
 	}
 	
+	public void testPrivateKeyCasting() {
+	    
+	    String algorithm = EncryptionModule.generateAsymmetricKeys(getContext(), 256);
+	    Log.d(TAG, algorithm);
+	    
+	}
+	
 	public void testRSAEncryption() {
 		
 		String TEST_STRING = "hjMIJC2ixV3RjmAFFhRNuTxI8xdGYHijZJLU5iHPGxN7iYpwnhMtLX1XSBzhhHE";

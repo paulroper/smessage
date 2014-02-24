@@ -5,13 +5,12 @@
 package com.csulcv.Smessage;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
+import org.spongycastle.asn1.pkcs.RSAPrivateKey;
 import org.spongycastle.crypto.AsymmetricBlockCipher;
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 import org.spongycastle.crypto.BlockCipher;
@@ -30,6 +29,7 @@ import org.spongycastle.crypto.paddings.PKCS7Padding;
 import org.spongycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.spongycastle.crypto.params.KeyParameter;
 import org.spongycastle.crypto.params.RSAKeyGenerationParameters;
+import org.spongycastle.crypto.params.RSAPrivateCrtKeyParameters;
 import org.spongycastle.util.encoders.Base64;
 
 import android.content.Context;
@@ -48,7 +48,7 @@ public class EncryptionModule {
      * @param activityContext The context of the activity that this method was called from.
      * @param keySizeInBits   The size of the key to generate.
      */
-    public static void generateAsymmetricKeys(Context activityContext, int keySizeInBits) {
+    public static String generateAsymmetricKeys(Context activityContext, int keySizeInBits) {
         
         RSAKeyPairGenerator keyGen = new RSAKeyPairGenerator();
         
@@ -68,7 +68,12 @@ public class EncryptionModule {
                 new SecureRandom(), RSA_STRENGTH, CERTAINTY));     
         
         AsymmetricCipherKeyPair keyPair = keyGen.generateKeyPair();
-               
+        
+        RSAPrivateCrtKeyParameters privateKey = (RSAPrivateCrtKeyParameters) keyPair.getPrivate();
+        RSAPrivateKey rsaKey = new RSAPrivateKey(privateKey.getModulus(), privateKey.getPublicExponent(), privateKey.getD);
+        return privateKey.
+        
+        /*
         try {
             
             // Open a couple of private files to write keys to
@@ -85,7 +90,8 @@ public class EncryptionModule {
             
         } catch (IOException exception) {
             Log.e(TAG, "Error opening key file");            
-        }        
+        }  
+        */     
 
     }    
     

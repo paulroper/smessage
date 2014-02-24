@@ -4,9 +4,6 @@
  */
 package com.csulcv.Smessage;
 
-import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
@@ -132,29 +129,9 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     }
     
     public void startSecureConversation() {
-        
-        BufferedInputStream key = null;
-        
-        try {
-            key = new BufferedInputStream(openFileInput(EncryptionModule.getRSAPublicKeyFileName()));
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "Key file not found", e);
-        }
-        
-        byte[] buffer = new byte[2048];
-        
-        try {
-            
-            while (key.available() > 0) {
-                key.read(buffer);
-            }
-            
-        } catch (IOException e) {
-            Log.e(TAG, "Error reading key from file", e);
-        }
-        
-        Log.d(TAG, "Key is " + new String(buffer));
-              
+
+        // TODO: Key store loading + exchange happens here!
+
     }
     
     /**

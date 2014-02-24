@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>    
+        
+    <!--  Define any colours used by the theme -->        
+    <color name="action_bar_colour">#3E97D1</color>
+    
+</resources>
