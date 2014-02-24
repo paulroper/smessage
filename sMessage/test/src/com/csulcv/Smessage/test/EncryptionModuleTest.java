@@ -4,14 +4,22 @@
  */
 package com.csulcv.Smessage.test;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 import org.spongycastle.crypto.CipherKeyGenerator;
 import org.spongycastle.crypto.KeyGenerationParameters;
 import org.spongycastle.crypto.generators.RSAKeyPairGenerator;
+import org.spongycastle.crypto.params.AsymmetricKeyParameter;
 import org.spongycastle.crypto.params.RSAKeyGenerationParameters;
+import org.spongycastle.crypto.params.RSAKeyParameters;
+import org.spongycastle.crypto.params.RSAPrivateCrtKeyParameters;
+import org.spongycastle.crypto.util.PrivateKeyFactory;
+import org.spongycastle.crypto.util.PublicKeyFactory;
 import org.spongycastle.util.encoders.Base64;
 
 import android.test.AndroidTestCase;
@@ -66,15 +74,45 @@ public class EncryptionModuleTest extends AndroidTestCase {
 	protected void tearDown() {		
 	}
 	
-	public void testPrivateKeyCasting() {
-	    
-	    String algorithm = EncryptionModule.generateAsymmetricKeys(getContext(), 256);
-	    Log.d(TAG, algorithm);
-	    
+	/**
+	 * Test the methods for converting AsymmetricCipherParameter objects into PrivateKey/PublicKey objects and then back
+	 * again to make sure that the keys are still valid.
+	 */
+	public void testRSAKeyDataTypeConversion() {
+		
+		String TEST_STRING = "hjMIJC2ixV3RjmAFFhRNuTxI8xdGYHijZJLU5iHPGxN7iYpwnhMtLX1XSBzhhHE";
+	
+		PrivateKey rsaPrivateKey = EncryptionModule.convertToPrivateKey( (RSAPrivateCrtKeyParameters) keyPair.getPrivate() );
+		PublicKey rsaPublicKey = EncryptionModule.convertToPublicKey( (RSAKeyParameters) keyPair.getPublic() );
+		
+		AsymmetricKeyParameter convertedRsaPrivateKey = null;
+		AsymmetricKeyParameter convertedRsaPublicKey = null;
+		
+		try {
+			convertedRsaPrivateKey = PrivateKeyFactory.createKey(rsaPrivateKey.getEncoded());
+			convertedRsaPublicKey = PublicKeyFactory.createKey(rsaPublicKey.getEncoded());
+		} catch (IOException e) {
+			Log.e(TAG, "Error creating asymmetric cipher parameter from keys");
+		}
+			
+		try {
+			
+			final boolean ENCRYPT = true;
+			
+			String encryptedString = EncryptionModule.rsa(getContext(), TEST_STRING, convertedRsaPublicKey, ENCRYPT);
+			String decryptedString = EncryptionModule.rsa(getContext(), encryptedString, convertedRsaPrivateKey, !ENCRYPT);
+			
+			assertEquals(TEST_STRING, decryptedString);			
+			
+		} catch (Exception e) {
+			Log.e(TAG, "Error running RSA encryption test", e);
+		}		
+		
 	}
 	
 	public void testRSAEncryption() {
 		
+		// RSA is used for encrypting keys so give it a fake key to encrypt
 		String TEST_STRING = "hjMIJC2ixV3RjmAFFhRNuTxI8xdGYHijZJLU5iHPGxN7iYpwnhMtLX1XSBzhhHE";
 		
 		try {

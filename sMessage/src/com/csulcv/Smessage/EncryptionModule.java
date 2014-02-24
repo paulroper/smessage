@@ -7,10 +7,16 @@ package com.csulcv.Smessage;
 import java.io.File;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.security.KeyFactory;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.spec.RSAPrivateCrtKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.Arrays;
 
-import org.spongycastle.asn1.pkcs.RSAPrivateKey;
 import org.spongycastle.crypto.AsymmetricBlockCipher;
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 import org.spongycastle.crypto.BlockCipher;
@@ -29,6 +35,7 @@ import org.spongycastle.crypto.paddings.PKCS7Padding;
 import org.spongycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.spongycastle.crypto.params.KeyParameter;
 import org.spongycastle.crypto.params.RSAKeyGenerationParameters;
+import org.spongycastle.crypto.params.RSAKeyParameters;
 import org.spongycastle.crypto.params.RSAPrivateCrtKeyParameters;
 import org.spongycastle.util.encoders.Base64;
 
@@ -43,12 +50,12 @@ public class EncryptionModule {
     private static String rsaPrivateKeyFileName = "rsa_private_key";
 
     /**
-     * Generates an RSA public/private key pair and stores them to a local file unavailable to the user.
+     * Generates an RSA public/private key pair and stores them to a local key store unavailable to the user.
      * 
      * @param activityContext The context of the activity that this method was called from.
      * @param keySizeInBits   The size of the key to generate.
      */
-    public static String generateAsymmetricKeys(Context activityContext, int keySizeInBits) {
+    public static PrivateKey generateAsymmetricKeys(Context activityContext, int keySizeInBits) {
         
         RSAKeyPairGenerator keyGen = new RSAKeyPairGenerator();
         
@@ -68,32 +75,19 @@ public class EncryptionModule {
                 new SecureRandom(), RSA_STRENGTH, CERTAINTY));     
         
         AsymmetricCipherKeyPair keyPair = keyGen.generateKeyPair();
-        
-        RSAPrivateCrtKeyParameters privateKey = (RSAPrivateCrtKeyParameters) keyPair.getPrivate();
-        RSAPrivateKey rsaKey = new RSAPrivateKey(privateKey.getModulus(), privateKey.getPublicExponent(), privateKey.getD);
-        return privateKey.
-        
-        /*
-        try {
-            
-            // Open a couple of private files to write keys to
-            FileOutputStream privateKeyStream = activityContext.openFileOutput(rsaPublicKeyFileName, Context.MODE_PRIVATE);
-            FileOutputStream publicKeyStream = activityContext.openFileOutput(rsaPrivateKeyFileName, Context.MODE_PRIVATE);
-            
-            // Get the keys to write and write them in to the file
-            // TODO: Find a serialisable format that the keys can be written in to
-            //publicKeyStream.write(keyPair.getPublic().toString().getBytes(Charset.defaultCharset()));
-            ///privateKeyStream.write(keyPair.getPrivate().toString().getBytes(Charset.defaultCharset()));            
-            
-            publicKeyStream.close();
-            privateKeyStream.close();
-            
-        } catch (IOException exception) {
-            Log.e(TAG, "Error opening key file");            
-        }  
-        */     
 
-    }    
+        try {
+            KeyStore keyStore = KeyStore.getInstance("BKS");
+            
+            // TODO: Create a keystore file to load in. Get the user to input their password to unlock the keystore.            
+            keyStore.load(stream, password);
+            
+        } catch (KeyStoreException e) {
+            Log.e(TAG, "Error loading key store");
+        }
+       
+        
+    }
     
     /**
      * Generate a new symmetric key used for AES message encryption.
@@ -282,6 +276,70 @@ public class EncryptionModule {
     
     public static String getRSAPrivateKeyFileName() {
         return rsaPrivateKeyFileName;
+    }
+    
+    /**
+     * Convert an RSA AsymmetricKeyParameter into a PrivateKey so that it's storable in a local key store.
+     * 
+     * @param rsaPrivateKeyParameters The private key parameters from the asymmetric key pair.
+     * @return                        A PrivateKey object.
+     */
+    public static PrivateKey convertToPrivateKey(RSAPrivateCrtKeyParameters rsaPrivateKeyParameters) {
+        
+        // Turn the key parameter into a specification that can be used to build the key
+        // The correct "gets" were found from the source code for RSAPrivateCrtParameters:
+        // http://dev.telnic.org/trac/browser/apps/blackberry/trunk/blackberry/src/org/bouncycastle/crypto/params/RSAPrivateCrtKeyParameters.java?rev=339
+        RSAPrivateCrtKeySpec rsaPrivateKeySpec = new RSAPrivateCrtKeySpec(  rsaPrivateKeyParameters.getModulus(), 
+                                                                            rsaPrivateKeyParameters.getPublicExponent(), 
+                                                                            rsaPrivateKeyParameters.getExponent(), 
+                                                                            rsaPrivateKeyParameters.getP(), 
+                                                                            rsaPrivateKeyParameters.getQ(), 
+                                                                            rsaPrivateKeyParameters.getDP(), 
+                                                                            rsaPrivateKeyParameters.getDQ(), 
+                                                                            rsaPrivateKeyParameters.getQInv() );
+        
+        PrivateKey rsaPrivateKey = null;
+        
+        try {
+            
+            // Use the Java crypto key factory to generate a PrivateKey from the spec
+            rsaPrivateKey = KeyFactory.getInstance("RSA").generatePrivate(rsaPrivateKeySpec);   
+        
+        } catch (Exception e) {
+            Log.e(TAG, "Error converting RSA key spec into private key");
+        }
+        
+        return rsaPrivateKey;
+        
+    }
+    
+    /**
+     * Convert an RSA AsymmetricKeyParameter into a PublicKey so that it's storable in a local key store.
+     * 
+     * @param rsaPublicKeyParameters The public key parameters from the asymmetric key pair.
+     * @return                       A PublicKey object.
+     */
+    public static PublicKey convertToPublicKey(RSAKeyParameters rsaPublicKeyParameters) {
+        
+        // Turn the key parameter into a specification that can be used to build the key
+        // The correct "gets" were found from the source code for RSAPrivateCrtParameters:
+        // http://dev.telnic.org/trac/browser/apps/blackberry/trunk/blackberry/src/org/bouncycastle/crypto/params/RSAPrivateCrtKeyParameters.java?rev=339
+        RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(   rsaPublicKeyParameters.getModulus(), 
+                                                                    rsaPublicKeyParameters.getExponent() );
+        
+        PublicKey rsaPublicKey = null;
+        
+        try {
+            
+            // Use the Java crypto key factory to generate a PrivateKey from the spec
+            rsaPublicKey = KeyFactory.getInstance("RSA").generatePublic(rsaPublicKeySpec);   
+        
+        } catch (Exception e) {
+            Log.e(TAG, "Error converting RSA key spec into private key");
+        }
+        
+        return rsaPublicKey;
+        
     }
        
 }
