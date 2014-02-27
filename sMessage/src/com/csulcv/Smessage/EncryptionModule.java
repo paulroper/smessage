@@ -5,18 +5,27 @@
 package com.csulcv.Smessage;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.KeyFactory;
+import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Arrays;
+import java.util.Date;
 
+import javax.security.auth.x500.X500Principal;
+
+import org.spongycastle.asn1.x509.X509Extensions;
+import org.spongycastle.cert.X509v3CertificateBuilder;
 import org.spongycastle.crypto.AsymmetricBlockCipher;
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 import org.spongycastle.crypto.BlockCipher;
@@ -38,6 +47,8 @@ import org.spongycastle.crypto.params.RSAKeyGenerationParameters;
 import org.spongycastle.crypto.params.RSAKeyParameters;
 import org.spongycastle.crypto.params.RSAPrivateCrtKeyParameters;
 import org.spongycastle.util.encoders.Base64;
+import org.spongycastle.x509.extension.AuthorityKeyIdentifierStructure;
+import org.spongycastle.x509.extension.SubjectKeyIdentifierStructure;
 
 import android.content.Context;
 import android.util.Log;
@@ -55,7 +66,7 @@ public class EncryptionModule {
      * @param activityContext The context of the activity that this method was called from.
      * @param keySizeInBits   The size of the key to generate.
      */
-    public static void generateAsymmetricKeys(Context activityContext, int keySizeInBits) {
+    public static void generateAsymmetricKeys(Context activityContext, int keySizeInBits, String keyStorePassword) {
         
         RSAKeyPairGenerator keyGen = new RSAKeyPairGenerator();
         
@@ -75,17 +86,33 @@ public class EncryptionModule {
                 new SecureRandom(), RSA_STRENGTH, CERTAINTY));     
         
         AsymmetricCipherKeyPair keyPair = keyGen.generateKeyPair();
-        
-        // TODO: We'll need a self signed cert to store the keys in the keystore. Could use X.509.
 
+        // Convert the AsymmetricKeyParameters into JCE format PrivateKey/PublicKey objects
+        PrivateKey rsaPrivateKey = convertToPrivateKey( (RSAPrivateCrtKeyParameters) keyPair.getPrivate() );
+        PublicKey rsaPublicKey = convertToPublicKey( (RSAKeyParameters) keyPair.getPublic() );
+        
+        // Create an X.509 certificate (TODO: Why do we need to do this?)
+        //X509v3CertificateBuilder
+        
+        // Create a new keys file that we'll use as the key store
+        File file = new File(activityContext.getFilesDir(), "keys.bks");
+        FileOutputStream outputStream = new FileOutputStream(file);
+
+        Certificate[] certificateChain = { };
+        
         try {
-            KeyStore keyStore = KeyStore.getInstance("BKS");
-            keyStore.aliases();
-            // TODO: Create a keystore file to load in. Get the user to input their password to unlock the keystore.            
-            //keyStore.load(stream, password);
+            
+            KeyStore keyStore = KeyStore.getInstance("BKS");           
+            keyStore.aliases();            
+            
+            keyStore.setKeyEntry("OwnPrivateKey", rsaPrivateKey, certificateChain);  
+            keyStore.setKeyEntry("OwnPublicKey", rsaPublicKey, certificateChain);
+            
+            // TODO: Password protect this properly by getting input from the user or something
+            keyStore.store(outputStream, keyStorePassword.toCharArray());
             
         } catch (KeyStoreException e) {
-            Log.e(TAG, "Error loading key store");
+            Log.e(TAG, "Error creating key store");
         }
        
         
