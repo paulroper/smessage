@@ -10,7 +10,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;

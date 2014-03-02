@@ -38,10 +38,5 @@ public class LogWrapper {
         if (loggingEnabled)
             Log.w(tag, msg);       
     }
-    
-    public static void wtf(String tag, String msg) {        
-        if (loggingEnabled)
-            Log.wtf(tag, msg);       
-    }
 
 }

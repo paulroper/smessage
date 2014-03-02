@@ -5,27 +5,21 @@
 package com.csulcv.Smessage;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.KeyFactory;
-import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Arrays;
-import java.util.Date;
 
-import javax.security.auth.x500.X500Principal;
-
-import org.spongycastle.asn1.x509.X509Extensions;
-import org.spongycastle.cert.X509v3CertificateBuilder;
 import org.spongycastle.crypto.AsymmetricBlockCipher;
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 import org.spongycastle.crypto.BlockCipher;
@@ -47,8 +41,6 @@ import org.spongycastle.crypto.params.RSAKeyGenerationParameters;
 import org.spongycastle.crypto.params.RSAKeyParameters;
 import org.spongycastle.crypto.params.RSAPrivateCrtKeyParameters;
 import org.spongycastle.util.encoders.Base64;
-import org.spongycastle.x509.extension.AuthorityKeyIdentifierStructure;
-import org.spongycastle.x509.extension.SubjectKeyIdentifierStructure;
 
 import android.content.Context;
 import android.util.Log;
@@ -96,20 +88,30 @@ public class EncryptionModule {
         
         // Create a new keys file that we'll use as the key store
         File file = new File(activityContext.getFilesDir(), "keys.bks");
-        FileOutputStream outputStream = new FileOutputStream(file);
+        FileOutputStream outputStream = null;
 
-        Certificate[] certificateChain = { };
+        try {
+            outputStream = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "Error opening file");
+        }
+
+        Certificate[] certificateChain = {};
         
         try {
             
             KeyStore keyStore = KeyStore.getInstance("BKS");           
             keyStore.aliases();            
             
-            keyStore.setKeyEntry("OwnPrivateKey", rsaPrivateKey, certificateChain);  
-            keyStore.setKeyEntry("OwnPublicKey", rsaPublicKey, certificateChain);
+            keyStore.setKeyEntry("OwnPrivateKey", rsaPrivateKey.getEncoded(), certificateChain);
+            keyStore.setKeyEntry("OwnPublicKey", rsaPublicKey.getEncoded(), certificateChain);
             
             // TODO: Password protect this properly by getting input from the user or something
-            keyStore.store(outputStream, keyStorePassword.toCharArray());
+            try {
+                keyStore.store(outputStream, keyStorePassword.toCharArray());
+            } catch (Exception e) {
+                // TODO: Exception handling
+            }
             
         } catch (KeyStoreException e) {
             Log.e(TAG, "Error creating key store");
@@ -158,13 +160,13 @@ public class EncryptionModule {
         BufferedAsymmetricBlockCipher cipher = 
                 new BufferedAsymmetricBlockCipher(new OAEPEncoding(engine));
         
-        byte[] input = null;
+        byte[] input;
 
         // Convert the input String into bytes. Decode from base 64 if we're decrypting.
         if (encrypt) {
-            input = message.getBytes(Charset.defaultCharset());
+            input = message.getBytes(Charset.defaultCharset().displayName());
         } else {
-            input = Base64.decode(message.getBytes(Charset.defaultCharset()));
+            input = Base64.decode(message.getBytes(Charset.defaultCharset().displayName()));
         }
             
         cipher.init(encrypt, key);
@@ -196,9 +198,9 @@ public class EncryptionModule {
         // Encode the message in base 64 so that it's human readable or decode it if we're dealing with a decrypted
         // message
         if (encrypt) {
-            return new String(Base64.encode(output), Charset.defaultCharset());
+            return new String(Base64.encode(output), Charset.defaultCharset().displayName());
         } else {
-            return new String(output, Charset.defaultCharset());
+            return new String(output, Charset.defaultCharset().displayName());
         }
 
     }
@@ -224,9 +226,9 @@ public class EncryptionModule {
 
         // Convert the input String into bytes. Decode from base 64 if we're decrypting.
         if (encrypt) {
-            input = message.getBytes(Charset.defaultCharset());
+            input = message.getBytes(Charset.defaultCharset().displayName());
         } else {
-            input = Base64.decode(message.getBytes(Charset.defaultCharset()));
+            input = Base64.decode(message.getBytes(Charset.defaultCharset().displayName()));
         }
             
         cipher.init(encrypt, new KeyParameter(key));
@@ -243,6 +245,7 @@ public class EncryptionModule {
         int outputLength = cipher.processBytes(input, INPUT_OFFSET, input.length, output, OUTPUT_OFFSET);
         int finalOutputLength;
         int originalMessageSize = 0;;
+        byte[] outputResized = null;
         
         Log.d(TAG, "processBytes: Processed " + outputLength + " bytes.");
         
@@ -256,7 +259,12 @@ public class EncryptionModule {
                  * creating a new array of that size. Arrays.copyOf() will truncate the array to remove the padding.
                  */ 
                 originalMessageSize = outputLength + finalOutputLength;
-                output = Arrays.copyOf(output, originalMessageSize);
+                
+                // output = Arrays.copyOf(output, originalMessageSize); Requires API level 9
+                
+                // Resize the output array to remove padding, offsets are 0
+                outputResized = new byte[originalMessageSize];
+                System.arraycopy(output, INPUT_OFFSET, outputResized, OUTPUT_OFFSET, originalMessageSize);
                 
             }
                 
@@ -276,9 +284,9 @@ public class EncryptionModule {
         // Encode the message in base 64 so that it's human readable or decode it if we're dealing with a decrypted
         // message
         if (encrypt) {
-            return new String(Base64.encode(output), Charset.defaultCharset());
+            return new String(Base64.encode(output), Charset.defaultCharset().displayName());
         } else {
-            return new String(output, Charset.defaultCharset());
+            return new String(outputResized, Charset.defaultCharset().displayName());
         }
 
     }    

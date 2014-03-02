@@ -71,8 +71,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
  
         // Generate the asymmetric keys for RSA if we have to
         if (!EncryptionModule.rsaKeysExist(this.getBaseContext())) {
-            final int RSA_STRENGTH = 2048;
-            EncryptionModule.generateAsymmetricKeys(this.getBaseContext(), RSA_STRENGTH);
+            //final int RSA_STRENGTH = 2048;
+            //EncryptionModule.generateAsymmetricKeys(this.getBaseContext(), RSA_STRENGTH, "TEST");
             Log.d(TAG, "Finished generating keys");
         } else {
             Log.d(TAG, "No need to generate keys");

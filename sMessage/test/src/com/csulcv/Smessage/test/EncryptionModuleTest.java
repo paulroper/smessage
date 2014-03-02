@@ -167,6 +167,7 @@ public class EncryptionModuleTest extends AndroidTestCase {
 
 		final int AES_STRENGTH = 256;
 		String aesKey = new String(Base64.encode(EncryptionModule.generateSymmetricKey(getContext(), AES_STRENGTH)));
+		String decryptedMessage = null;
 		
 		Log.d(TAG, "The AES key is " + aesKey);
 		
@@ -185,14 +186,14 @@ public class EncryptionModuleTest extends AndroidTestCase {
 			String decryptedKey = EncryptionModule.rsa(getContext(), encryptedKey, keyPair.getPrivate(), !ENCRYPT);
 			
 			// Decrypt the original message
-			String decryptedMessage = EncryptionModule.aes(getContext(), encryptedMessage, 
+			decryptedMessage = EncryptionModule.aes(getContext(), encryptedMessage, 
 					Base64.decode(decryptedKey.getBytes()), !ENCRYPT);
-			
-			assertEquals(message, decryptedMessage);
 			
 		} catch (Exception e) {
 			Log.e(TAG, "Error during key exchange test", e);
-		}
+		}		
+        
+        assertEquals(message, decryptedMessage);
 			
 	}
 

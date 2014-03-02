@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/prov-1.50.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/core-1.50.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/pkix-1.50.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

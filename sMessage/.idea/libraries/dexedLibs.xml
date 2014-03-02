@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="dexedLibs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/sc-bzip2-1.47.0.2-c7f450744691670cc96c6be299807598.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/sc-light-jdk15on-1.47.0.2-9c7441728b5926ab0d03accfc68780d3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v4-ef7ffd475b009b8755d81ad13fd447d6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v7-appcompat-6cf5f3804ea2f627fbb74282fa868cae.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v7-appcompat-37423621d99872c6216c52f51f5cea8c.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/scpg-jdk15on-1.47.0.2-7a43122bd8840fe4264dcb3bf921d86c.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
