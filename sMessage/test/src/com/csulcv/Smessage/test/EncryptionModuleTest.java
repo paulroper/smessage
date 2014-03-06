@@ -105,8 +105,8 @@ public class EncryptionModuleTest extends AndroidTestCase {
 			
 			final boolean ENCRYPT = true;
 			
-			String encryptedString = EncryptionModule.rsa(getContext(), TEST_STRING, convertedRsaPublicKey, ENCRYPT);
-			String decryptedString = EncryptionModule.rsa(getContext(), encryptedString, convertedRsaPrivateKey, !ENCRYPT);
+			String encryptedString = EncryptionModule.rsa(TEST_STRING, convertedRsaPublicKey, ENCRYPT);
+			String decryptedString = EncryptionModule.rsa(encryptedString, convertedRsaPrivateKey, !ENCRYPT);
 			
 			assertEquals(TEST_STRING, decryptedString);			
 			
@@ -125,8 +125,8 @@ public class EncryptionModuleTest extends AndroidTestCase {
 			
 			final boolean ENCRYPT = true;
 			
-			String encryptedString = EncryptionModule.rsa(getContext(), TEST_STRING, keyPair.getPublic(), ENCRYPT);
-			String decryptedString = EncryptionModule.rsa(getContext(), encryptedString, keyPair.getPrivate(), !ENCRYPT);
+			String encryptedString = EncryptionModule.rsa(TEST_STRING, keyPair.getPublic(), ENCRYPT);
+			String decryptedString = EncryptionModule.rsa(encryptedString, keyPair.getPrivate(), !ENCRYPT);
 			
 			assertEquals(TEST_STRING, decryptedString);			
 			
@@ -148,8 +148,8 @@ public class EncryptionModuleTest extends AndroidTestCase {
 			
 			final boolean ENCRYPT = true;
 			
-			String encryptedString = EncryptionModule.aes(getContext(), TEST_STRING, aesKey, ENCRYPT);
-			String decryptedString = EncryptionModule.aes(getContext(), encryptedString, aesKey, !ENCRYPT);
+			String encryptedString = EncryptionModule.aes(TEST_STRING, aesKey, ENCRYPT);
+			String decryptedString = EncryptionModule.aes(encryptedString, aesKey, !ENCRYPT);
 			
 			assertEquals(TEST_STRING, decryptedString);
 			
@@ -166,7 +166,7 @@ public class EncryptionModuleTest extends AndroidTestCase {
 				+ "of blocks to encrypt.";
 
 		final int AES_STRENGTH = 256;
-		String aesKey = new String(Base64.encode(EncryptionModule.generateSymmetricKey(getContext(), AES_STRENGTH)));
+		String aesKey = new String(Base64.encode(EncryptionModule.generateSymmetricKey(AES_STRENGTH)));
 		String decryptedMessage = null;
 		
 		Log.d(TAG, "The AES key is " + aesKey);
@@ -176,17 +176,17 @@ public class EncryptionModuleTest extends AndroidTestCase {
 			final boolean ENCRYPT = true;
 			
 			// Generate an encrypted message using AES.
-			String encryptedMessage = EncryptionModule.aes(getContext(), message, Base64.decode(aesKey.getBytes()), 
+			String encryptedMessage = EncryptionModule.aes(message, Base64.decode(aesKey.getBytes()),
 					ENCRYPT); 
 
 			// Use a public key and RSA encryption to produce an encrypted secret key.
-			String encryptedKey = EncryptionModule.rsa(getContext(), aesKey, keyPair.getPublic(), ENCRYPT);		
+			String encryptedKey = EncryptionModule.rsa(aesKey, keyPair.getPublic(), ENCRYPT);
 			
 			// Decrypt the symmetric key using a private key
-			String decryptedKey = EncryptionModule.rsa(getContext(), encryptedKey, keyPair.getPrivate(), !ENCRYPT);
+			String decryptedKey = EncryptionModule.rsa(encryptedKey, keyPair.getPrivate(), !ENCRYPT);
 			
 			// Decrypt the original message
-			decryptedMessage = EncryptionModule.aes(getContext(), encryptedMessage, 
+			decryptedMessage = EncryptionModule.aes(encryptedMessage,
 					Base64.decode(decryptedKey.getBytes()), !ENCRYPT);
 			
 		} catch (Exception e) {

@@ -48,9 +48,7 @@ import android.util.Log;
 public class EncryptionModule {
     
     private static final String TAG = "EncryptionModule";
-
-    private static String rsaPublicKeyFileName = "rsa_public_key";
-    private static String rsaPrivateKeyFileName = "rsa_private_key";
+    private static String keyStoreFileName = "keyStore.bks";
 
     /**
      * Generates an RSA public/private key pair and stores them to a local key store unavailable to the user.
@@ -123,18 +121,15 @@ public class EncryptionModule {
     /**
      * Generate a new symmetric key used for AES message encryption.
      * 
-     * @param activityContext The context of the activity that this method was called from.
      * @param keySizeInBits   The size of the key to generate.
      * @return                A byte[] array containing a symmetric key ready to be encrypted and sent to the recipient.             
      */
-    public static byte[] generateSymmetricKey(Context activityContext, int keySizeInBits) {
+    public static byte[] generateSymmetricKey(int keySizeInBits) {
         
         CipherKeyGenerator aesKeyGen = new CipherKeyGenerator();
-        
         aesKeyGen.init(new KeyGenerationParameters(new SecureRandom(), keySizeInBits));
-        byte[] aesKey = aesKeyGen.generateKey();        
-        
-        return aesKey;    
+
+        return aesKeyGen.generateKey();
         
     }
   
@@ -145,13 +140,12 @@ public class EncryptionModule {
      * 
      * See Q5: http://www.bouncycastle.org/wiki/display/JA1/Frequently+Asked+Questions
      * 
-     * @param activityContext The context of the activity that this method was called from.
      * @param message         The message to encrypt.
      * @param key             A secret key for encryption.
      * @param encrypt         True to encrypt a message, false to decrypt a message.
      * @return                A String containing the encrypted message.
      */
-    public static String rsa(Context activityContext, String message, CipherParameters key, boolean encrypt) throws Exception {
+    public static String rsa(String message, CipherParameters key, boolean encrypt) throws Exception {
         
         Log.d(TAG, "Message is: " + message);
         
@@ -207,14 +201,13 @@ public class EncryptionModule {
     
     /** 
      * Encrypt/decrypt a String message using AES. 
-     * 
-     * @param activityContext The context of the activity that this method was called from.
+     *
      * @param message         The message to encrypt.
      * @param key             A secret key for encryption.
      * @param encrypt         True to encrypt a message, false to decrypt a message.
      * @return                A String containing the encrypted message.
      */
-    public static String aes(Context activityContext, String message, byte[] key, boolean encrypt) throws Exception {
+    public static String aes(String message, byte[] key, boolean encrypt) throws Exception {
         
         Log.d(TAG, "Message is: " + message);
         
@@ -244,7 +237,7 @@ public class EncryptionModule {
         // Process the message 
         int outputLength = cipher.processBytes(input, INPUT_OFFSET, input.length, output, OUTPUT_OFFSET);
         int finalOutputLength;
-        int originalMessageSize = 0;;
+        int originalMessageSize = 0;
         byte[] outputResized = null;
         
         Log.d(TAG, "processBytes: Processed " + outputLength + " bytes.");
@@ -294,27 +287,16 @@ public class EncryptionModule {
     /**
      * Check whether the RSA keys have been generated.
      * 
-     * @param activityContext The context of the activity that this method was called from.
      * @return                True if both files exist, false otherwise.
      */
-    public static boolean rsaKeysExist(Context activityContext) {
-        
-        File privateKey = activityContext.getFileStreamPath(getRSAPrivateKeyFileName());
-        File publicKey = activityContext.getFileStreamPath(getRSAPublicKeyFileName());
-        
-        // If both the key files exist, return true
-        return ((privateKey.exists()) && (publicKey.exists()));
-        
+    public static boolean rsaKeysExist() {
+        return false;
     }
     
-    public static String getRSAPublicKeyFileName() {
-        return rsaPublicKeyFileName;
+    public static String getKeyStoreFileName() {
+        return keyStoreFileName;
     }
-    
-    public static String getRSAPrivateKeyFileName() {
-        return rsaPrivateKeyFileName;
-    }
-    
+
     /**
      * Convert an RSA AsymmetricKeyParameter into a PrivateKey so that it's storable in a local key store.
      * 
