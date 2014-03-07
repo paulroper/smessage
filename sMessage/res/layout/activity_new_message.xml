@@ -47,9 +47,9 @@
         android:id="@+id/message_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/send_button"
         android:layout_below="@id/contact_number"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/send_button">
 
     </ListView>
 
