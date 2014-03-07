@@ -14,3 +14,6 @@ android-support-v7-appcompat/gen/*
 
 # Don't track Dolphin directory files
 .directory
+
+# Don't track the workspace file for IntelliJ
+workspace.xml

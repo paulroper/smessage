@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -208,14 +209,14 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         String[] returnedColumnsSmsCursor = {"_id", "thread_id", "address", "body", "date", "type"};
 
         String address = "";
-        
+
         // Set up WHERE clause; find texts from address containing the number without an area code. If the number is
         // actually a word (like Google), don't strip any separators from the address stored in the table
         // TODO: Sent messages aren't displaying...
         if (numberToFind.matches("\\d")) {
-            address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE '%" + numberToFind + "'";
+            address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE " + DatabaseUtils.sqlEscapeString("%" + numberToFind);
         } else {    
-            address = "REPLACE(address, ' ', '') LIKE '%" + numberToFind + "'";
+            address = "REPLACE(address, ' ', '') LIKE " + DatabaseUtils.sqlEscapeString("%" + numberToFind);
         }
         
         // Default sort order is date DESC, change to date ASC so texts appear in order

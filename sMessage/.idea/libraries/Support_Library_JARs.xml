@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Support Library JARs">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../android-support-v7-appcompat/libs" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/../android-support-v7-appcompat/libs" recursive="false" />
+  </library>
+</component>

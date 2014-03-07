@@ -16,7 +16,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="sMessage" scope="PROVIDED" />
+    <orderEntry type="module" module-name="Smessage" scope="PROVIDED" />
   </component>
 </module>
 
