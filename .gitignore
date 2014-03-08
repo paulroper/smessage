@@ -3,6 +3,7 @@ sMessage/bin/*
 sMessage/gen/*
 sMessage/test/bin/*
 sMessage/test/gen/*
+sMessage/out/*
 android-support-v7-appcompat/bin/*
 android-support-v7-appcompat/gen/*
 
