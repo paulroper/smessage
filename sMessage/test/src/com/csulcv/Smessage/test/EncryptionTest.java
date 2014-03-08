@@ -1,12 +1,13 @@
 /**
- * EncryptionModule.java
+ * CryptoCore.java
  * @author Paul Roper
  */
 package com.csulcv.Smessage.test;
 
 import android.test.AndroidTestCase;
 import android.util.Log;
-import com.csulcv.Smessage.EncryptionModule;
+import com.csulcv.Smessage.CryptoCore;
+import com.csulcv.Smessage.KeyStoreManager;
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 import org.spongycastle.crypto.params.AsymmetricKeyParameter;
 import org.spongycastle.crypto.params.RSAKeyParameters;
@@ -16,14 +17,11 @@ import org.spongycastle.crypto.util.PublicKeyFactory;
 import org.spongycastle.util.encoders.Base64;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.security.*;
-import java.security.cert.*;
 
-public class EncryptionModuleTest extends AndroidTestCase {
+public class EncryptionTest extends AndroidTestCase {
 	
-	private static String TAG = "Encryption Module Test";
+	private static String TAG = "Smessage: Encryption Test";
 
     private AsymmetricCipherKeyPair rsaKeys = null;
 	private byte[] aesKey = null;	
@@ -32,16 +30,16 @@ public class EncryptionModuleTest extends AndroidTestCase {
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);        	
     }
 
-	public EncryptionModuleTest() {		
+	public EncryptionTest() {
 	}
 	
 	@Override
 	protected void setUp() {
 
-        if (EncryptionModule.keyStoreExists(getContext())) {
+        if (KeyStoreManager.keyStoreExists(getContext())) {
 
             try {
-                getContext().deleteFile(EncryptionModule.getKeyStoreFileName());
+                getContext().deleteFile(KeyStoreManager.getKeyStoreFileName());
             } catch (Exception e) {
                 e.printStackTrace();
                 fail("Key store file not found");
@@ -51,8 +49,8 @@ public class EncryptionModuleTest extends AndroidTestCase {
 
         }
 
-        rsaKeys = EncryptionModule.generateRSAKeyPair();
-	    aesKey = EncryptionModule.generateSymmetricKey();
+        rsaKeys = CryptoCore.generateRSAKeyPair();
+	    aesKey = CryptoCore.generateAESKey();
 
 	}
 	
@@ -66,12 +64,11 @@ public class EncryptionModuleTest extends AndroidTestCase {
         String testName = "TEST_NAME";
 
         // Create a new key store with the password TEST
-        EncryptionModule.encryptionSetup(getContext(), testName, password);
-
+        KeyStoreManager.setupKeyStore(getContext(), testName, password);
         FileInputStream keyStoreFile = null;
 
         try {
-            keyStoreFile = getContext().openFileInput(EncryptionModule.getKeyStoreFileName());
+            keyStoreFile = getContext().openFileInput(KeyStoreManager.getKeyStoreFileName());
         } catch (Exception e) {
             e.printStackTrace();
             fail("Error opening key store file");
@@ -87,9 +84,10 @@ public class EncryptionModuleTest extends AndroidTestCase {
             keyStore = KeyStore.getInstance("BKS");
             keyStore.load(keyStoreFile, password.toCharArray());
 
-            java.security.cert.Certificate storedCert = keyStore.getCertificate(EncryptionModule.getOwnCertAlias());
-            storedPrivateKey = keyStore.getKey(EncryptionModule.getOwnPrivateKeyAlias(), password.toCharArray());
-            storedPublicKey = keyStore.getKey(EncryptionModule.getOwnPublicKeyAlias(), password.toCharArray());
+            // Try loading the self-signed certificate and both RSA keys from the key store
+            java.security.cert.Certificate storedCert = keyStore.getCertificate(KeyStoreManager.getOwnCertAlias());
+            storedPrivateKey = keyStore.getKey(KeyStoreManager.getOwnPrivateKeyAlias(), password.toCharArray());
+            storedPublicKey = keyStore.getKey(KeyStoreManager.getOwnPublicKeyAlias(), password.toCharArray());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,8 +112,8 @@ public class EncryptionModuleTest extends AndroidTestCase {
 
             final boolean ENCRYPT = true;
 
-            String encryptedString = EncryptionModule.rsa(TEST_STRING, rsaPublicKey, ENCRYPT);
-            String decryptedString = EncryptionModule.rsa(encryptedString, rsaPrivateKey, !ENCRYPT);
+            String encryptedString = CryptoCore.rsa(TEST_STRING, rsaPublicKey, ENCRYPT);
+            String decryptedString = CryptoCore.rsa(encryptedString, rsaPrivateKey, !ENCRYPT);
 
             assertEquals(TEST_STRING, decryptedString);
 
@@ -133,20 +131,20 @@ public class EncryptionModuleTest extends AndroidTestCase {
 	public void testRSAKeyDataTypeConversion() {
 		
 		String TEST_STRING = "hjMIJC2ixV3RjmAFFhRNuTxI8xdGYHijZJLU5iHPGxN7iYpwnhMtLX1XSBzhhHE";
-        AsymmetricCipherKeyPair keyPair = EncryptionModule.generateRSAKeyPair();
+        AsymmetricCipherKeyPair keyPair = CryptoCore.generateRSAKeyPair();
 	
-		PrivateKey rsaPrivateKey = EncryptionModule.convertToPrivateKey( (RSAPrivateCrtKeyParameters) keyPair.getPrivate() );
-		PublicKey rsaPublicKey = EncryptionModule.convertToPublicKey( (RSAKeyParameters) keyPair.getPublic() );
+		PrivateKey rsaPrivateKey = KeyStoreManager.convertToPrivateKey( (RSAPrivateCrtKeyParameters) keyPair.getPrivate() );
+		PublicKey rsaPublicKey = KeyStoreManager.convertToPublicKey( (RSAKeyParameters) keyPair.getPublic() );
 		
-		AsymmetricKeyParameter convertedRsaPrivateKey = EncryptionModule.convertToAsymmetricKeyParameter(rsaPrivateKey);
-		AsymmetricKeyParameter convertedRsaPublicKey = EncryptionModule.convertToAsymmetricKeyParameter(rsaPublicKey);
+		AsymmetricKeyParameter convertedRsaPrivateKey = KeyStoreManager.convertToAsymmetricKeyParameter(rsaPrivateKey);
+		AsymmetricKeyParameter convertedRsaPublicKey = KeyStoreManager.convertToAsymmetricKeyParameter(rsaPublicKey);
 
 		try {
 			
 			final boolean ENCRYPT = true;
 			
-			String encryptedString = EncryptionModule.rsa(TEST_STRING, convertedRsaPublicKey, ENCRYPT);
-			String decryptedString = EncryptionModule.rsa(encryptedString, convertedRsaPrivateKey, !ENCRYPT);
+			String encryptedString = CryptoCore.rsa(TEST_STRING, convertedRsaPublicKey, ENCRYPT);
+			String decryptedString = CryptoCore.rsa(encryptedString, convertedRsaPrivateKey, !ENCRYPT);
 			
 			assertEquals(TEST_STRING, decryptedString);			
 			
@@ -166,8 +164,8 @@ public class EncryptionModuleTest extends AndroidTestCase {
 			
 			final boolean ENCRYPT = true;
 			
-			String encryptedString = EncryptionModule.rsa(TEST_STRING, rsaKeys.getPublic(), ENCRYPT);
-			String decryptedString = EncryptionModule.rsa(encryptedString, rsaKeys.getPrivate(), !ENCRYPT);
+			String encryptedString = CryptoCore.rsa(TEST_STRING, rsaKeys.getPublic(), ENCRYPT);
+			String decryptedString = CryptoCore.rsa(encryptedString, rsaKeys.getPrivate(), !ENCRYPT);
 			
 			assertEquals(TEST_STRING, decryptedString);			
 			
@@ -190,8 +188,8 @@ public class EncryptionModuleTest extends AndroidTestCase {
 			
 			final boolean ENCRYPT = true;
 			
-			String encryptedString = EncryptionModule.aes(TEST_STRING, aesKey, ENCRYPT);
-			String decryptedString = EncryptionModule.aes(encryptedString, aesKey, !ENCRYPT);
+			String encryptedString = CryptoCore.aes(TEST_STRING, aesKey, ENCRYPT);
+			String decryptedString = CryptoCore.aes(encryptedString, aesKey, !ENCRYPT);
 			
 			assertEquals(TEST_STRING, decryptedString);
 			
@@ -202,7 +200,11 @@ public class EncryptionModuleTest extends AndroidTestCase {
 		
 		
 	}
-	
+
+    /**
+     * RSA is used to encrypt the secret key to send via text. Try encrypting an AES key, sending it across the insecure
+     * channel and decrypting it on the other side.
+     */
 	public void testKeyExchange() {
 		
 		String message = "This is a message to test key exchange. It is fairly long to test how well AES handles lots"
@@ -218,18 +220,18 @@ public class EncryptionModuleTest extends AndroidTestCase {
 			final boolean ENCRYPT = true;
 			
 			// Generate an encrypted message using AES.
-			String encryptedMessage = EncryptionModule.aes(message, Base64.decode(base64AESKey.getBytes()),
-					ENCRYPT); 
+			String encryptedMessage = CryptoCore.aes(message, Base64.decode(base64AESKey.getBytes()),
+                    ENCRYPT);
 
 			// Use a public key and RSA encryption to produce an encrypted secret key.
-			String encryptedKey = EncryptionModule.rsa(base64AESKey, rsaKeys.getPublic(), ENCRYPT);
+			String encryptedKey = CryptoCore.rsa(base64AESKey, rsaKeys.getPublic(), ENCRYPT);
 			
 			// Decrypt the symmetric key using a private key
-			String decryptedKey = EncryptionModule.rsa(encryptedKey, rsaKeys.getPrivate(), !ENCRYPT);
+			String decryptedKey = CryptoCore.rsa(encryptedKey, rsaKeys.getPrivate(), !ENCRYPT);
 			
 			// Decrypt the original message
-			decryptedMessage = EncryptionModule.aes(encryptedMessage,
-					Base64.decode(decryptedKey.getBytes()), !ENCRYPT);
+			decryptedMessage = CryptoCore.aes(encryptedMessage,
+                    Base64.decode(decryptedKey.getBytes()), !ENCRYPT);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

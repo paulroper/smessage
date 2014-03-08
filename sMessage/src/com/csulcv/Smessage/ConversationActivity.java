@@ -4,8 +4,6 @@
  */
 package com.csulcv.Smessage;
 
-import java.util.ArrayList;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -27,6 +25,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class ConversationActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 

@@ -4,8 +4,6 @@
  */
 package com.csulcv.Smessage;
 
-import java.util.ArrayList;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -17,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+import java.util.ArrayList;
 
 public class NewMessageActivity extends ActionBarActivity {
 

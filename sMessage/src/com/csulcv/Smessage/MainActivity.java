@@ -6,10 +6,6 @@
  */
 package com.csulcv.Smessage;
 
-import java.security.Security;
-import java.util.ArrayList;
-import java.util.Collections;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -32,10 +28,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.security.Security;
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String TAG = "Smessage: Main Activity";
     public static final String CONTACT_NAME_PHONE_NUMBER = "com.csulcv.smessage.contactNamePhoneNumber";
-    private static final String TAG = "Smessage: Main Activity"; 
     
     private static final int LOADER_ID = 0;
     private ListView contactList = null;
@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);         
     }
 
-    private static final boolean loggingEnabled = true;
+    private static final boolean LOGGING_ENABLED = true;
     
     /**
      * 
@@ -70,8 +70,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);        
  
         // Generate the asymmetric keys for RSA if we have to
-        if (!EncryptionModule.keyStoreExists(getBaseContext())) {
-            //EncryptionModule.encryptionSetup(getBaseContext(), HelperMethods.getOwnNumber(getBaseContext()), );
+        if (!KeyStoreManager.keyStoreExists(getBaseContext())) {
+            //KeyStoreManager.setupKeyStore(getBaseContext(), HelperMethods.getOwnNumber(getBaseContext()), );
             Log.d(TAG, "Finished generating keys");
         } else {
             Log.d(TAG, "No need to generate keys");
@@ -86,7 +86,6 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     }
 
     /**
-     * 
      * @see android.app.Activity
      */
     @Override
@@ -97,8 +96,6 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     }
     
     /**
-     * 
-     * 
      * @see android.app.Activity
      */
     @Override
@@ -126,7 +123,10 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         }
         
     }
-        
+
+    /**
+     * @see android.app.LoaderManager
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
         
@@ -145,26 +145,9 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         
     }
 
-    /*
-     * Uses conversations to build the loader rather than all of the SMS messages available
-     * 
-    @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
-        
-        Uri smsUri = Uri.parse("content://sms/conversations");    
-
-         SMS columns seem to be: _ID, THREAD_ID, ADDRESS, PERSON, DATE, DATE_SENT, READ, SEEN, STATUS
-         * SUBJECT, BODY, PERSON, PROTOCOL, REPLY_PATH_PRESENT, SERVICE_CENTRE, LOCKED, ERROR_CODE, META_DATA
-         
-        String[] returnedColumns = {"_id", "thread_id", "msg_count", "snippet"};
-
-        // Default sort order is date DESC, change to date ASC so texts appear in order
-        String sortOrder = "thread_id DESC, date ASC";
-        
-        return new CursorLoader(this, smsUri, returnedColumns, null, null, sortOrder);       
-        
-    }*/
-    
+    /**
+     * @see android.app.LoaderManager
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor smsCursor) {           
         
@@ -311,7 +294,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                         smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX), smsCursor.getString(ADDRESS_COLUMN_INDEX),
                         smsCursor.getLong(DATE_COLUMN_INDEX))); 
                 
-                if (loggingEnabled) {
+                if (LOGGING_ENABLED) {
 
                     Log.i("Message " + messageCounter, "-----------------");
                     
@@ -339,7 +322,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
                 smsCursor.moveToPrevious();
                
-                if (loggingEnabled) { 
+                if (LOGGING_ENABLED) {
                     
                     Log.i("Message " + messageCounter, "-----------------");
                     
@@ -420,7 +403,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
              */
             if (contactsCursor.moveToFirst()) {              
                 
-                if (loggingEnabled) {
+                if (LOGGING_ENABLED) {
                 
                     Log.i("Contact " + contactCounter, "-----------------");
                     
@@ -440,7 +423,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 
             } else {  
                 
-                if (loggingEnabled) {
+                if (LOGGING_ENABLED) {
                     Log.i("Contact " + contactCounter, "-----------------");
                     Log.d("Adding contact", lookupAddress + "");  
                     contactCounter++;
@@ -454,7 +437,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                        
         }
         
-        if (loggingEnabled) {
+        if (LOGGING_ENABLED) {
             Log.i("End of contacts", "-----------------");
         }
         
