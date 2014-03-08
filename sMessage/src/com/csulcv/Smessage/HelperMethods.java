@@ -19,7 +19,7 @@ public class HelperMethods {
      * @param activityContext The context of the activity that this method was called from.
      * @return A String containing the user's telephone number.
      */
-    public String getOwnNumber(Context activityContext) {    
+    public static String getOwnNumber(Context activityContext) {
         
         TelephonyManager telephonyManager = 
                 (TelephonyManager) activityContext.getSystemService(Context.TELEPHONY_SERVICE);
@@ -33,7 +33,7 @@ public class HelperMethods {
     /**
      * Format the given phone number to get the original number minus the area code and without separators.
      * 
-     * @param  String phoneNumber The given phone number to format.
+     * @param phoneNumber The given phone number to format.
      * @return The formatted phone number without the area code and without separators.
      */
     public static String stripSeparatorsAndAreaCode(String phoneNumber) {

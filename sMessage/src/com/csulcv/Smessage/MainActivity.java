@@ -70,9 +70,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);        
  
         // Generate the asymmetric keys for RSA if we have to
-        if (!EncryptionModule.rsaKeysExist()) {
-            //final int RSA_STRENGTH = 2048;
-            //EncryptionModule.generateAsymmetricKeys(this.getBaseContext(), RSA_STRENGTH, "TEST");
+        if (!EncryptionModule.keyStoreExists(getBaseContext())) {
+            //EncryptionModule.encryptionSetup(getBaseContext(), HelperMethods.getOwnNumber(getBaseContext()), );
             Log.d(TAG, "Finished generating keys");
         } else {
             Log.d(TAG, "No need to generate keys");

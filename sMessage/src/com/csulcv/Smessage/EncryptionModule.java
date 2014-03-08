@@ -4,31 +4,13 @@
  */
 package com.csulcv.Smessage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.security.KeyFactory;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.cert.Certificate;
-import java.security.spec.RSAPrivateCrtKeySpec;
-import java.security.spec.RSAPublicKeySpec;
-import java.util.Arrays;
-
-import org.spongycastle.crypto.AsymmetricBlockCipher;
-import org.spongycastle.crypto.AsymmetricCipherKeyPair;
-import org.spongycastle.crypto.BlockCipher;
-import org.spongycastle.crypto.BufferedAsymmetricBlockCipher;
-import org.spongycastle.crypto.BufferedBlockCipher;
-import org.spongycastle.crypto.CipherKeyGenerator;
-import org.spongycastle.crypto.CipherParameters;
-import org.spongycastle.crypto.CryptoException;
-import org.spongycastle.crypto.KeyGenerationParameters;
+import android.content.Context;
+import android.util.Log;
+import org.spongycastle.asn1.x500.X500Name;
+import org.spongycastle.cert.X509v1CertificateBuilder;
+import org.spongycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.spongycastle.cert.jcajce.JcaX509v1CertificateBuilder;
+import org.spongycastle.crypto.*;
 import org.spongycastle.crypto.encodings.OAEPEncoding;
 import org.spongycastle.crypto.engines.AESEngine;
 import org.spongycastle.crypto.engines.RSAEngine;
@@ -36,56 +18,63 @@ import org.spongycastle.crypto.generators.RSAKeyPairGenerator;
 import org.spongycastle.crypto.modes.CBCBlockCipher;
 import org.spongycastle.crypto.paddings.PKCS7Padding;
 import org.spongycastle.crypto.paddings.PaddedBufferedBlockCipher;
-import org.spongycastle.crypto.params.KeyParameter;
-import org.spongycastle.crypto.params.RSAKeyGenerationParameters;
-import org.spongycastle.crypto.params.RSAKeyParameters;
-import org.spongycastle.crypto.params.RSAPrivateCrtKeyParameters;
+import org.spongycastle.crypto.params.*;
+import org.spongycastle.crypto.util.PrivateKeyFactory;
+import org.spongycastle.crypto.util.PublicKeyFactory;
+import org.spongycastle.operator.ContentSigner;
+import org.spongycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.spongycastle.util.encoders.Base64;
 
-import android.content.Context;
-import android.util.Log;
+import javax.crypto.EncryptedPrivateKeyInfo;
+import javax.security.auth.x500.X500Principal;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPrivateCrtKeySpec;
+import java.security.spec.RSAPublicKeySpec;
+import java.util.Arrays;
+import java.util.Date;
 
 public class EncryptionModule {
     
     private static final String TAG = "EncryptionModule";
-    private static String keyStoreFileName = "keyStore.bks";
+
+    private static final String KEY_STORE_FILE_NAME = "keyStore.bks";
+    private static final String OWN_PRIVATE_KEY_ALIAS = "OwnPrivateKey";
+    private static final String OWN_PUBLIC_KEY_ALIAS = "OwnPublicKey";
+    private static final String OWN_CERT_ALIAS = "OwnCert";
 
     /**
      * Generates an RSA public/private key pair and stores them to a local key store unavailable to the user.
      * 
      * @param activityContext The context of the activity that this method was called from.
-     * @param keySizeInBits   The size of the key to generate.
+     * @param certificateName The name to go on the self-signed certificate.
+     * @param keyStorePassword The password to store the key store file with.
      */
-    public static void generateAsymmetricKeys(Context activityContext, int keySizeInBits, String keyStorePassword) {
-        
-        RSAKeyPairGenerator keyGen = new RSAKeyPairGenerator();
-        
-        /* 
-         * Use Fermat number 4 (F4) for RSA key generation. From Wikipedia:
-         * 
-         * "it is famously known to be prime, large enough to avoid the attacks to which small exponents make RSA 
-         * vulnerable, and due to its low Hamming weight (number of 1 bits) can be computed extremely quickly on binary
-         * computers, which often support shift and increment instructions."
-         */
-        String PUBLIC_EXPONENT = "65537";
-        final int PUBLIC_EXPONENT_BASE = 10;
-        final int RSA_STRENGTH = 2048;
-        final int CERTAINTY = 88;
- 
-        keyGen.init(new RSAKeyGenerationParameters(new BigInteger(PUBLIC_EXPONENT, PUBLIC_EXPONENT_BASE), 
-                new SecureRandom(), RSA_STRENGTH, CERTAINTY));     
-        
-        AsymmetricCipherKeyPair keyPair = keyGen.generateKeyPair();
+    public static void encryptionSetup(Context activityContext, String certificateName, String keyStorePassword) {
+
+        // Generate the user's RSA keys
+        AsymmetricCipherKeyPair keyPair = generateRSAKeyPair();
 
         // Convert the AsymmetricKeyParameters into JCE format PrivateKey/PublicKey objects
         PrivateKey rsaPrivateKey = convertToPrivateKey( (RSAPrivateCrtKeyParameters) keyPair.getPrivate() );
         PublicKey rsaPublicKey = convertToPublicKey( (RSAKeyParameters) keyPair.getPublic() );
-        
-        // Create an X.509 certificate (TODO: Why do we need to do this?)
-        //X509v3CertificateBuilder
-        
+
+        /*
+         * Create a certificate chain consisting of a single self-signed certificate. Essentially a dummy so that we can
+         * use a KeyStore.
+         */
+        Certificate[] certificateChain = {generateSelfSignedCertificate(certificateName, rsaPublicKey, rsaPrivateKey)};
+
         // Create a new keys file that we'll use as the key store
-        File file = new File(activityContext.getFilesDir(), "keys.bks");
+        File file = new File(activityContext.getFilesDir(), KEY_STORE_FILE_NAME);
         FileOutputStream outputStream = null;
 
         try {
@@ -94,45 +83,117 @@ public class EncryptionModule {
             Log.e(TAG, "Error opening file");
         }
 
-        Certificate[] certificateChain = {};
-        
         try {
             
-            KeyStore keyStore = KeyStore.getInstance("BKS");           
-            keyStore.aliases();            
-            
-            keyStore.setKeyEntry("OwnPrivateKey", rsaPrivateKey.getEncoded(), certificateChain);
-            keyStore.setKeyEntry("OwnPublicKey", rsaPublicKey.getEncoded(), certificateChain);
-            
-            // TODO: Password protect this properly by getting input from the user or something
+            KeyStore keyStore = KeyStore.getInstance("BKS");
+            keyStore.load(null, keyStorePassword.toCharArray());
+
+            // Store the keys using the self-signed certificate then store the certificate itself
+            keyStore.setKeyEntry(OWN_PRIVATE_KEY_ALIAS, rsaPrivateKey, keyStorePassword.toCharArray(), certificateChain);
+            keyStore.setKeyEntry(OWN_PUBLIC_KEY_ALIAS, rsaPublicKey, keyStorePassword.toCharArray(), certificateChain);
+            keyStore.setCertificateEntry(OWN_CERT_ALIAS, certificateChain[0]);
+
             try {
                 keyStore.store(outputStream, keyStorePassword.toCharArray());
             } catch (Exception e) {
                 // TODO: Exception handling
             }
             
-        } catch (KeyStoreException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Error creating key store");
+            e.printStackTrace();
         }
-       
         
+    }
+
+    /**
+     * Generate a 2048 bit RSA key pair consisting of a public and a private key.
+     *
+     * @return An AsymmetricCipherKeyPair consisting of the public and private keys.
+     */
+    public static AsymmetricCipherKeyPair generateRSAKeyPair() {
+
+        RSAKeyPairGenerator keyGen = new RSAKeyPairGenerator();
+
+        /*
+         * Use Fermat number 4 (F4) for RSA key generation. From Wikipedia:
+         *
+         * "it is famously known to be prime, large enough to avoid the attacks to which small exponents make RSA
+         * vulnerable, and due to its low Hamming weight (number of 1 bits) can be computed extremely quickly on binary
+         * computers, which often support shift and increment instructions."
+         */
+        String PUBLIC_EXPONENT = "65537";
+        final int PUBLIC_EXPONENT_BASE = 10;
+        final int RSA_STRENGTH = 2048;
+        final int CERTAINTY = 88;
+
+        keyGen.init(new RSAKeyGenerationParameters(new BigInteger(PUBLIC_EXPONENT, PUBLIC_EXPONENT_BASE),
+                new SecureRandom(), RSA_STRENGTH, CERTAINTY));
+
+        return keyGen.generateKeyPair();
+
     }
     
     /**
-     * Generate a new symmetric key used for AES message encryption.
+     * Generate a new 256 bit symmetric key used for AES message encryption.
      * 
-     * @param keySizeInBits   The size of the key to generate.
-     * @return                A byte[] array containing a symmetric key ready to be encrypted and sent to the recipient.             
+     * @return                A byte[] array containing a symmetric key ready to be encrypted and sent to the recipient.
      */
-    public static byte[] generateSymmetricKey(int keySizeInBits) {
-        
+    public static byte[] generateSymmetricKey() {
+
+        final int KEY_SIZE = 256;
+
         CipherKeyGenerator aesKeyGen = new CipherKeyGenerator();
-        aesKeyGen.init(new KeyGenerationParameters(new SecureRandom(), keySizeInBits));
+        aesKeyGen.init(new KeyGenerationParameters(new SecureRandom(), KEY_SIZE));
 
         return aesKeyGen.generateKey();
         
     }
-  
+
+    /**
+     * Create a self-signed certificate to save keys into the key store.
+     *
+     * @param rsaPublicKey The user's RSA public key.
+     * @param rsaPrivateKey The user's RSA private key.
+     * @return A self-signed X.509 certificate created using the user's RSA keys.
+     */
+    private static X509Certificate generateSelfSignedCertificate(String name, PublicKey rsaPublicKey, PrivateKey rsaPrivateKey) {
+
+        ContentSigner signatureGenerator = null;
+
+        try {
+            signatureGenerator = new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC").build(rsaPrivateKey);
+        } catch (Exception e) {
+            Log.e(TAG, "Error generating content signer");
+        }
+
+        // The certificate expires after...
+        Date certStartDate = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+        Date certEndDate = new Date(System.currentTimeMillis() + 365 * 24 * 60 * 60 * 1000);
+
+        // Use the user's phone number as the name to sign with
+        X500Principal certificateSigner = new X500Principal("CN=" + name);
+
+        X509v1CertificateBuilder certificateBuilder = new JcaX509v1CertificateBuilder(
+                certificateSigner,
+                BigInteger.ONE,
+                certStartDate, certEndDate,
+                certificateSigner,
+                rsaPublicKey
+        );
+
+        X509Certificate cert = null;
+
+        try {
+            cert = new JcaX509CertificateConverter().setProvider("BC").
+                    getCertificate(certificateBuilder.build(signatureGenerator));
+        } catch (Exception e) {
+            Log.e(TAG, "Error generating X.509 certificate");
+        }
+
+        return cert;
+
+    }
     
     /** 
      * Encrypt/decrypt a String message using RSA. In the context of the application, this is used to encrypt the
@@ -283,19 +344,6 @@ public class EncryptionModule {
         }
 
     }    
-    
-    /**
-     * Check whether the RSA keys have been generated.
-     * 
-     * @return                True if both files exist, false otherwise.
-     */
-    public static boolean rsaKeysExist() {
-        return false;
-    }
-    
-    public static String getKeyStoreFileName() {
-        return keyStoreFileName;
-    }
 
     /**
      * Convert an RSA AsymmetricKeyParameter into a PrivateKey so that it's storable in a local key store.
@@ -360,5 +408,62 @@ public class EncryptionModule {
         return rsaPublicKey;
         
     }
-       
+
+    public static AsymmetricKeyParameter convertToAsymmetricKeyParameter(PublicKey key) {
+
+        AsymmetricKeyParameter convertedKey = null;
+
+        try {
+            convertedKey = PublicKeyFactory.createKey(key.getEncoded());
+        } catch (IOException e) {
+            Log.e(TAG, "Error converting PublicKey to AsymmetricKeyParameter");
+        }
+
+        return convertedKey;
+
+    }
+
+
+    public static AsymmetricKeyParameter convertToAsymmetricKeyParameter(PrivateKey key) {
+
+        AsymmetricKeyParameter convertedKey = null;
+
+        try {
+            convertedKey = PrivateKeyFactory.createKey(key.getEncoded());
+        } catch (IOException e) {
+            Log.e(TAG, "Error converting PublicKey to AsymmetricKeyParameter");
+        }
+
+        return convertedKey;
+
+    }
+
+    /**
+     * Check whether the key store has been generated.
+     *
+     * @return True if the file exist, false otherwise.
+     */
+    public static boolean keyStoreExists(Context activityContext) {
+
+        File keyStoreFile = activityContext.getFileStreamPath(EncryptionModule.getKeyStoreFileName());
+        return keyStoreFile.exists();
+
+    }
+
+    public static String getKeyStoreFileName() {
+        return KEY_STORE_FILE_NAME;
+    }
+
+    public static String getOwnPrivateKeyAlias() {
+        return OWN_PRIVATE_KEY_ALIAS;
+    }
+
+    public static String getOwnPublicKeyAlias() {
+        return OWN_PUBLIC_KEY_ALIAS;
+    }
+
+    public static String getOwnCertAlias() {
+        return OWN_CERT_ALIAS;
+    }
+    
 }
