@@ -79,6 +79,7 @@ public class KeyStoreGenerator {
 
                 // Password protect the key store and save it to a file
                 keyStore.store(outputStream, keyStorePassword.toCharArray());
+                outputStream.close();
 
             } catch (Exception e) {
                 Log.e(TAG, "Error saving key store to file", e);

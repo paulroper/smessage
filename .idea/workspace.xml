@@ -38,37 +38,18 @@
       </layout>
     </layouts>
   </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Smessage" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="e6edaab6-607e-462d-95dd-9cb6506880e9" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="DELETED" beforePath="D:\Repositories\Project\sMessage\res\drawable-hdpi\ic_contact_picture.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Repositories\Project\sMessage\res\drawable-mdpi\ic_contact_picture.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Repositories\Project\sMessage\res\drawable-xhdpi\ic_contact_picture.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Repositories\Project\sMessage\res\drawable-xxhdpi\ic_contact_picture.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-hdpi/ic_action_new.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-hdpi/ic_action_new.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-mdpi/ic_action_new.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-mdpi/ic_action_new.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-xhdpi/ic_action_new.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-xhdpi/ic_action_new.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-xxhdpi/ic_action_new.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-xxhdpi/ic_action_new.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-hdpi/ic_action_search.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-hdpi/ic_action_search.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-mdpi/ic_action_search.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-mdpi/ic_action_search.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-xhdpi/ic_action_search.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-xhdpi/ic_action_search.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-xxhdpi/ic_action_search.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-xxhdpi/ic_action_search.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-hdpi/ic_action_secure.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-hdpi/ic_action_secure.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-mdpi/ic_action_secure.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-mdpi/ic_action_secure.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-xhdpi/ic_action_secure.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-xhdpi/ic_action_secure.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-xxhdpi/ic_action_secure.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-xxhdpi/ic_action_secure.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-hdpi/ic_action_send_now.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-hdpi/ic_action_send_now.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-mdpi/ic_action_send_now.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-mdpi/ic_action_send_now.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-xhdpi/ic_action_send_now.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-xhdpi/ic_action_send_now.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/drawable-xxhdpi/ic_action_send_now.png" afterPath="$PROJECT_DIR$/sMessage/res/drawable-xxhdpi/ic_action_send_now.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/AndroidManifest.xml" afterPath="$PROJECT_DIR$/sMessage/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/layout/activity_conversation.xml" afterPath="$PROJECT_DIR$/sMessage/res/layout/activity_conversation.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/layout/activity_new_message.xml" afterPath="$PROJECT_DIR$/sMessage/res/layout/activity_new_message.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml" afterPath="$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/res/layout/message_list_row.xml" afterPath="$PROJECT_DIR$/sMessage/res/layout/message_list_row.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/sMessage.iml" afterPath="$PROJECT_DIR$/sMessage/sMessage.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/test/test.iml" afterPath="$PROJECT_DIR$/sMessage/test/test.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/ConversationActivity.java" afterPath="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/ConversationActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/KeyStoreGenerator.java" afterPath="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/KeyStoreGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/KeyStoreManager.java" afterPath="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/KeyStoreManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java" afterPath="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/sMessage/Smessage.iml" afterPath="$PROJECT_DIR$/sMessage/Smessage.iml" />
     </list>
     <ignored path="Project.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -138,67 +119,74 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ConversationActivity.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ConversationActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/ConversationActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="179" column="12" selection-start="5603" selection-end="5603" vertical-scroll-proportion="0.68203497" vertical-offset="3091" max-vertical-offset="5600">
+            <state line="104" column="19" selection-start="3457" selection-end="3457" vertical-scroll-proportion="0.0" vertical-offset="709" max-vertical-offset="9440">
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#10102#14531#0" expanded="true" />
+                <element signature="e#14519#14520#0" expanded="true" />
+                <element signature="e#16135#16144#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="102" column="0" selection-start="3546" selection-end="3546" vertical-scroll-proportion="2.3701298" vertical-offset="0" max-vertical-offset="9300">
+              <folding>
+                <element signature="e#1698#1977#0" expanded="true" />
+                <element signature="e#1961#1962#0" expanded="true" />
+                <element signature="e#8387#8414#0" expanded="true" />
+                <element signature="e#8472#8499#0" expanded="true" />
+                <element signature="e#10480#10507#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KeyStoreManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/KeyStoreManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="53" column="87" selection-start="2049" selection-end="2049" vertical-scroll-proportion="0.0" vertical-offset="348" max-vertical-offset="3120">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KeyStoreGenerator.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/KeyStoreGenerator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="75" column="78" selection-start="3500" selection-end="3500" vertical-scroll-proportion="0.0" vertical-offset="710" max-vertical-offset="2540">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="contact_list_row.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="38" selection-start="851" selection-end="851" vertical-scroll-proportion="-13.76" vertical-offset="76" max-vertical-offset="680">
-              <folding>
-                <element signature="e#635#662#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HelperMethods.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/HelperMethods.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="41" column="37" selection-start="1387" selection-end="1387" vertical-scroll-proportion="0.0" vertical-offset="471" max-vertical-offset="1600">
+            <state line="21" column="38" selection-start="851" selection-end="851" vertical-scroll-proportion="0.0" vertical-offset="76" max-vertical-offset="680">
               <folding />
             </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
           </provider>
         </entry>
       </file>
       <file leaf-file-name="activity_conversation.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sMessage/res/layout/activity_conversation.xml">
-          <provider selected="true" editor-type-id="android-designer">
-            <state />
-          </provider>
           <provider editor-type-id="text-editor">
             <state line="11" column="4" selection-start="534" selection-end="534" vertical-scroll-proportion="0.0" vertical-offset="109" max-vertical-offset="1000">
               <folding />
             </state>
           </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EncryptionModuleTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sMessage/test/src/com/csulcv/Smessage/test/EncryptionModuleTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="4" selection-start="1224" selection-end="1224" vertical-scroll-proportion="0.0" vertical-offset="720" max-vertical-offset="4120">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EncryptionModule.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="142" column="0" selection-start="5771" selection-end="5771" vertical-scroll-proportion="0.0" vertical-offset="2840" max-vertical-offset="6520">
-              <folding />
-            </state>
+          <provider selected="true" editor-type-id="android-designer">
+            <state />
           </provider>
         </entry>
       </file>
@@ -217,7 +205,6 @@
       <list>
         <option value="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java" />
         <option value="$PROJECT_DIR$/sMessage/test/src/com/csulcv/Smessage/test/EncryptionModuleTest.java" />
-        <option value="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java" />
         <option value="$PROJECT_DIR$/sMessage/res/drawable/scaled_contact_image.xml" />
         <option value="$PROJECT_DIR$/sMessage/res/layout/message_list_row.xml" />
         <option value="$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml" />
@@ -225,6 +212,10 @@
         <option value="$PROJECT_DIR$/sMessage/res/layout/activity_conversation.xml" />
         <option value="$PROJECT_DIR$/sMessage/res/layout/activity_new_message.xml" />
         <option value="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/HelperMethods.java" />
+        <option value="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/ConversationActivity.java" />
+        <option value="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/KeyStoreGenerator.java" />
+        <option value="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/KeyStoreManager.java" />
+        <option value="$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java" />
       </list>
     </option>
   </component>
@@ -297,6 +288,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -316,9 +308,26 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Project" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sMessage" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Smessage" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -340,7 +349,7 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="true" />
   </component>
-  <component name="RunManager" selected="Android Tests.Smessage Tests">
+  <component name="RunManager" selected="Android Application.Smessage">
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
       <module name="" />
       <option name="TESTING_TYPE" value="0" />
@@ -369,6 +378,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -394,19 +416,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -463,7 +472,7 @@
       <method />
     </configuration>
     <configuration default="false" name="Smessage" type="AndroidRunConfigurationType" factoryName="Android Application">
-      <module name="sMessage" />
+      <module name="Smessage" />
       <option name="ACTIVITY_CLASS" value="" />
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
@@ -528,6 +537,26 @@
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
     <editor active="false" />
@@ -535,25 +564,25 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977098" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290469" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977098" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32671756" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.9282443" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.97709924" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977098" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19486405" sideWeight="0.50076103" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977098" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.9755725" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.97709924" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977098" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20694864" sideWeight="0.49923897" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20996979" sideWeight="0.49923897" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977098" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290469" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930514" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -585,238 +614,217 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/ConversationActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="41" selection-start="467" selection-end="467" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5760">
+        <state line="179" column="12" selection-start="5603" selection-end="5603" vertical-scroll-proportion="0.0" vertical-offset="3580" max-vertical-offset="5600">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#10102#14531#0" expanded="true" />
+            <element signature="e#14519#14520#0" expanded="true" />
+            <element signature="e#16135#16144#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="38" selection-start="851" selection-end="851" vertical-scroll-proportion="0.0" vertical-offset="76" max-vertical-offset="680">
           <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sMessage/res/layout/activity_conversation.xml">
+      <provider editor-type-id="text-editor">
+        <state line="11" column="4" selection-start="534" selection-end="534" vertical-scroll-proportion="0.0" vertical-offset="109" max-vertical-offset="1000">
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/ConversationActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="41" selection-start="467" selection-end="467" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5760">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#10102#14531#0" expanded="true" />
+            <element signature="e#14519#14520#0" expanded="true" />
+            <element signature="e#16135#16144#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="346" column="53" selection-start="13458" selection-end="13458" vertical-scroll-proportion="0.0" vertical-offset="6920" max-vertical-offset="9920">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="30" selection-start="338" selection-end="338" vertical-scroll-proportion="0.0" vertical-offset="56" max-vertical-offset="660">
           <folding>
-            <element signature="e#635#662#0" expanded="true" />
+            <element signature="e#1698#1977#0" expanded="true" />
+            <element signature="e#1961#1962#0" expanded="true" />
+            <element signature="e#8387#8414#0" expanded="true" />
+            <element signature="e#8472#8499#0" expanded="true" />
+            <element signature="e#10480#10507#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/res/layout/message_list_row.xml">
+    <entry file="file://$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="30" selection-start="338" selection-end="338" vertical-scroll-proportion="0.0" vertical-offset="56" max-vertical-offset="660">
+          <folding />
+        </state>
+      </provider>
       <provider editor-type-id="android-designer">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sMessage/res/layout/message_list_row.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="4" selection-start="210" selection-end="210" vertical-scroll-proportion="0.0" vertical-offset="100" max-vertical-offset="640">
           <folding />
         </state>
       </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/res/drawable/scaled_contact_image.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="28" selection-start="185" selection-end="185" vertical-scroll-proportion="0.0" vertical-offset="60" max-vertical-offset="220">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/test/src/com/csulcv/Smessage/test/EncryptionModuleTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="4" selection-start="1224" selection-end="1224" vertical-scroll-proportion="0.0" vertical-offset="720" max-vertical-offset="4120">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="142" column="0" selection-start="5771" selection-end="5771" vertical-scroll-proportion="0.0" vertical-offset="2840" max-vertical-offset="7400">
-          <folding />
-        </state>
+        <state line="3" column="28" selection-start="185" selection-end="185" vertical-scroll-proportion="0.0" vertical-offset="60" max-vertical-offset="220" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/ConversationActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="41" selection-start="467" selection-end="467" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5760">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#10102#14531#0" expanded="true" />
+            <element signature="e#14519#14520#0" expanded="true" />
+            <element signature="e#16135#16144#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="287" column="35" selection-start="10820" selection-end="10820" vertical-scroll-proportion="0.0" vertical-offset="5740" max-vertical-offset="9340">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="69" selection-start="623" selection-end="623" vertical-scroll-proportion="0.0" vertical-offset="280" max-vertical-offset="660">
           <folding>
-            <element signature="e#635#662#0" expanded="true" />
+            <element signature="e#1698#1977#0" expanded="true" />
+            <element signature="e#1961#1962#0" expanded="true" />
+            <element signature="e#8387#8414#0" expanded="true" />
+            <element signature="e#8472#8499#0" expanded="true" />
+            <element signature="e#10480#10507#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/test/src/com/csulcv/Smessage/test/EncryptionModuleTest.java">
+    <entry file="file://$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="4" selection-start="1224" selection-end="1224" vertical-scroll-proportion="0.0" vertical-offset="720" max-vertical-offset="4120">
+        <state line="14" column="69" selection-start="623" selection-end="623" vertical-scroll-proportion="0.0" vertical-offset="280" max-vertical-offset="660">
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="142" column="0" selection-start="5771" selection-end="5771" vertical-scroll-proportion="0.0" vertical-offset="2840" max-vertical-offset="7400">
-          <folding />
-        </state>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/ConversationActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="41" selection-start="467" selection-end="467" vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="5184">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#10102#14531#0" expanded="true" />
+            <element signature="e#14519#14520#0" expanded="true" />
+            <element signature="e#16135#16144#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="78" column="9" selection-start="2806" selection-end="2806" vertical-scroll-proportion="0.0" vertical-offset="1404" max-vertical-offset="8406">
-          <folding />
+          <folding>
+            <element signature="e#1698#1977#0" expanded="true" />
+            <element signature="e#1961#1962#0" expanded="true" />
+            <element signature="e#8387#8414#0" expanded="true" />
+            <element signature="e#8472#8499#0" expanded="true" />
+            <element signature="e#10480#10507#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="69" selection-start="623" selection-end="623" vertical-scroll-proportion="0.0" vertical-offset="252" max-vertical-offset="594">
-          <folding>
-            <element signature="e#635#662#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/test/src/com/csulcv/Smessage/test/EncryptionModuleTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="4" selection-start="1224" selection-end="1224" vertical-scroll-proportion="0.0" vertical-offset="648" max-vertical-offset="3708">
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="142" column="0" selection-start="5771" selection-end="5771" vertical-scroll-proportion="0.0" vertical-offset="2556" max-vertical-offset="6660">
-          <folding />
-        </state>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/ConversationActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="41" selection-start="467" selection-end="467" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5184">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#10102#14531#0" expanded="true" />
+            <element signature="e#14519#14520#0" expanded="true" />
+            <element signature="e#16135#16144#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="72" column="43" selection-start="2526" selection-end="2526" vertical-scroll-proportion="0.0" vertical-offset="1296" max-vertical-offset="8928">
-          <folding />
+          <folding>
+            <element signature="e#1698#1977#0" expanded="true" />
+            <element signature="e#1961#1962#0" expanded="true" />
+            <element signature="e#8387#8414#0" expanded="true" />
+            <element signature="e#8472#8499#0" expanded="true" />
+            <element signature="e#10480#10507#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="14" selection-start="639" selection-end="639" vertical-scroll-proportion="0.0" vertical-offset="288" max-vertical-offset="594">
-          <folding>
-            <element signature="e#635#662#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/test/src/com/csulcv/Smessage/test/EncryptionModuleTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="4" selection-start="1224" selection-end="1224" vertical-scroll-proportion="0.0" vertical-offset="648" max-vertical-offset="3708">
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="142" column="0" selection-start="5771" selection-end="5771" vertical-scroll-proportion="0.0" vertical-offset="2556" max-vertical-offset="6660">
-          <folding />
-        </state>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/ConversationActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="41" selection-start="467" selection-end="467" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5184">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#10102#14531#0" expanded="true" />
+            <element signature="e#14519#14520#0" expanded="true" />
+            <element signature="e#16135#16144#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="72" column="43" selection-start="2526" selection-end="2526" vertical-scroll-proportion="0.0" vertical-offset="1296" max-vertical-offset="8928">
-          <folding />
+          <folding>
+            <element signature="e#1698#1977#0" expanded="true" />
+            <element signature="e#1961#1962#0" expanded="true" />
+            <element signature="e#8387#8414#0" expanded="true" />
+            <element signature="e#8472#8499#0" expanded="true" />
+            <element signature="e#10480#10507#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/test/src/com/csulcv/Smessage/test/EncryptionModuleTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="108" column="99" selection-start="3849" selection-end="3849" vertical-scroll-proportion="0.0" vertical-offset="1944" max-vertical-offset="3258">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="142" column="0" selection-start="5771" selection-end="5771" vertical-scroll-proportion="0.0" vertical-offset="2556" max-vertical-offset="6660">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="292" column="7" selection-start="12323" selection-end="12323" vertical-scroll-proportion="0.0" vertical-offset="5256" max-vertical-offset="5904">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="308" column="8" selection-start="12885" selection-end="12885" vertical-scroll-proportion="0.0" vertical-offset="4620" max-vertical-offset="4950">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="13" selection-start="1712" selection-end="1712" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5270">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="13" selection-start="1712" selection-end="1712" vertical-scroll-proportion="0.0" vertical-offset="748" max-vertical-offset="5270">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/sMessage.iml">
+    <entry file="file://$PROJECT_DIR$/sMessage/Smessage.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="629" />
       </provider>
@@ -827,58 +835,33 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/res/layout/activity_main.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="882">
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="346" column="53" selection-start="13458" selection-end="13458" vertical-scroll-proportion="0.0" vertical-offset="5740" max-vertical-offset="9140">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/test/src/com/csulcv/Smessage/test/EncryptionModuleTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="4" selection-start="1224" selection-end="1224" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3258">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/EncryptionModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="142" column="0" selection-start="5771" selection-end="5771" vertical-scroll-proportion="0.0" vertical-offset="1695" max-vertical-offset="5868">
-          <folding />
-        </state>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://C:/Program Files (x86)/Android/android-sdk/sources/android-19/android/widget/ImageView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="13" selection-start="2354" selection-end="2354" vertical-scroll-proportion="-16.05036" vertical-offset="7133" max-vertical-offset="24040">
-          <folding />
-        </state>
+        <state line="63" column="13" selection-start="2354" selection-end="2354" vertical-scroll-proportion="-16.05036" vertical-offset="7133" max-vertical-offset="24040" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/res/drawable/scaled_contact_image.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="61" selection-start="166" selection-end="166" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="220">
-          <folding />
-        </state>
+        <state line="2" column="61" selection-start="166" selection-end="166" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="220" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/res/layout/message_list_row.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state line="21" column="33" selection-start="837" selection-end="837" vertical-scroll-proportion="-8.72" vertical-offset="202" max-vertical-offset="640">
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/AndroidManifest.xml">
@@ -889,49 +872,70 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/res/layout/activity_conversation.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider editor-type-id="text-editor">
         <state line="11" column="4" selection-start="534" selection-end="534" vertical-scroll-proportion="0.0" vertical-offset="109" max-vertical-offset="1000">
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/res/layout/activity_new_message.xml">
       <provider selected="true" editor-type-id="android-designer">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sMessage/res/layout/activity_new_message.xml">
       <provider editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1240">
           <folding />
         </state>
       </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/res/layout/contact_list_row.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="38" selection-start="851" selection-end="851" vertical-scroll-proportion="0.0" vertical-offset="76" max-vertical-offset="680">
+          <folding />
+        </state>
+      </provider>
       <provider editor-type-id="android-designer">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/KeyStoreGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="38" selection-start="851" selection-end="851" vertical-scroll-proportion="-13.76" vertical-offset="76" max-vertical-offset="680">
-          <folding>
-            <element signature="e#635#662#0" expanded="true" />
-          </folding>
+        <state line="75" column="78" selection-start="3500" selection-end="3500" vertical-scroll-proportion="0.0" vertical-offset="710" max-vertical-offset="2540">
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/HelperMethods.java">
+    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/KeyStoreManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="37" selection-start="1387" selection-end="1387" vertical-scroll-proportion="0.0" vertical-offset="471" max-vertical-offset="1600">
+        <state line="53" column="87" selection-start="2049" selection-end="2049" vertical-scroll-proportion="0.0" vertical-offset="348" max-vertical-offset="3120">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/ConversationActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="179" column="12" selection-start="5603" selection-end="5603" vertical-scroll-proportion="0.68203497" vertical-offset="3091" max-vertical-offset="5600">
+        <state line="104" column="19" selection-start="3457" selection-end="3457" vertical-scroll-proportion="0.0" vertical-offset="709" max-vertical-offset="9440">
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10102#14531#0" expanded="true" />
+            <element signature="e#14519#14520#0" expanded="true" />
+            <element signature="e#16135#16144#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sMessage/src/com/csulcv/Smessage/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="102" column="0" selection-start="3546" selection-end="3546" vertical-scroll-proportion="2.3701298" vertical-offset="0" max-vertical-offset="9300">
+          <folding>
+            <element signature="e#1698#1977#0" expanded="true" />
+            <element signature="e#1961#1962#0" expanded="true" />
+            <element signature="e#8387#8414#0" expanded="true" />
+            <element signature="e#8472#8499#0" expanded="true" />
+            <element signature="e#10480#10507#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -988,7 +992,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>Android|test</last-edited>
+          <last-edited>Android|Smessage</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

@@ -3,6 +3,7 @@
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
+        <option name="APK_PATH" value="/bin/Smessage.apk" />
         <proGuardCfgFiles>
           <file>file://C:/Program Files/Java/jdk1.7.0_51/tools/proguard/proguard-android.txt</file>
         </proGuardCfgFiles>

@@ -89,6 +89,18 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(broadcastReceiver, newSmsIntent);
+    }
+
     /**
      * @see android.app.Activity
      */

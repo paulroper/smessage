@@ -377,7 +377,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
                         messageContents = CryptoCore.aes(messageContents, secretKey, !ENCRYPT);
                         message.setBody(messageContents);
 
-                        getSupportLoaderManager().restartLoader(LOADER_ID, null, callbacks);
+                        messages.notifyDataSetChanged();
 
                         Log.d(TAG, messageContents);
 
