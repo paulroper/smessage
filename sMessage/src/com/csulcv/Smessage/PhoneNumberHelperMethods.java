@@ -1,5 +1,5 @@
 /**
- * HelperMethods.java
+ * PhoneNumberHelperMethods.java
  * @author Paul Roper
  * 
  * Contains some utility methods used throughout the application.
@@ -11,7 +11,7 @@ import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-public class HelperMethods {
+public class PhoneNumberHelperMethods {
     
     /**
      * Get the user's telephone number.
@@ -77,6 +77,6 @@ public class HelperMethods {
         
         return phoneNumberStripped;
         
-    }  
+    }
     
 }

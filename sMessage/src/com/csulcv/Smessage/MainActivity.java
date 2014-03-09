@@ -35,7 +35,7 @@ import java.util.Collections;
 public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "Smessage: Main Activity";
-    public static final String CONTACT_NAME_PHONE_NUMBER = "com.csulcv.smessage.contactNamePhoneNumber";
+    public static final String CONVERSATION_INFORMATION = "com.csulcv.smessage.conversationInformation";
     
     private static final int LOADER_ID = 0;
     private ListView contactList = null;
@@ -58,6 +58,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     }
 
     private static final boolean LOGGING_ENABLED = true;
+    private String keyStorePassword = "TESTING";
+    private String userName = "TEST";
     
     /**
      * 
@@ -71,7 +73,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
  
         // Generate the asymmetric keys for RSA if we have to
         if (!KeyStoreManager.keyStoreExists(getBaseContext())) {
-            //KeyStoreManager.setupKeyStore(getBaseContext(), HelperMethods.getOwnNumber(getBaseContext()), );
+            KeyStoreGenerator.setupKeyStore(getBaseContext(), userName, keyStorePassword);
             Log.d(TAG, "Finished generating keys");
         } else {
             Log.d(TAG, "No need to generate keys");
@@ -172,11 +174,12 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 // Create intent used to move to SendMessage activity
                 Intent intent = new Intent(MainActivity.this, ConversationActivity.class);
 
-                Bundle contactNamePhoneNumber = new Bundle();                
-                intent.putExtra(CONTACT_NAME_PHONE_NUMBER, contactNamePhoneNumber);
+                Bundle conversationInformation = new Bundle();
+                intent.putExtra(CONVERSATION_INFORMATION, conversationInformation);
                 
-                contactNamePhoneNumber.putString("CONTACT_NAME", contact.getContactName());
-                contactNamePhoneNumber.putString("CONTACT_PHONE_NUMBER", contact.getContactPhoneNumber());
+                conversationInformation.putString("CONTACT_NAME", contact.getContactName());
+                conversationInformation.putString("CONTACT_PHONE_NUMBER", contact.getContactPhoneNumber());
+                conversationInformation.putString("KEY_STORE_PASSWORD", keyStorePassword);
                 
                 Log.i(TAG, "Starting Conversation activity");          
                     

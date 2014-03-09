@@ -7,6 +7,7 @@ package com.csulcv.Smessage.test;
 import android.test.AndroidTestCase;
 import android.util.Log;
 import com.csulcv.Smessage.CryptoCore;
+import com.csulcv.Smessage.KeyStoreGenerator;
 import com.csulcv.Smessage.KeyStoreManager;
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 import org.spongycastle.crypto.params.AsymmetricKeyParameter;
@@ -39,7 +40,7 @@ public class EncryptionTest extends AndroidTestCase {
         if (KeyStoreManager.keyStoreExists(getContext())) {
 
             try {
-                getContext().deleteFile(KeyStoreManager.getKeyStoreFileName());
+                getContext().deleteFile(KeyStoreGenerator.KEY_STORE_FILE_NAME);
             } catch (Exception e) {
                 e.printStackTrace();
                 fail("Key store file not found");
@@ -64,11 +65,11 @@ public class EncryptionTest extends AndroidTestCase {
         String testName = "TEST_NAME";
 
         // Create a new key store with the password TEST
-        KeyStoreManager.setupKeyStore(getContext(), testName, password);
+        KeyStoreGenerator.setupKeyStore(getContext(), testName, password);
         FileInputStream keyStoreFile = null;
 
         try {
-            keyStoreFile = getContext().openFileInput(KeyStoreManager.getKeyStoreFileName());
+            keyStoreFile = getContext().openFileInput(KeyStoreGenerator.KEY_STORE_FILE_NAME);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Error opening key store file");
@@ -85,9 +86,9 @@ public class EncryptionTest extends AndroidTestCase {
             keyStore.load(keyStoreFile, password.toCharArray());
 
             // Try loading the self-signed certificate and both RSA keys from the key store
-            java.security.cert.Certificate storedCert = keyStore.getCertificate(KeyStoreManager.getOwnCertAlias());
-            storedPrivateKey = keyStore.getKey(KeyStoreManager.getOwnPrivateKeyAlias(), password.toCharArray());
-            storedPublicKey = keyStore.getKey(KeyStoreManager.getOwnPublicKeyAlias(), password.toCharArray());
+            java.security.cert.Certificate storedCert = keyStore.getCertificate(KeyStoreGenerator.OWN_CERT_ALIAS);
+            storedPrivateKey = keyStore.getKey(KeyStoreGenerator.OWN_PRIVATE_KEY_ALIAS, password.toCharArray());
+            storedPublicKey = keyStore.getKey(KeyStoreGenerator.OWN_PUBLIC_KEY_ALIAS, password.toCharArray());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,6 +104,52 @@ public class EncryptionTest extends AndroidTestCase {
         } catch (Exception e) {
             e.printStackTrace();
             fail("Error creating AsymmetricKeyParameters");
+        }
+
+        // RSA is used for encrypting keys so give it a fake key to encrypt
+        String TEST_STRING = "hjMIJC2ixV3RjmAFFhRNuTxI8xdGYHijZJLU5iHPGxN7iYpwnhMtLX1XSBzhhHE";
+
+        try {
+
+            final boolean ENCRYPT = true;
+
+            String encryptedString = CryptoCore.rsa(TEST_STRING, rsaPublicKey, ENCRYPT);
+            String decryptedString = CryptoCore.rsa(encryptedString, rsaPrivateKey, !ENCRYPT);
+
+            assertEquals(TEST_STRING, decryptedString);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Error running RSA encryption test");
+        }
+
+    }
+
+    public void testKeyStoreManager() {
+
+        String password = "TEST";
+        String testName = "TEST_NAME";
+
+        // Create a new key store with the password TEST
+        KeyStoreGenerator.setupKeyStore(getContext(), testName, password);
+        KeyStoreManager keyStoreManager = null;
+
+        try {
+            keyStoreManager = new KeyStoreManager(getContext(), password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Error creating a key store manager");
+        }
+
+        AsymmetricKeyParameter rsaPrivateKey = null;
+        AsymmetricKeyParameter rsaPublicKey = null;
+
+        try {
+            rsaPrivateKey = keyStoreManager.getPrivateKey(KeyStoreGenerator.OWN_PRIVATE_KEY_ALIAS);
+            rsaPublicKey = keyStoreManager.getPublicKey(KeyStoreGenerator.OWN_PUBLIC_KEY_ALIAS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Error loading keys from the key store");
         }
 
         // RSA is used for encrypting keys so give it a fake key to encrypt

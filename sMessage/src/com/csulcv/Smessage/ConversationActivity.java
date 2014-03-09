@@ -23,25 +23,36 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import org.spongycastle.crypto.params.AsymmetricKeyParameter;
+import org.spongycastle.crypto.params.RSAKeyParameters;
+import org.spongycastle.util.encoders.Base64;
 
+import java.security.KeyFactory;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 
 public class ConversationActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private SmsManager smsManager = SmsManager.getDefault();
+    private KeyStoreManager keyStoreManager = null;
     
     private static final String TAG = "Smessage: Conversation Activity";
-    private static final int LOADER_ID = 0; 
-    private static String contactName = "";
-    private static String contactPhoneNumber = "";
+    private static final int LOADER_ID = 0;
+
+    private boolean conversationSecure = false;
+    private String contactName = "";
+    private String contactPhoneNumber = "";
+    private String keyStorePassword = "";
+    private byte[] secretKey = null;
 
     // SimpleCursorAdapter stores messages from the SMS database and the ListView displays them
     private ListView messageList = null;
     private SimpleCursorAdapter messages = null;
 
-    private static final boolean loggingEnabled = true;
+    private static final boolean LOGGING_ENABLED = true;
            
     /**
      * 
@@ -50,28 +61,131 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {  
-        
+
         super.onCreate(savedInstanceState);        
         setContentView(R.layout.activity_conversation);
-        initialiseActionBar();           
 
-        String[] smsColumnsToDisplay = {"body"};
-        int[] displayMessageIn = {R.id.message_row}; 
-        
-        messageList = (ListView) findViewById(R.id.message_list);
-        
-        messages = new SimpleCursorAdapter(this, 
-                R.layout.message_list_row, 
-                null, 
-                smsColumnsToDisplay,
-                displayMessageIn, 
-                0);               
-        
-        // Get the cursor loader used for getting messages
-        messageList.setAdapter(messages);   
+        getConversationInformation();
+
+        initialiseKeyStore();
+        initialiseActionBar();
+        initialiseMessageList();
+
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         
-    }  
+    }
+
+    /**
+     * Get the contact's name and phone number plus the user's key store password from MainActivity.
+     */
+    private void getConversationInformation() {
+
+        // Get the message from the intent that created this activity
+        Intent intent = getIntent();
+        Bundle conversationInformation = intent.getBundleExtra(MainActivity.CONVERSATION_INFORMATION);
+
+        contactName = conversationInformation.getString("CONTACT_NAME");
+        contactPhoneNumber = conversationInformation.getString("CONTACT_PHONE_NUMBER");
+        keyStorePassword = conversationInformation.getString("KEY_STORE_PASSWORD");
+
+    }
+
+    /**
+     * Create the message list view and define what happens when a message is clicked.
+     */
+    private void initialiseMessageList() {
+
+        String[] smsColumnsToDisplay = {"body"};
+        int[] displayMessageIn = {R.id.message_row};
+
+        messageList = (ListView) findViewById(R.id.message_list);
+
+        messages = new SimpleCursorAdapter(this,
+                R.layout.message_list_row,
+                null,
+                smsColumnsToDisplay,
+                displayMessageIn,
+                0);
+
+        // Get the cursor loader used for getting messages
+        messageList.setAdapter(messages);
+        messageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)  {
+
+                final boolean ENCRYPT = true;
+
+                // Get the details of the message clicked
+                Message message = (Message) parent.getAdapter().getItem(position);
+                String messageContents = message.getMessage();
+
+                Log.i("Message clicked: ", messageContents);
+
+                if (!conversationSecure) {
+
+                    if (messageContents.startsWith("----BEGIN PUBLIC KEY----")) {
+
+                        try {
+
+                            messageContents = messageContents.substring(23);
+
+                            // Turn the key message into an AsymmetricKeyParameter
+                            AsymmetricKeyParameter publicKey = CryptoHelperMethods.convertToAsymmetricKeyParameter(
+                                    (KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(messageContents.getBytes()))));
+
+                            // Create a new shared secret key and store it using the contact's phone number
+                            byte[] secretKey = CryptoCore.generateAESKey();
+                            keyStoreManager.addSecretKey(contactPhoneNumber, secretKey);
+
+                            // Encrypt the secret key and send it off
+                            ArrayList<String> splitMessage = smsManager.divideMessage(CryptoCore.rsa(new String(Base64.encode(secretKey)), publicKey, ENCRYPT));
+                            //smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "The message selected wasn't a public key!");
+                        }
+
+                    }
+
+                } else if (conversationSecure) {
+
+                    try {
+                        messageContents = CryptoCore.aes(messageContents, secretKey, !ENCRYPT);
+                        Log.d(TAG, messageContents);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error decrypting message", e);
+                    }
+
+                } else {
+                    // Do nothing
+                }
+
+            }
+
+        });
+
+    }
+
+    /**
+     * Load the key store manager and find out if the conversation has already been secured.
+     */
+    private void initialiseKeyStore() {
+
+        try {
+
+            keyStoreManager = new KeyStoreManager(getBaseContext(), keyStorePassword);
+
+            if (keyStoreManager.keyExists(contactPhoneNumber)) {
+                conversationSecure = true;
+                secretKey = keyStoreManager.getSecretKey(contactPhoneNumber);
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading the KeyStoreManager", e);
+        }
+
+    }
 
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
@@ -119,6 +233,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
                 return true;
                 
             case R.id.action_secure_conversation:
+                // TODO: Use value of conversationSecure to change what the button does
                 startSecureConversation();
                 return true;
             
@@ -131,7 +246,26 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     
     public void startSecureConversation() {
 
-        // TODO: Key store loading + exchange happens here!
+        // TODO: Some sort of box asking if the user is sure and that they'll be charged for the text or whatever
+        AsymmetricKeyParameter publicKey = null;
+
+        try {
+            publicKey = keyStoreManager.getPublicKey(KeyStoreGenerator.OWN_PUBLIC_KEY_ALIAS);
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting public key from key store", e);
+        }
+
+        // Turn the public key into a Base64 String ready to be sent
+        String publicKeyMessage = new String(Base64.encode(CryptoHelperMethods.convertToPublicKey((RSAKeyParameters) publicKey).getEncoded()));
+
+        EditText messageBox = (EditText) findViewById(R.id.edit_message);
+
+        // TODO: Use real PEM here!
+        messageBox.setText("----BEGIN PUBLIC KEY----" + publicKeyMessage);
+
+        // Send the key to the recipient
+        ArrayList<String> splitMessage = smsManager.divideMessage(publicKeyMessage);
+        //smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);
 
     }
     
@@ -144,13 +278,6 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         setupActionBar();
         
         ActionBar actionBar = getSupportActionBar();
-        
-        // Get the message from the intent that created this activity
-        Intent intent = getIntent();
-        Bundle contactNameAddress = intent.getBundleExtra(MainActivity.CONTACT_NAME_PHONE_NUMBER);
-
-        contactName = contactNameAddress.getString("CONTACT_NAME");
-        contactPhoneNumber = contactNameAddress.getString("CONTACT_PHONE_NUMBER");
         
         if (contactName.equals("null")) {
             actionBar.setTitle(contactPhoneNumber);  
@@ -167,7 +294,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
      * @param view
      * @throws IllegalArgumentException If there's an error sending the message, throw an exception.
      */
-    public void sendMessage(View view) throws IllegalArgumentException {   
+    public void sendMessage(View view) throws Exception {
         
         // Get text message from the text box
         EditText editText = (EditText) findViewById(R.id.edit_message);
@@ -176,7 +303,12 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         // If we have a message to send, split it and send it
         // TODO: Error checking!
         if (message != null) {          
-            
+
+            if (conversationSecure) {
+                final boolean ENCRYPT = true;
+                message = CryptoCore.aes(message, secretKey, ENCRYPT);
+            }
+
             Log.i(TAG, "Sending text message");           
             
             ArrayList<String> splitMessage = smsManager.divideMessage(message);            
@@ -196,9 +328,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
         
         Uri smsUri = Uri.parse("content://sms/");
-        
-        // TODO: sqlEscapeString might not actually work correctly
-        String numberToFind = HelperMethods.stripSeparatorsAndAreaCode(contactPhoneNumber);
+        String numberToFind = PhoneNumberHelperMethods.stripSeparatorsAndAreaCode(contactPhoneNumber);
         
         Log.i(TAG, "Address substring: " + numberToFind);
         
@@ -212,7 +342,6 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
 
         // Set up WHERE clause; find texts from address containing the number without an area code. If the number is
         // actually a word (like Google), don't strip any separators from the address stored in the table
-        // TODO: Sent messages aren't displaying...
         if (numberToFind.matches("\\d")) {
             address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE " + DatabaseUtils.sqlEscapeString("%" + numberToFind);
         } else {    
@@ -229,7 +358,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-        if (loggingEnabled) {       
+        if (LOGGING_ENABLED) {
             
             Log.i(TAG, "Cursor finished loading");            
             int messageCounter = 0;
@@ -247,7 +376,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
                 
             }
             
-        }            
+        }
         
         /*
          * Moves the query results into the adapter, causing the ListView fronting this adapter to re-display

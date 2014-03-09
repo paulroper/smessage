@@ -23,19 +23,32 @@
       </filter>
     </filters>
   </component>
-  <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Smessage" />
+  <component name="AndroidLayoutPreviewToolWindow">
+    <option name="state">
+      <GlobalState />
+    </option>
+  </component>
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+    <layouts>
+      <layout url="file://$PROJECT_DIR$/res/layout/activity_conversation.xml">
+        <config>
+          <device>Nexus 5</device>
+          <theme>@style/SmessageTheme</theme>
+        </config>
+      </layout>
+    </layouts>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f49dba8-6b49-4be8-ac93-d0dc4bab891a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/csulcv/Smessage/Contact.java" afterPath="$PROJECT_DIR$/src/com/csulcv/Smessage/Contact.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/csulcv/Smessage/ConversationActivity.java" afterPath="$PROJECT_DIR$/src/com/csulcv/Smessage/ConversationActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/src/com/csulcv/Smessage/test/EncryptionTest.java" afterPath="$PROJECT_DIR$/test/src/com/csulcv/Smessage/test/EncryptionTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStoreManager.java" afterPath="$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStoreManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/csulcv/Smessage/MainActivity.java" afterPath="$PROJECT_DIR$/src/com/csulcv/Smessage/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/csulcv/Smessage/Message.java" afterPath="$PROJECT_DIR$/src/com/csulcv/Smessage/Message.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/csulcv/Smessage/NewMessageActivity.java" afterPath="$PROJECT_DIR$/src/com/csulcv/Smessage/NewMessageActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="D:\Repositories\Project\sMessage\src\com\csulcv\Smessage\EncryptionModule.java" afterPath="$PROJECT_DIR$/src/com/csulcv/Smessage/CryptoCore.java" />
-      <change type="MOVED" beforePath="D:\Repositories\Project\sMessage\test\src\com\csulcv\Smessage\test\EncryptionModuleTest.java" afterPath="$PROJECT_DIR$/test/src/com/csulcv/Smessage/test/EncryptionTest.java" />
+      <change type="MOVED" beforePath="D:\Repositories\Project\sMessage\src\com\csulcv\Smessage\HelperMethods.java" afterPath="$PROJECT_DIR$/src/com/csulcv/Smessage/PhoneNumberHelperMethods.java" />
     </list>
     <ignored path="sMessage.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -99,13 +112,70 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="148" column="37" selection-start="5072" selection-end="5072" vertical-scroll-proportion="-0.6752412" vertical-offset="2700" max-vertical-offset="8780">
+            <state line="159" column="30" selection-start="5491" selection-end="5491" vertical-scroll-proportion="0.0" vertical-offset="1920" max-vertical-offset="8840">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConversationActivity.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/ConversationActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="139" column="0" selection-start="5055" selection-end="5055" vertical-scroll-proportion="2.2954304" vertical-offset="0" max-vertical-offset="7640">
               <folding>
-                <element signature="e#7795#7804#0" expanded="true" />
+                <element signature="e#3735#6051#0" expanded="true" />
+                <element signature="e#6039#6040#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CryptoCore.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/CryptoCore.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="108" column="11" selection-start="4187" selection-end="4187" vertical-scroll-proportion="0.0" vertical-offset="79" max-vertical-offset="4260">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PhoneNumberHelperMethods.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/PhoneNumberHelperMethods.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="79" column="5" selection-start="3167" selection-end="3167" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1600">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CryptoHelperMethods.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/CryptoHelperMethods.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="119" column="60" selection-start="4761" selection-end="4761" vertical-scroll-proportion="0.0" vertical-offset="2233" max-vertical-offset="2700">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KeyStoreGenerator.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStoreGenerator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="39" column="77" selection-start="1682" selection-end="1682" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2520">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EncryptionTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/src/com/csulcv/Smessage/test/EncryptionTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="186" column="71" selection-start="6466" selection-end="6466" vertical-scroll-proportion="0.0" vertical-offset="2987" max-vertical-offset="5620">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -123,18 +193,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/ConversationActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/HelperMethods.java" />
         <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/EncryptionModule.java" />
         <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStore.java" />
         <option value="$PROJECT_DIR$/test/src/com/csulcv/Smessage/test/EncryptionModuleTest.java" />
         <option value="$PROJECT_DIR$/test/src/com/csulcv/Smessage/test/CryptoCoreTest.java" />
-        <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStoreManager.java" />
         <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/Message.java" />
         <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/Contact.java" />
         <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/CryptoCore.java" />
         <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/MainActivity.java" />
         <option value="$PROJECT_DIR$/test/src/com/csulcv/Smessage/test/EncryptionTest.java" />
+        <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStoreManager.java" />
+        <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/HelperMethods.java" />
+        <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/PhoneNumberHelperMethods.java" />
+        <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/CryptoKeyHelperMethods.java" />
+        <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStoreGenerator.java" />
+        <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/ConversationActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/csulcv/Smessage/CryptoHelperMethods.java" />
       </list>
     </option>
   </component>
@@ -152,7 +226,16 @@
             <id />
           </State>
           <State>
-            <id>Android Lint</id>
+            <id>Java language level migration aids</id>
+          </State>
+          <State>
+            <id>Memory issues</id>
+          </State>
+          <State>
+            <id>Performance issues</id>
+          </State>
+          <State>
+            <id>Probable bugs</id>
           </State>
         </expanded-state>
         <selected-state>
@@ -225,10 +308,42 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Smessage" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sMessage" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Smessage" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sMessage" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -238,7 +353,7 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="options.lastSelected" value="editor.preferences.completion" />
+    <property name="options.lastSelected" value="preferences.sourceCode.XML" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -250,8 +365,11 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="true" />
+    <property name="DEBUGGABLE_DEVICE" value="064ead950061bf25" />
+    <property name="DEBUGGABLE_PROCESS" value="com.csulcv.Smessage" />
+    <property name="SHOW_ALL_PROCESSES" value="false" />
   </component>
-  <component name="RunManager" selected="Android Tests.Smessage Test">
+  <component name="RunManager" selected="Android Application.Smessage">
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
       <module name="" />
       <option name="TESTING_TYPE" value="0" />
@@ -483,11 +601,12 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32988626" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960597" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32988626" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32988626" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.8024819" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32988626" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33712512" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -497,7 +616,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32988626" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973376" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20820022" sideWeight="0.49948293" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21246007" sideWeight="0.49948293" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32988626" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -528,6 +647,44 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/ConversationActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="44" selection-start="1991" selection-end="1991" vertical-scroll-proportion="0.0" vertical-offset="1240" max-vertical-offset="5380">
+          <folding>
+            <element signature="e#3735#6051#0" expanded="true" />
+            <element signature="e#6039#6040#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStoreManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="0" selection-start="480" selection-end="480" vertical-scroll-proportion="0.0" vertical-offset="320" max-vertical-offset="2180">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStoreGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="0" selection-start="1291" selection-end="1291" vertical-scroll-proportion="0.0" vertical-offset="660" max-vertical-offset="5240">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/src/com/csulcv/Smessage/test/EncryptionTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="0" selection-start="1580" selection-end="1580" vertical-scroll-proportion="0.0" vertical-offset="1080" max-vertical-offset="5960">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="148" column="37" selection-start="5072" selection-end="5072" vertical-scroll-proportion="0.0" vertical-offset="2960" max-vertical-offset="8780">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/CryptoCore.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="163" column="52" selection-start="6741" selection-end="6741" vertical-scroll-proportion="0.0" vertical-offset="2771" max-vertical-offset="6715">
@@ -542,7 +699,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/HelperMethods.java">
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/PhoneNumberHelperMethods.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="27" column="8" selection-start="852" selection-end="852" vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="1496">
           <folding />
@@ -552,9 +709,7 @@
     <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8415">
-          <folding>
-            <element signature="e#7795#7804#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -572,7 +727,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/HelperMethods.java">
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/PhoneNumberHelperMethods.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="27" column="8" selection-start="852" selection-end="852" vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="1496">
           <folding />
@@ -582,9 +737,7 @@
     <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="81" column="0" selection-start="2930" selection-end="2930" vertical-scroll-proportion="0.0" vertical-offset="1377" max-vertical-offset="8415">
-          <folding>
-            <element signature="e#7795#7804#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -602,7 +755,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/HelperMethods.java">
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/PhoneNumberHelperMethods.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="27" column="8" selection-start="852" selection-end="852" vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="1760">
           <folding />
@@ -612,9 +765,7 @@
     <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="81" column="0" selection-start="2930" selection-end="2930" vertical-scroll-proportion="0.0" vertical-offset="1620" max-vertical-offset="9900">
-          <folding>
-            <element signature="e#7795#7804#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -738,47 +889,12 @@
     </entry>
     <entry file="file://C:/Program Files (x86)/Android/android-sdk-windows/sources/android-19/android/app/Instrumentation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1700" column="0" selection-start="67014" selection-end="67014" vertical-scroll-proportion="0.10804851" vertical-offset="32602" max-vertical-offset="34700">
-          <folding />
-        </state>
+        <state line="1700" column="0" selection-start="67014" selection-end="67014" vertical-scroll-proportion="0.10804851" vertical-offset="32602" max-vertical-offset="34700" />
       </provider>
     </entry>
     <entry file="jar://C:/Program Files (x86)/Android/android-sdk-windows/platforms/android-19/android.jar!/junit/framework/TestResult.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="0" selection-start="1605" selection-end="1605" vertical-scroll-proportion="0.7024442" vertical-offset="59" max-vertical-offset="1000">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/HelperMethods.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="8" selection-start="852" selection-end="852" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1600">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/ConversationActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="166" column="14" selection-start="5034" selection-end="5034" vertical-scroll-proportion="0.33262485" vertical-offset="2507" max-vertical-offset="5180">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStoreManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="124" column="34" selection-start="5408" selection-end="5408" vertical-scroll-proportion="0.46014878" vertical-offset="2047" max-vertical-offset="5840">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#10703#10704#0" expanded="true" />
-            <element signature="e#10745#10746#0" expanded="true" />
-            <element signature="e#10797#10798#0" expanded="true" />
-            <element signature="e#10841#10842#0" expanded="true" />
-            <element signature="e#10892#10893#0" expanded="true" />
-            <element signature="e#10935#10936#0" expanded="true" />
-            <element signature="e#10981#10982#0" expanded="true" />
-            <element signature="e#11018#11019#0" expanded="true" />
-          </folding>
-        </state>
+        <state line="37" column="0" selection-start="1605" selection-end="1605" vertical-scroll-proportion="0.7024442" vertical-offset="59" max-vertical-offset="1000" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/Contact.java">
@@ -795,6 +911,51 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Program Files (x86)/Android/android-sdk-windows/sources/android-19/java/security/spec/PKCS8EncodedKeySpec.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="5" selection-start="1343" selection-end="1343" vertical-scroll-proportion="0.40488842" vertical-offset="19" max-vertical-offset="960">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/src/com/csulcv/Smessage/test/EncryptionTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="186" column="71" selection-start="6466" selection-end="6466" vertical-scroll-proportion="0.0" vertical-offset="2987" max-vertical-offset="5620">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/PhoneNumberHelperMethods.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="79" column="5" selection-start="3167" selection-end="3167" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1600">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStoreGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="77" selection-start="1682" selection-end="1682" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2520">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/KeyStoreManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="83" selection-start="1295" selection-end="1295" vertical-scroll-proportion="0.41304347" vertical-offset="20" max-vertical-offset="2200">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/activity_conversation.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="4" selection-start="891" selection-end="891" vertical-scroll-proportion="0.46927375" vertical-offset="0" max-vertical-offset="1000">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/CryptoCore.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="108" column="11" selection-start="4187" selection-end="4187" vertical-scroll-proportion="0.0" vertical-offset="1139" max-vertical-offset="4260">
@@ -802,18 +963,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/src/com/csulcv/Smessage/test/EncryptionTest.java">
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="244" column="1" selection-start="8202" selection-end="8202" vertical-scroll-proportion="4.8459086" vertical-offset="0" max-vertical-offset="4700">
+        <state line="159" column="30" selection-start="5491" selection-end="5491" vertical-scroll-proportion="0.0" vertical-offset="2220" max-vertical-offset="8840">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/MainActivity.java">
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/CryptoHelperMethods.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="148" column="37" selection-start="5072" selection-end="5072" vertical-scroll-proportion="-0.6752412" vertical-offset="2700" max-vertical-offset="8780">
+        <state line="119" column="60" selection-start="4761" selection-end="4761" vertical-scroll-proportion="0.0" vertical-offset="2233" max-vertical-offset="2700">
           <folding>
-            <element signature="e#7795#7804#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/csulcv/Smessage/ConversationActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="139" column="0" selection-start="5055" selection-end="5055" vertical-scroll-proportion="2.2954304" vertical-offset="0" max-vertical-offset="7640">
+          <folding>
+            <element signature="e#3735#6051#0" expanded="true" />
+            <element signature="e#6039#6040#0" expanded="true" />
           </folding>
         </state>
       </provider>
