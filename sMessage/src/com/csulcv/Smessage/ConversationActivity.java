@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
@@ -24,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import org.spongycastle.crypto.params.AsymmetricKeyParameter;
@@ -38,19 +38,21 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
 
     private SmsManager smsManager = SmsManager.getDefault();
     private KeyStoreManager keyStoreManager = null;
-    
+
     private static final String TAG = "Smessage: Conversation Activity";
     private static final int LOADER_ID = 0;
 
-    private boolean conversationSecure = false;
     private String contactName = "";
     private String contactPhoneNumber = "";
+
+    private boolean conversationSecure = false;
     private String keyStorePassword = "";
     private byte[] secretKey = null;
 
-    // SimpleCursorAdapter stores messages from the SMS database and the ListView displays them
+    // ArrayAdapter stores messages from the SMS database and the ListView displays them
     private ListView messageList = null;
-    private SimpleCursorAdapter messages = null;
+    private ArrayAdapter<Message> messages = null;
+    private LoaderManager.LoaderCallbacks<Cursor> callbacks = this;
 
     private static final boolean LOGGING_ENABLED = true;
            
@@ -69,7 +71,6 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
 
         initialiseKeyStore();
         initialiseActionBar();
-        initialiseMessageList();
 
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         
@@ -87,83 +88,6 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         contactName = conversationInformation.getString("CONTACT_NAME");
         contactPhoneNumber = conversationInformation.getString("CONTACT_PHONE_NUMBER");
         keyStorePassword = conversationInformation.getString("KEY_STORE_PASSWORD");
-
-    }
-
-    /**
-     * Create the message list view and define what happens when a message is clicked.
-     */
-    private void initialiseMessageList() {
-
-        String[] smsColumnsToDisplay = {"body"};
-        int[] displayMessageIn = {R.id.message_row};
-
-        messageList = (ListView) findViewById(R.id.message_list);
-
-        messages = new SimpleCursorAdapter(this,
-                R.layout.message_list_row,
-                null,
-                smsColumnsToDisplay,
-                displayMessageIn,
-                0);
-
-        // Get the cursor loader used for getting messages
-        messageList.setAdapter(messages);
-        messageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)  {
-
-                final boolean ENCRYPT = true;
-
-                // Get the details of the message clicked
-                Message message = (Message) parent.getAdapter().getItem(position);
-                String messageContents = message.getMessage();
-
-                Log.i("Message clicked: ", messageContents);
-
-                if (!conversationSecure) {
-
-                    if (messageContents.startsWith("----BEGIN PUBLIC KEY----")) {
-
-                        try {
-
-                            messageContents = messageContents.substring(23);
-
-                            // Turn the key message into an AsymmetricKeyParameter
-                            AsymmetricKeyParameter publicKey = CryptoHelperMethods.convertToAsymmetricKeyParameter(
-                                    (KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(messageContents.getBytes()))));
-
-                            // Create a new shared secret key and store it using the contact's phone number
-                            byte[] secretKey = CryptoCore.generateAESKey();
-                            keyStoreManager.addSecretKey(contactPhoneNumber, secretKey);
-
-                            // Encrypt the secret key and send it off
-                            ArrayList<String> splitMessage = smsManager.divideMessage(CryptoCore.rsa(new String(Base64.encode(secretKey)), publicKey, ENCRYPT));
-                            //smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);
-
-                        } catch (Exception e) {
-                            Log.e(TAG, "The message selected wasn't a public key!");
-                        }
-
-                    }
-
-                } else if (conversationSecure) {
-
-                    try {
-                        messageContents = CryptoCore.aes(messageContents, secretKey, !ENCRYPT);
-                        Log.d(TAG, messageContents);
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error decrypting message", e);
-                    }
-
-                } else {
-                    // Do nothing
-                }
-
-            }
-
-        });
 
     }
 
@@ -256,7 +180,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         }
 
         // Turn the public key into a Base64 String ready to be sent
-        String publicKeyMessage = new String(Base64.encode(CryptoHelperMethods.convertToPublicKey((RSAKeyParameters) publicKey).getEncoded()));
+        String publicKeyMessage = new String(Base64.encode(CryptoUtils.convertToPublicKey((RSAKeyParameters) publicKey).getEncoded()));
 
         EditText messageBox = (EditText) findViewById(R.id.edit_message);
 
@@ -264,7 +188,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         messageBox.setText("----BEGIN PUBLIC KEY----" + publicKeyMessage);
 
         // Send the key to the recipient
-        ArrayList<String> splitMessage = smsManager.divideMessage(publicKeyMessage);
+        // ArrayList<String> splitMessage = smsManager.divideMessage(publicKeyMessage);
         //smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);
 
     }
@@ -356,41 +280,147 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
     }
     
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor smsCursor) {
+
+        messageList = (ListView) findViewById(R.id.message_list);
+
+        messages = new ArrayAdapter<Message>(this,
+                R.layout.message_list_row,
+                R.id.message,
+                getMessages(smsCursor));
+
+        // Get the cursor loader used for getting messages
+        messageList.setAdapter(messages);
+        messageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)  {
+
+                final boolean ENCRYPT = true;
+
+                // Get the details of the message clicked
+                Message message = (Message) parent.getAdapter().getItem(position);
+                String messageContents = message.getBody();
+
+                Log.i("Message clicked: ", messageContents);
+
+                // If no shared secret exists yet, treat the message as a key
+                if (!conversationSecure && !keyStoreManager.keyExists(contactPhoneNumber)) {
+
+                    // TODO: Make the headers constants and put them somewhere or use a real PEM object
+                    if (messageContents.startsWith("----BEGIN PUBLIC KEY----")) {
+
+                        try {
+
+                            // 24 is the length of the ----BEGIN PUBLIC KEY---- header
+                            messageContents = messageContents.substring(24);
+
+                            Log.d(TAG, "Public key is " + messageContents);
+
+                            // Turn the key message into an AsymmetricKeyParameter
+                            AsymmetricKeyParameter publicKey = CryptoUtils.convertToAsymmetricKeyParameter(
+                                    (KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(Base64.decode(messageContents.getBytes())))));
+
+                            // Create a new shared secret key and store it using the contact's phone number
+                            secretKey = CryptoCore.generateAESKey();
+                            keyStoreManager.addSecretKey(contactPhoneNumber, secretKey);
+
+                            // Encrypt the key using the recipient's public key
+                            String keyMessage = CryptoCore.rsa(new String(Base64.encode(secretKey)), publicKey, ENCRYPT);
+
+                            // TODO: Use real PEM here!
+                            EditText messageBox = (EditText) findViewById(R.id.edit_message);
+                            messageBox.setText("----BEGIN SHARED KEY----" + keyMessage);
+
+                            // Send it off
+                            // ArrayList<String> splitMessage = smsManager.divideMessage(keyMessage);
+                            //smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);
+
+                            conversationSecure = true;
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "The message selected wasn't a public key!", e);
+                        }
+
+                    } else if (messageContents.startsWith("----BEGIN SHARED KEY----")) {
+
+                        try {
+
+                            // 24 is the length of the ----BEGIN SHARED KEY---- header
+                            messageContents = messageContents.substring(24);
+
+                            Log.d(TAG, "Shared key is " + messageContents);
+
+                            // Turn the key back into a byte array
+                            secretKey = Base64.decode((CryptoCore.rsa(messageContents,
+                                    keyStoreManager.getPrivateKey(KeyStoreGenerator.OWN_PRIVATE_KEY_ALIAS),
+                                    !ENCRYPT))
+                                    .getBytes());
+
+                            keyStoreManager.addSecretKey(contactPhoneNumber, secretKey);
+
+                            conversationSecure = true;
+
+                        } catch (Exception e) {
+                            Log.d(TAG, "The message selected wasn't a shared key!", e);
+                        }
+
+                    } else {
+                        // Do nothing
+                    }
+
+                // If the conversation is already secure, try and decrypt the message
+                } else if (conversationSecure) {
+
+                    try {
+
+                        messageContents = CryptoCore.aes(messageContents, secretKey, !ENCRYPT);
+                        message.setBody(messageContents);
+
+                        getSupportLoaderManager().restartLoader(LOADER_ID, null, callbacks);
+
+                        Log.d(TAG, messageContents);
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error decrypting message", e);
+                    }
+
+                } else {
+                    // Do nothing
+                }
+
+            }
+
+        });
 
         if (LOGGING_ENABLED) {
-            
-            Log.i(TAG, "Cursor finished loading");            
+
+            Log.i(TAG, "Cursor finished loading");
             int messageCounter = 0;
-            
+
             // Use cursor to iterate over the database and get each row
-            while (cursor.moveToNext()) {  
-                
+            while (smsCursor.moveToNext()) {
+
                 Log.i("Message " + messageCounter, "-----------------");
-                
-                for (int i = 0; i < cursor.getColumnCount(); i++) {
-                    Log.d(cursor.getColumnName(i) + "", cursor.getString(i) + "");               
+
+                for (int i = 0; i < smsCursor.getColumnCount(); i++) {
+                    Log.d(smsCursor.getColumnName(i) + "", smsCursor.getString(i) + "");
                 }
-                
-                messageCounter++;                
-                
+
+                messageCounter++;
+
             }
-            
+
         }
-        
-        /*
-         * Moves the query results into the adapter, causing the ListView fronting this adapter to re-display
-         */
-        messages.swapCursor(cursor);
-        
-        runOnUiThread(new Runnable() { 
-            
-            @Override 
+
+        runOnUiThread(new Runnable() {
+
+            @Override
             public void run() {
                 Log.d(TAG, "Moving list to bottom");
                 messageList.setSelection(messages.getCount());
             }
-            
+
         });
         
     }    
@@ -405,8 +435,40 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
          * Clears out the adapter's reference to the Cursor.
          * This prevents memory leaks.
          */
-        messages.swapCursor(null);      
+        messages.clear();
         
+    }
+
+    /**
+     * Uses the cursor provided to get the list of messages for the contact. Decryption happens here if required so that
+     * the underlying SMS store is not affected.
+     *
+     * @param smsCursor A cursor returned by the cursor loader connected to the SMS database table.
+     * @return          The list of messages associated with the contact.
+     */
+    private ArrayList<Message> getMessages(Cursor smsCursor) {
+
+        ArrayList<Message> messages = new ArrayList<Message>();
+
+        final int ID_COLUMN_INDEX = 0;
+        final int THREAD_ID_COLUMN_INDEX = 1;
+        final int ADDRESS_COLUMN_INDEX = 2;
+        final int MESSAGE_BODY_COLUMN_INDEX = 3;
+        final int DATE_COLUMN_INDEX = 4;
+        final int TYPE_COLUMN_INDEX = 5;
+
+        // While there's a message to get
+        while (smsCursor.moveToNext()) {
+
+            // Add it to the Message list
+            messages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX),
+                    smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX), smsCursor.getString(ADDRESS_COLUMN_INDEX),
+                    smsCursor.getLong(DATE_COLUMN_INDEX)));
+
+        }
+
+        return messages;
+
     }
    
 }

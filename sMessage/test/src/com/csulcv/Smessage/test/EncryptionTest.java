@@ -7,6 +7,7 @@ package com.csulcv.Smessage.test;
 import android.test.AndroidTestCase;
 import android.util.Log;
 import com.csulcv.Smessage.CryptoCore;
+import com.csulcv.Smessage.CryptoUtils;
 import com.csulcv.Smessage.KeyStoreGenerator;
 import com.csulcv.Smessage.KeyStoreManager;
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
@@ -180,11 +181,11 @@ public class EncryptionTest extends AndroidTestCase {
 		String TEST_STRING = "hjMIJC2ixV3RjmAFFhRNuTxI8xdGYHijZJLU5iHPGxN7iYpwnhMtLX1XSBzhhHE";
         AsymmetricCipherKeyPair keyPair = CryptoCore.generateRSAKeyPair();
 	
-		PrivateKey rsaPrivateKey = KeyStoreManager.convertToPrivateKey( (RSAPrivateCrtKeyParameters) keyPair.getPrivate() );
-		PublicKey rsaPublicKey = KeyStoreManager.convertToPublicKey( (RSAKeyParameters) keyPair.getPublic() );
+		PrivateKey rsaPrivateKey = CryptoUtils.convertToPrivateKey( (RSAPrivateCrtKeyParameters) keyPair.getPrivate() );
+		PublicKey rsaPublicKey = CryptoUtils.convertToPublicKey( (RSAKeyParameters) keyPair.getPublic() );
 		
-		AsymmetricKeyParameter convertedRsaPrivateKey = KeyStoreManager.convertToAsymmetricKeyParameter(rsaPrivateKey);
-		AsymmetricKeyParameter convertedRsaPublicKey = KeyStoreManager.convertToAsymmetricKeyParameter(rsaPublicKey);
+		AsymmetricKeyParameter convertedRsaPrivateKey = CryptoUtils.convertToAsymmetricKeyParameter(rsaPrivateKey);
+		AsymmetricKeyParameter convertedRsaPublicKey = CryptoUtils.convertToAsymmetricKeyParameter(rsaPublicKey);
 
 		try {
 			

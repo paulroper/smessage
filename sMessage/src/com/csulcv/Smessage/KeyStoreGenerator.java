@@ -45,8 +45,8 @@ public class KeyStoreGenerator {
         AsymmetricCipherKeyPair keyPair = CryptoCore.generateRSAKeyPair();
 
         // Convert the AsymmetricKeyParameters into JCE format PrivateKey/PublicKey objects
-        PrivateKey rsaPrivateKey = CryptoHelperMethods.convertToPrivateKey((RSAPrivateCrtKeyParameters) keyPair.getPrivate());
-        PublicKey rsaPublicKey = CryptoHelperMethods.convertToPublicKey((RSAKeyParameters) keyPair.getPublic());
+        PrivateKey rsaPrivateKey = CryptoUtils.convertToPrivateKey((RSAPrivateCrtKeyParameters) keyPair.getPrivate());
+        PublicKey rsaPublicKey = CryptoUtils.convertToPublicKey((RSAKeyParameters) keyPair.getPublic());
 
         /*
          * Create a certificate chain consisting of a single self-signed certificate. Essentially a dummy so that we can

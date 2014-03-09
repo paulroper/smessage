@@ -15,9 +15,9 @@ import java.security.PublicKey;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
-public class CryptoHelperMethods {
+public class CryptoUtils {
 
-    private static final String TAG = "Smessage: CryptoHelperMethods";
+    private static final String TAG = "Smessage: CryptoUtils";
 
     /**
      * Convert an RSA AsymmetricKeyParameter into a PrivateKey so that it can be stored in a local key store.

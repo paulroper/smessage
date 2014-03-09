@@ -43,6 +43,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     
     private LoaderCallbacks<Cursor> callbacks = this;
     private static final IntentFilter newSmsIntent = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver () {
 
         @Override
@@ -57,7 +58,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);         
     }
 
-    private static final boolean LOGGING_ENABLED = true;
+    // TODO: These are just test variables, change them later
+    private static final boolean LOGGING_ENABLED = false;
     private String keyStorePassword = "TESTING";
     private String userName = "TEST";
     
@@ -160,7 +162,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         contactListAdapter = new ArrayAdapter<Contact>(this, 
                 R.layout.contact_list_row, 
                 R.id.contact_name, 
-                getContactNamesFromConversations(getNewestConversationMessages(smsCursor)));
+                getContactsFromConversations(getNewestConversationMessages(smsCursor)));
         
         contactList.setAdapter(contactListAdapter);          
         contactList.setOnItemClickListener(new OnItemClickListener() {
@@ -241,9 +243,12 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 Log.d(smsCursor.getColumnName(i), smsCursor.getString(i));
                 
                 if (smsCursor.getColumnName(i).equals("body") && smsCursor.getString(i) != null) {
+
                     Log.i("Adding message", "Adding message to ArrayList");
+
                     newestConversationMessages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX), 
                             "null", smsCursor.getString(SNIPPET_COLUMN_INDEX), null));
+
                 }
                 
             }            
@@ -293,6 +298,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
              * so it doesn't move past it.
              */
             if (smsCursor.isLast()) {
+
                 newestConversationMessages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX), 
                         smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX), smsCursor.getString(ADDRESS_COLUMN_INDEX),
                         smsCursor.getLong(DATE_COLUMN_INDEX))); 
@@ -363,7 +369,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
      * @param  newestConversationMessages The list of messages to lookup the contact names from.
      * @return                            A list containing contacts with an on-going conversation thread.
      */
-    public ArrayList<Contact> getContactNamesFromConversations(ArrayList<Message> newestConversationMessages) {             
+    public ArrayList<Contact> getContactsFromConversations(ArrayList<Message> newestConversationMessages) {
         
         /*
          * Contacts columns seem to be: _ID, LOOKUP_KEY, DISPLAY_NAME, PHOTO_ID, IN_VISIBLE_GROUP, HAS_PHONE_NUMBER,
@@ -386,9 +392,9 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
          * For each of the latest messages, use the contact's address to find the contact's name from the phone book.
          * If a name does not exist, just use the address as a name.
          */
-        for (Message m : newestConversationMessages) {             
+        for (int i = 0; i < newestConversationMessages.size(); i++) {
 
-            lookupAddress = m.getAddress();
+            lookupAddress = newestConversationMessages.get(i).getAddress();
             
             // TODO: Currently skips draft messages as they have no recipient address and the wrong thread_id
             if (lookupAddress == null) {
@@ -410,8 +416,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 
                     Log.i("Contact " + contactCounter, "-----------------");
                     
-                    for (int i = 0; i < contactsCursor.getColumnCount(); i++) {
-                        Log.d(contactsCursor.getColumnName(i), contactsCursor.getString(i) + "");
+                    for (int j = 0; j < contactsCursor.getColumnCount(); j++) {
+                        Log.d(contactsCursor.getColumnName(j), contactsCursor.getString(j) + "");
                     }
                                     
                     Log.d("Adding contact", contactsCursor.getString(DISPLAY_NAME_COLUMN_INDEX));

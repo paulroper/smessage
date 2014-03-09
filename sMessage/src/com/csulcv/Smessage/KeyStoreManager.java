@@ -92,13 +92,23 @@ public class KeyStoreManager {
     /**
      * Check whether a key associated with the given alias exists.
      */
-    public boolean keyExists(String alias) throws KeyStoreException {
+    public boolean keyExists(String alias) {
 
-        if (keyStore.isKeyEntry(alias)) {
-            return true;
-        } else {
-            return false;
+        boolean keyExists = false;
+
+        try {
+
+            if (keyStore.isKeyEntry(alias)) {
+                keyExists = true;
+            } else {
+                keyExists = false;
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error checking key store for key", e);
         }
+
+        return keyExists;
 
     }
 
