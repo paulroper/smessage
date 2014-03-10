@@ -17,4 +17,4 @@ android-support-v7-appcompat/gen/*
 .directory
 
 # Don't track the workspace file for IntelliJ
-workspace.xml
+sMessage/.idea/workspace.xml
