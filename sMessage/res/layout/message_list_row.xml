@@ -6,12 +6,12 @@
     <ImageView
         android:id="@+id/contact_image"
         android:layout_alignParentLeft="true"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:src="@drawable/ic_launcher"
+        android:src="@drawable/ic_contact_picture_holo_light"
         android:contentDescription="@string/contact_icon_desc" />    
 
     <TextView

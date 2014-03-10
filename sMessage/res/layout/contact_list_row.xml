@@ -6,8 +6,8 @@
     <ImageView
         android:id="@+id/contact_image"
         android:layout_alignParentLeft="true"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
         android:paddingBottom="10dp"

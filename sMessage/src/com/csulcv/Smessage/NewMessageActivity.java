@@ -57,7 +57,7 @@ public class NewMessageActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.conversation_activity_actions, menu);
+        getMenuInflater().inflate(R.menu.new_message_activity_actions, menu);
         return true;
         
     }    

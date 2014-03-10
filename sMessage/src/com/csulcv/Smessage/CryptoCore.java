@@ -82,9 +82,7 @@ public class CryptoCore {
      * @return                A String containing the encrypted message.
      */
     public static String rsa(String message, CipherParameters key, boolean encrypt) throws Exception {
-        
-        Log.d(TAG, "Message is: " + message);
-        
+
         // Set up the cipher: RSA/OAEP 
         AsymmetricBlockCipher engine = new RSAEngine();
         BufferedAsymmetricBlockCipher cipher = new BufferedAsymmetricBlockCipher(new OAEPEncoding(engine));
@@ -100,9 +98,7 @@ public class CryptoCore {
             
         cipher.init(encrypt, key);
         byte[] output = new byte[cipher.getOutputBlockSize()];
-        
-        Log.d(TAG, "Max RSA block size is " + cipher.getOutputBlockSize());
-        
+
         /*
          * We don't need this but the processBytes method requires it. It tells the cipher where to start processing
          * the input array.
@@ -117,15 +113,7 @@ public class CryptoCore {
         } catch (CryptoException ce) {
             Log.e(TAG, "Error encrypting message", ce);
         }
-        
-        if (encrypt) {            
-            Log.d(TAG, "Output bytes are " + Arrays.toString(output));
-            Log.d(TAG, "Output is " + new String(Base64.encode(output)));
-        } else {            
-            Log.d(TAG, "Output bytes are " + Arrays.toString(output));
-            Log.d(TAG, "Output is " + new String(output));
-        }
-        
+
         /*
          * Encode the message in base 64 so that it's human readable or decode it if we're dealing with a decrypted
          * message.
@@ -144,30 +132,34 @@ public class CryptoCore {
      * @param message         The message to encrypt.
      * @param key             A secret key for encryption.
      * @param encrypt         True to encrypt a message, false to decrypt a message.
-     * @return                A String containing the encrypted message.
+     * @return                A String containing the encrypted message or the original message if encryption fails at
+     *                        any point.
      */
-    public static String aes(String message, byte[] key, boolean encrypt) throws Exception {
-        
-        Log.d(TAG, "Message is: " + message);
-        
+    public static String aes(String message, byte[] key, boolean encrypt) {
+
         // Set up the cipher: AES/CBC/PKCS7 
         // CBC = Cipher-block Chaining
         BlockCipher engine = new AESEngine();
         BufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(engine), new PKCS7Padding());
         byte[] input = null;
 
-        // Convert the input String into bytes. Decode from base 64 if we're decrypting.
-        if (encrypt) {
-            input = message.getBytes(Charset.defaultCharset().displayName());
-        } else {
-            input = Base64.decode(message.getBytes(Charset.defaultCharset().displayName()));
+        try {
+
+            // Convert the input String into bytes. Decode from base 64 if we're decrypting.
+            if (encrypt) {
+                input = message.getBytes(Charset.defaultCharset().displayName());
+            } else {
+                input = Base64.decode(message.getBytes(Charset.defaultCharset().displayName()));
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error converting input string to bytes", e);
+            return message;
         }
             
         cipher.init(encrypt, new KeyParameter(key));
         byte[] output = new byte[cipher.getOutputSize(input.length)];
-        
-        Log.d(TAG, "Cipher text array size is " + cipher.getOutputSize(input.length));
-        
+
         // We don't need these but the processBytes method requires them. It tells the cipher where to start processing
         // the input array and where to store the processed block in the output array
         final int INPUT_OFFSET = 0;
@@ -178,10 +170,9 @@ public class CryptoCore {
         int finalOutputLength;
         int originalMessageSize = 0;
         byte[] croppedOutput = null;
-        
-        Log.d(TAG, "processBytes: Processed " + outputLength + " bytes.");
-        
+
         try {
+
             finalOutputLength = cipher.doFinal(output, outputLength);
             
             if (!encrypt) {
@@ -199,27 +190,30 @@ public class CryptoCore {
                 System.arraycopy(output, INPUT_OFFSET, croppedOutput, OUTPUT_OFFSET, originalMessageSize);
                 
             }
-                
-            Log.d(TAG, "doFinal: Processed " + finalOutputLength + " bytes.");
-        } catch (CryptoException ce) {
-            Log.e(TAG, "Error encrypting message", ce);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error encrypting message", e);
+            return message;
         }
-        
-        if (encrypt) {            
-            Log.d(TAG, "Output bytes are " + Arrays.toString(output));
-            Log.d(TAG, "Output is " + new String(Base64.encode(output)));
-        } else {            
-            Log.d(TAG, "Output bytes are " + Arrays.toString(output));
-            Log.d(TAG, "Output is " + new String(output));
-        }
-        
+
         // Encode the message in base 64 so that it's human readable or decode it if we're dealing with a decrypted
         // message
-        if (encrypt) {
-            return new String(Base64.encode(output), Charset.defaultCharset().displayName());
-        } else {
-            return new String(croppedOutput, Charset.defaultCharset().displayName());
+        String messageToReturn = "";
+
+        try {
+
+            if (encrypt) {
+                messageToReturn = new String(Base64.encode(output), Charset.defaultCharset().displayName());
+            } else {
+                messageToReturn = new String(croppedOutput, Charset.defaultCharset().displayName());
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting the message to return", e);
+            return message;
         }
+
+        return messageToReturn;
 
     }    
 

@@ -8,6 +8,9 @@ import org.spongycastle.crypto.params.RSAPrivateCrtKeyParameters;
 import org.spongycastle.crypto.util.PrivateKeyFactory;
 import org.spongycastle.crypto.util.PublicKeyFactory;
 
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -79,13 +82,21 @@ public class KeyStoreManager {
 
     }
 
-    public void addSecretKey(String alias, byte[] secretKey) throws Exception {
+    public void addSecretKey(String alias, byte[] secretKeyBytes) throws Exception {
 
         FileOutputStream keyStoreFileOutput = activityContext.openFileOutput(KeyStoreGenerator.KEY_STORE_FILE_NAME,
                 Context.MODE_PRIVATE);
 
-        keyStore.setKeyEntry(alias, secretKey, certificateChain);
+        SecretKey secretKey = new SecretKeySpec(secretKeyBytes, "AES");
+
+        keyStore.setKeyEntry(alias, secretKey, keyStorePassword.toCharArray(), certificateChain);
         keyStore.store(keyStoreFileOutput, keyStorePassword.toCharArray());
+
+        if (keyExists(alias)) {
+            Log.d(TAG, "The key exists!");
+        } else {
+            throw new Exception("The alias given does not correspond to a key");
+        }
 
         keyStoreFileOutput.close();
 
@@ -119,7 +130,8 @@ public class KeyStoreManager {
 
     public byte[] getSecretKey(String alias) throws Exception {
 
-        return keyStore.getKey(alias, keyStorePassword.toCharArray()).getEncoded();
+        Key storedSecretKey = keyStore.getKey(alias, keyStorePassword.toCharArray());
+        return storedSecretKey.getEncoded();
 
     }
 

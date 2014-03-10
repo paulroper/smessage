@@ -40,9 +40,7 @@ public class PhoneNumberHelperMethods {
         
         String phoneNumberWithoutSeparators = "";
         String phoneNumberStripped = "";
-                
-        Log.d("Phone number to format:", phoneNumber);
-        
+
         final int FIRST_NUMBER_AFTER_AREA_CODE_INDEX = 2;
         final int FIRST_NUMBER_AFTER_ZERO_INDEX = 1;
         
@@ -59,22 +57,16 @@ public class PhoneNumberHelperMethods {
             // Use the regex [^\\d] to remove all non-numeric characters from the phone number
             phoneNumberWithoutSeparators = phoneNumber.replaceAll("[^\\d]", "");
             phoneNumberStripped = phoneNumberWithoutSeparators.substring(FIRST_NUMBER_AFTER_AREA_CODE_INDEX);
-            
-            Log.d("Phone number without separators:", phoneNumberWithoutSeparators);  
-            
+
         } else if (phoneNumber.charAt(0) == '0') {
             
             phoneNumberWithoutSeparators = phoneNumber.replaceAll("[^\\d]", "");
             phoneNumberStripped = phoneNumberWithoutSeparators.substring(FIRST_NUMBER_AFTER_ZERO_INDEX);
             
-            Log.d("Phone number without separators:", phoneNumberWithoutSeparators);    
-            
         } else {
             return phoneNumber;
         }
-        
-        Log.d("Phone number without separators and area code:", phoneNumberStripped);
-        
+
         return phoneNumberStripped;
         
     }

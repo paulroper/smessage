@@ -6,10 +6,8 @@
  */
 package com.csulcv.Smessage;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.app.AlertDialog;
+import android.content.*;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,10 +21,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import org.spongycastle.crypto.params.AsymmetricKeyParameter;
+import org.spongycastle.crypto.params.RSAKeyParameters;
+import org.spongycastle.util.encoders.Base64;
 
 import java.security.Security;
 import java.util.ArrayList;
@@ -61,8 +60,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     // TODO: These are just test variables, change them later
     private static final boolean LOGGING_ENABLED = false;
     private String keyStorePassword = "TESTING";
-    private String userName = "TEST";
-    
+    private String userName = "";
+
     /**
      * 
      * @see android.app.Activity
@@ -71,8 +70,10 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);        
- 
+        setContentView(R.layout.activity_main);
+
+        userName = PhoneNumberHelperMethods.getOwnNumber(this);
+
         // Generate the asymmetric keys for RSA if we have to
         if (!KeyStoreManager.keyStoreExists(getBaseContext())) {
             KeyStoreGenerator.setupKeyStore(getBaseContext(), userName, keyStorePassword);
