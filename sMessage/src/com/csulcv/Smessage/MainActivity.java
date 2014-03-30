@@ -14,18 +14,17 @@ import android.os.Bundle;
 import android.provider.ContactsContract.PhoneLookup;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import org.spongycastle.crypto.params.AsymmetricKeyParameter;
-import org.spongycastle.crypto.params.RSAKeyParameters;
-import org.spongycastle.util.encoders.Base64;
 
 import java.security.Security;
 import java.util.ArrayList;
@@ -35,10 +34,9 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
     private static final String TAG = "Smessage: Main Activity";
     public static final String CONVERSATION_INFORMATION = "com.csulcv.smessage.conversationInformation";
-    
+
     private static final int LOADER_ID = 0;
-    private ListView contactList = null;
-    private ArrayAdapter<Contact> contactListAdapter = null;    
+    private ArrayAdapter<Contact> contactListAdapter = null;
     
     private LoaderCallbacks<Cursor> callbacks = this;
     private static final IntentFilter newSmsIntent = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
@@ -51,16 +49,21 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
             getSupportLoaderManager().restartLoader(LOADER_ID, null, callbacks);
         }
         
-    };    
-    
+    };
+
+    private NotificationCompat.Builder mBuilder =
+            new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.flat_app_logo)
+                    .setContentTitle("My notification")
+                    .setContentText("Hello World!");
+
     static {        
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);         
     }
 
-    // TODO: These are just test variables, change them later
     private static final boolean LOGGING_ENABLED = false;
-    private String keyStorePassword = "TESTING";
-    private String userName = "";
+    private static final boolean TEST_MODE = true;
+    private String keyStorePassword = "";
 
     /**
      * 
@@ -72,21 +75,137 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        userName = PhoneNumberHelperMethods.getOwnNumber(this);
+        SharedPreferences settings = getPreferences(MODE_PRIVATE);
+        boolean firstRun = settings.getBoolean("firstRun", true);
 
-        // Generate the asymmetric keys for RSA if we have to
-        if (!KeyStoreManager.keyStoreExists(getBaseContext())) {
-            KeyStoreGenerator.setupKeyStore(getBaseContext(), userName, keyStorePassword);
-            Log.d(TAG, "Finished generating keys");
-        } else {
-            Log.d(TAG, "No need to generate keys");
+        if (firstRun) {
+            Log.d(TAG, "First run - Setting up the key store");
+            generateKeyStore(settings);
+        } else if (!TEST_MODE) {
+            Log.d(TAG, "Loading the key store");
+            loadKeyStore();
         }
-                
+
         // Set up a BroadcastReceiver so that when we receive a new SMS we can update the conversation list dynamically
         registerReceiver(broadcastReceiver, newSmsIntent);
         
         // Start the cursor loader that gets SMS messages from the device
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);        
+
+    }
+
+    /**
+     * Get a password from the user and generate a new key store if necessary.
+     */
+    public void generateKeyStore(SharedPreferences settings) {
+
+        if (!TEST_MODE) {
+
+            final AlertDialog.Builder dialogBox = new AlertDialog.Builder(this);
+            dialogBox.setTitle("Please set a password");
+
+            // Use an EditText view to get the user's password
+            final EditText passwordInput = new EditText(this);
+            passwordInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            dialogBox.setView(passwordInput);
+
+            // Get the password the user entered and store it
+            dialogBox.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int id) {
+
+                    setKeyStorePassword(passwordInput.getText().toString());
+
+                    if (keyStorePassword.length() < 6) {
+                        Toast.makeText(getBaseContext(), "Please enter 6 characters or more", Toast.LENGTH_SHORT).show();
+                        dialogBox.show();
+                        dismissDialog(id);
+                    }
+
+                }
+
+            });
+
+            // If the user clicks cancel, exit
+            dialogBox.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int id) {
+                    dialogBox.show();
+                }
+
+            });
+
+            AlertDialog dialog = dialogBox.create();
+
+            Toast.makeText(getBaseContext(), "Please enter 6 characters or more", Toast.LENGTH_SHORT).show();
+            dialog.show();
+
+        }
+
+        String userName = PhoneNumberHelperMethods.getOwnNumber(this);
+        KeyStoreGenerator.setupKeyStore(getBaseContext(), userName, keyStorePassword);
+
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("firstRun", false);
+        editor.commit();
+
+    }
+
+    /**
+     * Get the user to set or enter a password before they can use the app.
+     */
+    public void loadKeyStore() {
+
+        final AlertDialog.Builder dialogBox = new AlertDialog.Builder(this);
+        dialogBox.setTitle("Please enter your password");
+
+        // Use an EditText view to get the user's password
+        final EditText passwordInput = new EditText(this);
+        passwordInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        dialogBox.setView(passwordInput);
+
+        // Get the password the user entered and store it
+        dialogBox.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+                setKeyStorePassword(passwordInput.getText().toString());
+
+                if (keyStorePassword.length() < 6) {
+                    Toast.makeText(getBaseContext(), "Please enter 6 characters or more", Toast.LENGTH_SHORT).show();
+                    dialogBox.show();
+                }
+
+                /*
+                 * If it's the first run, create a new key store using the entered password otherwise check that the
+                 * password is correct.
+                 */
+                try {
+                    KeyStoreManager keyStoreManager = new KeyStoreManager(MainActivity.this.getBaseContext(),
+                            keyStorePassword);
+                } catch (Exception e) {
+                    Log.d(TAG, "Wrong password!");
+                    dialogBox.show();
+                }
+
+            }
+
+        });
+
+        // If the user clicks cancel, exit
+        dialogBox.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+                dialogBox.show();
+            }
+
+        });
+
+        AlertDialog dialog = dialogBox.create();
+        dialog.show();
+
+        Toast.makeText(getBaseContext(), "Password entered correctly", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -169,38 +288,40 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<Cursor> loader, Cursor smsCursor) {           
         
         // Get ListView used for contacts and get contacts
-        contactList = (ListView) findViewById(R.id.contact_list);
+        ListView contactList = (ListView) findViewById(R.id.contact_list);
         
         // Setup adapter for message list using array list of messages
         contactListAdapter = new ArrayAdapter<Contact>(this, 
                 R.layout.contact_list_row, 
                 R.id.contact_name, 
                 getContactsFromConversations(getNewestConversationMessages(smsCursor)));
+
+        smsCursor.close();
         
         contactList.setAdapter(contactListAdapter);          
         contactList.setOnItemClickListener(new OnItemClickListener() {
-            
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Contact contact = (Contact) parent.getAdapter().getItem(position);
-                
-                Log.i("Contact clicked: ", contact.getContactName() + " " + contact.getContactPhoneNumber()); 
-                
+
+                Log.i("Contact clicked: ", contact.getContactName() + " " + contact.getContactPhoneNumber());
+
                 // Create intent used to move to SendMessage activity
                 Intent intent = new Intent(MainActivity.this, ConversationActivity.class);
 
                 Bundle conversationInformation = new Bundle();
                 intent.putExtra(CONVERSATION_INFORMATION, conversationInformation);
-                
+
                 conversationInformation.putString("CONTACT_NAME", contact.getContactName());
                 conversationInformation.putString("CONTACT_PHONE_NUMBER", contact.getContactPhoneNumber());
                 conversationInformation.putString("KEY_STORE_PASSWORD", keyStorePassword);
-                
-                Log.i(TAG, "Starting Conversation activity");          
-                    
-                startActivity(intent);   
+
+                Log.i(TAG, "Starting Conversation activity");
+
+                startActivity(intent);
             }
-            
+
         });
         
     }    
@@ -232,7 +353,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
      */
     public ArrayList<Message> getConversations(Cursor smsCursor) {     
         
-        ArrayList<Message> newestConversationMessages = new ArrayList<Message>();        
+        ArrayList<Message> newestConversationMessages = new ArrayList<Message>();
        
         // Indices are fixed constants based on position in the returnedColumns array  
         @SuppressWarnings("unused")
@@ -267,6 +388,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
             }            
      
         }
+
+        smsCursor.close();
             
         // Sort conversations in ascending order
         Collections.sort(newestConversationMessages);        
@@ -367,7 +490,9 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
             }    
     
         }
-     
+
+        smsCursor.close();
+
         // Sort messages in ascending order
         Collections.sort(newestConversationMessages);
         
@@ -489,6 +614,28 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         
         return contactNames;        
         
-    }    
-    
+    }
+
+    /**
+     * Use the photo ID attached to each contact to retrieve their picture.
+     *
+     * @param contacts An ArrayList of contacts.
+     */
+    public void getContactPhotos(ArrayList<Contact> contacts) {
+
+        for (int i = 0; i < contacts.size(); i++) {
+            contacts.get(i).getContactPhotoId();
+        }
+
+    }
+
+    /**
+     * Used by the requestPassword() method to set the global key store password from an inline class.
+     *
+     * @param password The password obtained from the user.
+     */
+    public void setKeyStorePassword(String password) {
+        keyStorePassword = password;
+    }
+
 }

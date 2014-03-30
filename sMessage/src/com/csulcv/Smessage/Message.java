@@ -68,7 +68,7 @@ class Message implements Comparable<Message> {
     }
 
     /**
-     * Used to compare objects so that {@link Collections#sort()} can be used.
+     * Used to compare objects so that the sort method from the Java collections can be used.
      *
      * @param message The Message to compare dates with.
      * @return A value corresponding to whether the Message date is greater than, less than or equal to the

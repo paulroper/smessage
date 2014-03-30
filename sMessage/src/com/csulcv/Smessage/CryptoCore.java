@@ -20,7 +20,6 @@ import org.spongycastle.util.encoders.Base64;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.SecureRandom;
-import java.util.Arrays;
 
 public class CryptoCore {
     

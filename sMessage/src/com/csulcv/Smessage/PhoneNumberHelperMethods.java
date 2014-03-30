@@ -9,7 +9,6 @@ package com.csulcv.Smessage;
 import android.content.Context;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 public class PhoneNumberHelperMethods {
     

@@ -3,19 +3,19 @@ package com.csulcv.Smessage;
 import android.content.Context;
 import android.util.Log;
 import org.spongycastle.crypto.params.AsymmetricKeyParameter;
-import org.spongycastle.crypto.params.RSAKeyParameters;
-import org.spongycastle.crypto.params.RSAPrivateCrtKeyParameters;
 import org.spongycastle.crypto.util.PrivateKeyFactory;
 import org.spongycastle.crypto.util.PublicKeyFactory;
 
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.*;
-import java.security.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.cert.Certificate;
-import java.security.spec.RSAPrivateCrtKeySpec;
-import java.security.spec.RSAPublicKeySpec;
 
 public class KeyStoreManager {
 
@@ -105,7 +105,10 @@ public class KeyStoreManager {
     public AsymmetricKeyParameter getPublicKey(String alias) throws Exception {
 
         Key storedPublicKey = keyStore.getKey(alias, keyStorePassword.toCharArray());
-        AsymmetricKeyParameter publicKey = new PublicKeyFactory().createKey(storedPublicKey.getEncoded());
+
+        // TODO: Uncomment if this doesn't work!
+        //AsymmetricKeyParameter publicKey = new PublicKeyFactory().createKey(storedPublicKey.getEncoded());
+        AsymmetricKeyParameter publicKey = PublicKeyFactory.createKey(storedPublicKey.getEncoded());
 
         if (publicKey.isPrivate()) {
             throw new Exception("The alias given does not correspond to a public key");
@@ -118,7 +121,10 @@ public class KeyStoreManager {
     public AsymmetricKeyParameter getPrivateKey(String alias) throws Exception {
 
         Key storedPrivateKey = keyStore.getKey(alias, keyStorePassword.toCharArray());
-        AsymmetricKeyParameter privateKey = new PrivateKeyFactory().createKey(storedPrivateKey.getEncoded());
+
+        // TODO: Uncomment if this doesn't work!
+        //AsymmetricKeyParameter privateKey = new PrivateKeyFactory().createKey(storedPrivateKey.getEncoded());
+        AsymmetricKeyParameter privateKey = PrivateKeyFactory.createKey(storedPrivateKey.getEncoded());
 
         if (!privateKey.isPrivate()) {
             throw new Exception("The alias given does not correspond to a private key");
@@ -143,13 +149,7 @@ public class KeyStoreManager {
         boolean keyExists = false;
 
         try {
-
-            if (keyStore.isKeyEntry(alias)) {
-                keyExists = true;
-            } else {
-                keyExists = false;
-            }
-
+            return keyStore.isKeyEntry(alias);
         } catch (Exception e) {
             Log.e(TAG, "Error checking key store for key", e);
         }

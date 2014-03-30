@@ -21,6 +21,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.util.Calendar;
 import java.util.Date;
 
 public class KeyStoreGenerator {
@@ -109,8 +110,23 @@ public class KeyStoreGenerator {
         }
 
         // The certificate expires after one year
-        Date certStartDate = new Date(System.currentTimeMillis() - (24 * 60 * 60 * 1000));
-        Date certEndDate = new Date(System.currentTimeMillis() + (365 * 24 * 60 * 60 * 1000));
+        // TODO: Refactored into an overflow corrected version
+        // Date certStartDate = new Date(System.currentTimeMillis() - (24 * 60 * 60 * 1000));
+        // Date certEndDate = new Date(System.currentTimeMillis() + (365 * 24 * 60 * 60 * 1000));
+
+        Calendar calendar = null;
+
+        // Start the certificate date yesterday
+        calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
+
+        Date certStartDate = calendar.getTime();
+
+        // Add a year to the calendar
+        calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, 1);
+
+        Date certEndDate = calendar.getTime();
 
         // Use the provided name to sign the certificate with
         X500Principal certificateSigner = new X500Principal("CN=" + name);

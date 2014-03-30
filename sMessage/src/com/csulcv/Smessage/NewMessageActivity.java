@@ -102,7 +102,7 @@ public class NewMessageActivity extends ActionBarActivity {
     /**
      * Send an SMS message.
      * 
-     * @param view
+     * @param view The button that this method is assigned to.
      * @throws IllegalArgumentException If there's an error sending the message, throw an exception.
      */
     public void sendMessage(View view) throws IllegalArgumentException {      
