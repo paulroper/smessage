@@ -19,6 +19,7 @@ public class PasswordActivity extends ActionBarActivity {
 
     private static final String TAG = "Smessage: Password Activity";
     public static final String USER_PASSWORD = "com.csulcv.smessage.userPassword";
+
     public static boolean firstRun = true;
     private SharedPreferences settings = null;
 
@@ -36,6 +37,27 @@ public class PasswordActivity extends ActionBarActivity {
 
         //final boolean keyStoreExists = KeyStoreManager.keyStoreExists(this);
         settings = getSharedPreferences("settings", MODE_PRIVATE);
+
+        setupActivity();
+
+    }
+
+    /**
+     * Put in to a separate method so that the activity can be put back to its first run form when the password is reset.
+     */
+    public void setupActivity() {
+
+        firstRun = settings.getBoolean("firstRun", true);
+
+        if (firstRun) {
+            TextView passwordMessage = (TextView) findViewById(R.id.enter_password);
+            passwordMessage.setText("Please enter a new password");
+            Button resetPassword = (Button) findViewById(R.id.reset_password);
+            resetPassword.setVisibility(View.GONE);
+        } else {
+            TextView passwordMessage = (TextView) findViewById(R.id.enter_password);
+            passwordMessage.setText("Please enter your password");
+        }
 
         EditText password = (EditText) findViewById(R.id.password);
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -60,6 +82,8 @@ public class PasswordActivity extends ActionBarActivity {
 
                     if (!PasswordActivity.firstRun) {
 
+                        Log.d(TAG, "Testing password");
+
                         // Try and open the key store - If it fails, the password is incorrect
                         try {
                             KeyStoreManager keyStoreManager = new KeyStoreManager(PasswordActivity.this, password);
@@ -74,7 +98,7 @@ public class PasswordActivity extends ActionBarActivity {
 
                     }
 
-                    // Create intent used to move to SendMessage activity
+                    // Create intent used to pass the user's password to the main activity and move there
                     Intent intent = new Intent(PasswordActivity.this, MainActivity.class);
 
                     Bundle userPassword = new Bundle();
@@ -93,27 +117,6 @@ public class PasswordActivity extends ActionBarActivity {
             }
 
         });
-
-        setupActivity();
-
-    }
-
-    /**
-     * Put in to a separate method so that the activity can be put back to its first run form when the password is reset.
-     */
-    public void setupActivity() {
-
-        boolean firstRun = settings.getBoolean("firstRun", true);
-
-        if (firstRun) {
-            TextView passwordMessage = (TextView) findViewById(R.id.enter_password);
-            passwordMessage.setText("Please enter a new password");
-            Button resetPassword = (Button) findViewById(R.id.reset_password);
-            resetPassword.setVisibility(View.GONE);
-        } else {
-            TextView passwordMessage = (TextView) findViewById(R.id.enter_password);
-            passwordMessage.setText("Please enter your password");
-        }
 
     }
 
