@@ -171,4 +171,24 @@ public class KeyStoreManager {
 
     }
 
+    /**
+     * Delete the key store file from internal storage. Used when the user needs to reset their password.
+     *
+     * @param activityContext The activity that the method was called from.
+     * @return true if the file was deleted successfully, false otherwise.
+     */
+    public static boolean deleteKeyStore(Context activityContext) {
+
+        File keyStoreFile = activityContext.getFileStreamPath(KeyStoreGenerator.KEY_STORE_FILE_NAME);
+
+        if (keyStoreFile.delete()) {
+            Log.d(TAG, "Key store deleted");
+            return true;
+        } else {
+            Log.d(TAG, "Error deleting key store");
+            return false;
+        }
+
+    }
+
 }

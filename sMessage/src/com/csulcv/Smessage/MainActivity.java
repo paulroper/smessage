@@ -6,7 +6,6 @@
  */
 package com.csulcv.Smessage;
 
-import android.app.AlertDialog;
 import android.content.*;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,13 +17,14 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.security.Security;
 import java.util.ArrayList;
@@ -75,7 +75,12 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences settings = getPreferences(MODE_PRIVATE);
+        // Get the message from the intent that created this activity
+        Intent intent = getIntent();
+        Bundle password = intent.getBundleExtra(PasswordActivity.USER_PASSWORD);
+        keyStorePassword = password.getString("PASSWORD");
+
+        SharedPreferences settings = getSharedPreferences("settings", MODE_PRIVATE);
         boolean firstRun = settings.getBoolean("firstRun", true);
 
         if (firstRun) {
@@ -95,52 +100,17 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     }
 
     /**
+     * Stop the user from being able to go back to the password screen
+     */
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
+    /**
      * Get a password from the user and generate a new key store if necessary.
      */
     public void generateKeyStore(SharedPreferences settings) {
-
-        if (!TEST_MODE) {
-
-            final AlertDialog.Builder dialogBox = new AlertDialog.Builder(this);
-            dialogBox.setTitle("Please set a password");
-
-            // Use an EditText view to get the user's password
-            final EditText passwordInput = new EditText(this);
-            passwordInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            dialogBox.setView(passwordInput);
-
-            // Get the password the user entered and store it
-            dialogBox.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int id) {
-
-                    setKeyStorePassword(passwordInput.getText().toString());
-
-                    if (keyStorePassword.length() < 6) {
-                        Toast.makeText(getBaseContext(), "Please enter 6 characters or more", Toast.LENGTH_SHORT).show();
-                        dialogBox.show();
-                        dismissDialog(id);
-                    }
-
-                }
-
-            });
-
-            // If the user clicks cancel, exit
-            dialogBox.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int id) {
-                    dialogBox.show();
-                }
-
-            });
-
-            AlertDialog dialog = dialogBox.create();
-
-            Toast.makeText(getBaseContext(), "Please enter 6 characters or more", Toast.LENGTH_SHORT).show();
-            dialog.show();
-
-        }
 
         String userName = PhoneNumberHelperMethods.getOwnNumber(this);
         KeyStoreGenerator.setupKeyStore(getBaseContext(), userName, keyStorePassword);
@@ -156,56 +126,11 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
      */
     public void loadKeyStore() {
 
-        final AlertDialog.Builder dialogBox = new AlertDialog.Builder(this);
-        dialogBox.setTitle("Please enter your password");
-
-        // Use an EditText view to get the user's password
-        final EditText passwordInput = new EditText(this);
-        passwordInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        dialogBox.setView(passwordInput);
-
-        // Get the password the user entered and store it
-        dialogBox.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-
-                setKeyStorePassword(passwordInput.getText().toString());
-
-                if (keyStorePassword.length() < 6) {
-                    Toast.makeText(getBaseContext(), "Please enter 6 characters or more", Toast.LENGTH_SHORT).show();
-                    dialogBox.show();
-                }
-
-                /*
-                 * If it's the first run, create a new key store using the entered password otherwise check that the
-                 * password is correct.
-                 */
-                try {
-                    KeyStoreManager keyStoreManager = new KeyStoreManager(MainActivity.this.getBaseContext(),
-                            keyStorePassword);
-                } catch (Exception e) {
-                    Log.d(TAG, "Wrong password!");
-                    dialogBox.show();
-                }
-
-            }
-
-        });
-
-        // If the user clicks cancel, exit
-        dialogBox.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int id) {
-                dialogBox.show();
-            }
-
-        });
-
-        AlertDialog dialog = dialogBox.create();
-        dialog.show();
-
-        Toast.makeText(getBaseContext(), "Password entered correctly", Toast.LENGTH_SHORT).show();
+        try {
+         KeyStoreManager keyStoreManager = new KeyStoreManager(MainActivity.this.getBaseContext(), keyStorePassword);
+        } catch (Exception e) {
+            Log.d(TAG, "Wrong password!");
+        }
 
     }
 

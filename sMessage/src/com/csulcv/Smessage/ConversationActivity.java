@@ -476,8 +476,9 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         // While there's a message to get
         while (smsCursor.moveToNext()) {
 
-            // If the conversation's secure, try and decrypt the messages
-            if (conversationSecure && smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX).endsWith("==")) {
+            // If the conversation's secure and the message ends with the "=" Base 64 padding character,
+            // try and decrypt the messages
+            if (conversationSecure && smsCursor.getString(MESSAGE_BODY_COLUMN_INDEX).endsWith("=")) {
 
                 // Add it to the Message list
                 messages.add(new Message(smsCursor.getInt(THREAD_ID_COLUMN_INDEX),

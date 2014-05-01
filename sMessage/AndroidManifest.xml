@@ -19,17 +19,21 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/SmessageTheme">        
+        android:theme="@style/SmessageTheme">
         <activity
-            android:name="com.csulcv.Smessage.MainActivity"
-            android:label="@string/app_name" 
-            android:configChanges="orientation|screenSize" >
+            android:name="com.csulcv.Smessage.PasswordActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>        
+        </activity>
+        <activity
+            android:name="com.csulcv.Smessage.MainActivity"
+            android:configChanges="orientation|screenSize" >
+        </activity>
         <activity
             android:name="com.csulcv.Smessage.ConversationActivity"
             android:parentActivityName="com.csulcv.Smessage.MainActivity"
