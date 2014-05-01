@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
     private static final boolean LOGGING_ENABLED = false;
     private static final boolean TEST_MODE = true;
-    private String keyStorePassword = "";
+    private static String keyStorePassword = "";
 
     /**
      * 
@@ -77,8 +77,13 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
         // Get the message from the intent that created this activity
         Intent intent = getIntent();
+
         Bundle password = intent.getBundleExtra(PasswordActivity.USER_PASSWORD);
-        keyStorePassword = password.getString("PASSWORD");
+
+        // If we're coming back to this activity rather than forward from the password screen, this bundle won't exist
+        if (password != null && password.containsKey("PASSWORD")) {
+            keyStorePassword = password.getString("PASSWORD");
+        }
 
         SharedPreferences settings = getSharedPreferences("settings", MODE_PRIVATE);
         boolean firstRun = settings.getBoolean("firstRun", true);

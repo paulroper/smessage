@@ -41,13 +41,16 @@
             android:configChanges="orientation|screenSize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.csulcv.smessage.MainActivity" />
+                android:value="com.csulcv.Smessage.MainActivity" />
         </activity>        
         <activity 
             android:name="com.csulcv.Smessage.NewMessageActivity"
             android:parentActivityName="com.csulcv.Smessage.MainActivity" 
             android:windowSoftInputMode="stateHidden"
             android:configChanges="orientation|screenSize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.csulcv.Smessage.MainActivity" />
         </activity>
     </application>
 

@@ -18,5 +18,7 @@
     <string name="password_screen_background">Password Screen Background</string>
     <string name="reset_password">Reset Password</string>
     <string name="enter_password">Please enter a new password:</string>
+    <string name="enter_phone_number">Enter a phone number</string>
+    <string name="header_background">Header background</string>
 
 </resources>

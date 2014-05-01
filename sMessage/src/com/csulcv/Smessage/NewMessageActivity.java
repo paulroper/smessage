@@ -6,8 +6,15 @@ package com.csulcv.Smessage;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -15,14 +22,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class NewMessageActivity extends ActionBarActivity {
+public class NewMessageActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private SmsManager smsManager = SmsManager.getDefault();    
     private final static String TAG = "Smessage: New Message Activity";
-    
+    private static final int LOADER_ID = 0;
+
+    private SmsManager smsManager = SmsManager.getDefault();
+    private String enteredPhoneNumber = "";
+
+    // ArrayAdapter stores messages from the SMS database and the ListView displays them
+    private ListView messageList = null;
+    private SimpleCursorAdapter messages = null;
+    private LoaderManager.LoaderCallbacks<Cursor> callbacks = this;
+
+
     /**
      * 
      * @see android.app.Activity
@@ -32,7 +49,10 @@ public class NewMessageActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_message);
-        initialiseActionBar();  
+
+        setupActionBar();
+
+
     }  
 
     /**
@@ -86,17 +106,75 @@ public class NewMessageActivity extends ActionBarActivity {
         }
         
     }
-    
-    /**
-     * Set up the ActionBar for this activity.
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+
+        Uri smsUri = Uri.parse("content://sms/");
+        String numberToFind = PhoneNumberHelperMethods.stripSeparatorsAndAreaCode(enteredPhoneNumber);
+
+        Log.i(TAG, "Address substring: " + numberToFind);
+
+        /*
+         * SMS columns seem to be: _ID, THREAD_ID, ADDRESS, PERSON, DATE, DATE_SENT, READ, SEEN, STATUS
+         * SUBJECT, BODY, PERSON, PROTOCOL, REPLY_PATH_PRESENT, SERVICE_CENTRE, LOCKED, ERROR_CODE, META_DATA
+         */
+        String[] returnedColumnsSmsCursor = {"_id", "thread_id", "address", "body", "date", "type", "person"};
+
+        String address = "";
+
+        // Set up WHERE clause; find texts from address containing the number without an area code. If the number is
+        // actually a word (like Google), don't strip any separators from the address stored in the table
+        if (numberToFind.matches("\\d")) {
+            address = "REPLACE(REPLACE(address, ' ', ''), '-', '') LIKE " + DatabaseUtils.sqlEscapeString("%" + numberToFind);
+        } else {
+            address = "REPLACE(address, ' ', '') LIKE " + DatabaseUtils.sqlEscapeString("%" + numberToFind);
+        }
+
+        // Default sort order is date DESC, change to date ASC so texts appear in order
+        String sortOrder = "thread_id ASC, date ASC";
+
+        return new CursorLoader(this, smsUri, returnedColumnsSmsCursor, address, null, sortOrder);
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor smsCursor) {
+
+        messageList = (ListView) findViewById(R.id.message_list);
+        messages = new SimpleCursorAdapter(this,
+                                            R.layout.message_list_row,
+                                            smsCursor,
+                                            new String[] {"body"},
+                                            new int[] {R.id.message},
+                                            0);
+
+        // Get the cursor loader used for getting messages
+        messageList.setAdapter(messages);
+
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                messageList.setSelection(messages.getCount());
+            }
+
+        });
+
+    }
+
+    /*
+     * Invoked when the CursorLoader is reset.
      */
-    public void initialiseActionBar() {        
-        
-        // Show the Up button in the action bar.
-        setupActionBar();
-        
-        //ActionBar actionBar = getSupportActionBar();  
-        
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+        /*
+         * Clears out the adapter's reference to the Cursor.
+         * This prevents memory leaks.
+         */
+        messages.swapCursor(null);
+
     }
 
     /**
@@ -116,15 +194,21 @@ public class NewMessageActivity extends ActionBarActivity {
         String message = editTextMessage.getText().toString();      
         
         // If we have a message to send, split it and send it
-        // TODO: Error checking!
-        if (message != null && contactPhoneNumber != null) {  
+        if (message != null && contactPhoneNumber != null && message.length() > 0 && contactPhoneNumber.length() > 0) {
             
             Log.i(TAG, "Sending text message"); 
-            
-            ArrayList<String> splitMessage = smsManager.divideMessage(message);            
-            smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);            
-            
+
+            try {
+                ArrayList<String> splitMessage = smsManager.divideMessage(message);
+                smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);
+            } catch (Exception e) {
+                Log.d(TAG, "Error sending message");
+            }
+
             editTextMessage.setText("");
+
+            enteredPhoneNumber = contactPhoneNumber;
+            getSupportLoaderManager().initLoader(LOADER_ID, null, this);
             
         } else {            
             // If there's no message to send, do nothing

@@ -147,7 +147,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            
+
             case R.id.action_search:
                 //openSearch();
                 return true;
@@ -256,7 +256,7 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
         String message = editText.getText().toString();      
         
         // If we have a message to send, split it and send it
-        if (message != null) {
+        if (message != null && message.length() > 0) {
 
             if (conversationSecure) {
                 final boolean ENCRYPT = true;
@@ -264,10 +264,14 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
             }
 
             Log.i(TAG, "Sending text message");           
-            
-            ArrayList<String> splitMessage = smsManager.divideMessage(message);            
-            smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);            
-            
+
+            try {
+                ArrayList<String> splitMessage = smsManager.divideMessage(message);
+                smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);
+            } catch (Exception e) {
+                Log.d(TAG, "Error sending message");
+            }
+
             editText.setText("");            
         
         } else {            
