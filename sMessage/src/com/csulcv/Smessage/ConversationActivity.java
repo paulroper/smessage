@@ -409,20 +409,59 @@ public class ConversationActivity extends ActionBarActivity implements LoaderMan
                 // If the conversation is already secure, try and decrypt the message
                 } else if (conversationSecure) {
 
-                    try {
+                    // The sender wants to re-establish a secure channel
+                    if (messageContents.startsWith("----BEGIN PUBLIC KEY----")) {
 
-                        // Decrypt the message tapped and notify the message list that the underlying adapter's changed
-                        messageContents = CryptoCore.aes(messageContents, secretKey, !ENCRYPT);
-                        message.setBody(messageContents);
+                        try {
 
-                        messages.notifyDataSetChanged();
+                            // 24 is the length of the ----BEGIN PUBLIC KEY---- header
+                            messageContents = messageContents.substring(24);
 
-                        Toast.makeText(ConversationActivity.this.getBaseContext(),
-                                "Message decrypted!", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Public key is " + messageContents);
 
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error decrypting message", e);
-                    }
+                            // Turn the key message into an AsymmetricKeyParameter
+                            AsymmetricKeyParameter publicKey = CryptoUtils.convertToAsymmetricKeyParameter(
+                                    (KeyFactory.getInstance("RSA").generatePublic(
+                                            new X509EncodedKeySpec(Base64.decode(messageContents.getBytes())))));
+
+                            // Create a new shared secret key and store it using the contact's phone number
+                            secretKey = CryptoCore.generateAESKey();
+                            keyStoreManager.addSecretKey(contactPhoneNumber, secretKey);
+
+                            // Encrypt the key using the recipient's public key
+                            String keyMessage = CryptoCore.rsa(new String(Base64.encode(secretKey)), publicKey, ENCRYPT);
+
+                            // Add a header and send it off
+                            ArrayList<String> splitMessage = smsManager.divideMessage("----BEGIN SHARED KEY----" + keyMessage);
+                            smsManager.sendMultipartTextMessage(contactPhoneNumber, null, splitMessage, null, null);
+
+                            Toast.makeText(ConversationActivity.this.getBaseContext(), "Sharing a secret...",
+                                    Toast.LENGTH_SHORT).show();
+
+                            conversationSecure = true;
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "The message selected wasn't a public key!", e);
+                        }
+
+                    } else {
+
+	                    try {
+
+	                        // Decrypt the message tapped and notify the message list that the underlying adapter's changed
+	                        messageContents = CryptoCore.aes(messageContents, secretKey, !ENCRYPT);
+	                        message.setBody(messageContents);
+
+	                        messages.notifyDataSetChanged();
+
+	                        Toast.makeText(ConversationActivity.this.getBaseContext(),
+	                                "Message decrypted!", Toast.LENGTH_SHORT).show();
+
+	                    } catch (Exception e) {
+	                        Log.e(TAG, "Error decrypting message", e);
+	                    }
+
+	            	}
 
                 } else {
                     // Do nothing
